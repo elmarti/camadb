@@ -16,7 +16,7 @@ jobs:
         run: |
           yarn
           yarn build
-          yarn docs
+          yarn generate-docs
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.6.2
