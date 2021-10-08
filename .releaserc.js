@@ -1,14 +1,10 @@
-const { promisify } = require('util')
-import promisify from 'util';
-import dateFormat from 'dateformat';
-const dateFormat = require('dateformat')
-const readFileAsync = promisify(require('fs').readFile)
-import path from 'path';
+const path = require('path');
+const fs = require('fs');
 // Given a `const` variable `TEMPLATE_DIR` which points to "<semantic-release-gitmoji>/lib/assets/templates"
 
 // the *.hbs template and partials should be passed as strings of contents
-const template = readFileAsync(path.join('semantic-release-templates', 'default-template.hbs'))
-const commitTemplate = readFileAsync(path.join('semantic-release-templates', 'commit-template.hbs'))
+const template = fs.readFileSync(path.join('semantic-release-templates', 'default-template.hbs'))
+const commitTemplate = fs.readFileSync(path.join('semantic-release-templates', 'commit-template.hbs'))
 
 module.exports = {
   branches: ["main" ,{
@@ -32,7 +28,7 @@ module.exports = {
         partials: { commitTemplate },
         helpers: {
           datetime: function (format = 'UTC:yyyy-mm-dd') {
-            return dateFormat(new Date(), format)
+            return new Date();
           }
         },
         issueResolution: {
