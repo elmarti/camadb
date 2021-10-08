@@ -1,7 +1,9 @@
 const { promisify } = require('util')
+import promisify from 'util';
+import dateFormat from 'dateformat';
 const dateFormat = require('dateformat')
 const readFileAsync = promisify(require('fs').readFile)
-const path = require('path')
+import path from 'path';
 // Given a `const` variable `TEMPLATE_DIR` which points to "<semantic-release-gitmoji>/lib/assets/templates"
 
 // the *.hbs template and partials should be passed as strings of contents
