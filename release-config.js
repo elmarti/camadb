@@ -19,7 +19,11 @@ module.exports = {
           ':bug:',
           ':ambulance:',
           ':lock:'
-        ]
+        ],
+        branches: [{
+          name:"develop",
+          prerelease: true
+        }, "main"]
       },
       releaseNotes: {
         template,
@@ -40,8 +44,5 @@ module.exports = {
     '@semantic-release/github',
     '@semantic-release/npm'
   ],
-  branches: [{
-    name:"develop",
-    prerelease: true
-  }, "main"]
+
 }
