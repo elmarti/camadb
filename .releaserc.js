@@ -9,6 +9,10 @@ const template = readFileAsync(path.join('semantic-release-templates', 'default-
 const commitTemplate = readFileAsync(path.join('semantic-release-templates', 'commit-template.hbs'))
 
 module.exports = {
+  branches: ["main" ,{
+    name:"develop",
+    prerelease: true
+  }],
   plugins: [
     [
       'semantic-release-gitmoji', {
@@ -19,11 +23,7 @@ module.exports = {
           ':bug:',
           ':ambulance:',
           ':lock:'
-        ],
-        branches: [{
-          name:"develop",
-          prerelease: true
-        }, "main"]
+        ]
       },
       releaseNotes: {
         template,
@@ -44,5 +44,7 @@ module.exports = {
     '@semantic-release/github',
     '@semantic-release/npm'
   ],
+  tagFormat: '${version}',
+
 
 }
