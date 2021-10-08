@@ -65,7 +65,9 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
     {
       sort:{
         desc: x => x._id
-      }
+      },
+      offset: 100,
+      limit: 100
     });
   console.log('result', findResult.length);
   console.timeEnd('finding');

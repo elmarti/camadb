@@ -21,6 +21,12 @@ export class QueryService<T> implements IQueryService<T>{
     if(options.sort){
       data = sort(data).by(options.sort)
     }
+    if(options.offset){
+      data = data.slice(options.offset, data.length);
+    }
+    if(options.limit){
+      data = data.slice(0, options.limit);
+    }
     return data;
   }
 
