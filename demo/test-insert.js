@@ -1,7 +1,10 @@
 require('reflect-metadata');
 const { Cama } = require('../dist');
-
+const fs = require('fs');
 async function demo() {
+  fs.rmdirSync('./.cama', {
+    recursive: true
+  });
   console.info('creating database');
   console.time('Database created');
   const database = new Cama({
@@ -56,7 +59,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
   console.time('insert complete');
   await collection.insertMany(dummyData);
   console.timeEnd('insert complete');
-  console.time('finding');
+  console.time('uncached find');
   const findResult = await collection.findMany({
     _id: {
       $gte: 50000,
@@ -70,7 +73,21 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
       limit: 100
     });
   console.log('result', findResult.length);
-  console.timeEnd('finding');
+  console.timeEnd('uncached find');
+  console.time('cached find');
+  const cachedFindResult = await collection.findMany({
+      _id: {
+        $gte: 50000,
+      },
+    },
+    {
+      sort:{
+        desc: x => x._id
+      },
+
+    });
+  console.log('result', cachedFindResult.length);
+  console.timeEnd('cached find');
 }
 console.time('demo');
 demo()

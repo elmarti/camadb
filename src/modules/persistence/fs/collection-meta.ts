@@ -17,6 +17,14 @@ export class CollectionMeta implements ICollectionMeta {
   private collectionName?: string;
   private camaPath?: string;
   constructor(@inject(TYPES.FS) private fs: IFS, @inject(TYPES.CamaConfig) private config: ICamaConfig) {}
+
+  /**
+   * Initialise the collection meta
+   * @private
+   * @remarks Internal method - don't call it
+   * @param collectionName - The name of the collection
+   * @param config - The collection config
+   */
   async init(collectionName: string, config: ICollectionConfig): Promise<void> {
     this.camaPath =  path.join(process.cwd(), './.cama');
     this.dbPath = path.join(this.camaPath, collectionName);
@@ -38,6 +46,11 @@ export class CollectionMeta implements ICollectionMeta {
     return this.fs.writeJSON<IMetaStructure>(this.dbPath, this.fileName, this.meta);
   }
 
+  /**
+   * Update the meta value
+   * @param collectionName - the name of the collection
+   * @param metaStructure - the value to be to be applied to the meta
+   */
   async update(collectionName: string, metaStructure: IMetaStructure): Promise<void> {
     const dbPath = this.config.path || path.join(process.cwd(), './.cama', collectionName);
     this.meta = metaStructure;
@@ -48,6 +61,9 @@ export class CollectionMeta implements ICollectionMeta {
     });
   }
 
+  /**
+   * Gets the in-memory meta value
+   */
   async get(): Promise<IMetaStructure|undefined> {
     return this.meta;
   }

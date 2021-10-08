@@ -12,6 +12,7 @@ import QueryModule from  './modules/query';
 
 import 'reflect-metadata';
 
+
 export class Cama implements ICama {
   private container: Container;
 
@@ -29,13 +30,29 @@ export class Cama implements ICama {
 
   }
 
+
   private _getPersistenceAdapter(): IPersistenceAdapter {
     return this.container.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
   }
 
+  /**
+   * Initializes a collection with the appropriate persistence adapter
+   *
+   * @remarks
+   * Initialises collection metadata if non-existent, else loads it
+   *
+   * @param collectionName - the collection name
+   * @param config - The collection configuration
+   * @returns an initialised collection
+   */
   async initCollection<T>(collectionName: string, config: ICollectionConfig): Promise<ICollection> {
     const collection = this.container.get<ICollection>(TYPES.Collection);
     await collection.init(collectionName, config);
     return collection;
   }
+}
+
+export {
+  Collection
+
 }

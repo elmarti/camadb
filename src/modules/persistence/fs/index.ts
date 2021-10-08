@@ -10,6 +10,9 @@ import { FsPaging } from './fs-paging';
 import { IPaging } from '../../../interfaces/paging.interface';
 
 
+/**
+ * Initialise the FS Adapter module
+ */
 export default new ContainerModule((bind: interfaces.Bind, unbind: interfaces.Unbind) => {
   bind<IPersistenceAdapter>(TYPES.PersistenceAdapter).to(FSPersistence).inSingletonScope();
   bind<ICollectionMeta>(TYPES.CollectionMeta).to(CollectionMeta).inSingletonScope();
