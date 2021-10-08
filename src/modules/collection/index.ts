@@ -4,6 +4,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../../types';
 import { IPersistenceAdapter } from '../../interfaces/persistence-adapter.interface';
 import { IQueryService } from '../../interfaces/query-service.interface';
+import { IQueryOptions } from '../../interfaces/query-options.interface';
 
 @injectable()
 export class Collection  implements ICollection   {
@@ -29,8 +30,8 @@ export class Collection  implements ICollection   {
   async insertOne(row: any):Promise<void> {
     return this.persistenceAdapter.insert([row]);
   }
-  async findMany<T>(query: any): Promise<Array<T>> {
-    return await this.queryService.filter(query);
+  async findMany<T>(query: any, options:IQueryOptions): Promise<Array<T>> {
+    return await this.queryService.filter(query, options);
   }
 
 }

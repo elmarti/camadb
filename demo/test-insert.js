@@ -61,7 +61,12 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
     _id: {
       $gte: 50000,
     },
-  });
+  },
+    {
+      sort:{
+        desc: x => x._id
+      }
+    });
   console.log('result', findResult.length);
   console.timeEnd('finding');
 }

@@ -1675,6 +1675,11 @@ fast-levenshtein@^2.0.6, fast-levenshtein@~2.0.6:
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
+fast-sort@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/fast-sort/-/fast-sort-3.0.3.tgz#f3f61561ebf8625672f4b2c652816e92d6273158"
+  integrity sha512-8O5/zuAd0caOZ8ray+uCBLP2FQiShC0whpsAKrn9JcluJRyV/XopSO+u2hYwGf1g0VvpYbnD3ZM/Jqp07AEIhQ==
+
 fastq@^1.6.0:
   version "1.13.0"
   resolved "https://registry.yarnpkg.com/fastq/-/fastq-1.13.0.tgz#616760f88a7526bdfc596b7cab8c18938c36b98c"

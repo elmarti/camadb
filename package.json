@@ -44,6 +44,7 @@
     "dist/**/*"
   ],
   "dependencies": {
+    "fast-sort": "^3.0.3",
     "flatted": "^3.2.2",
     "inversify": "^5.1.1",
     "p-queue": "6.6.2",
