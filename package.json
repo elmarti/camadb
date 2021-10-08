@@ -1,7 +1,7 @@
 {
-  "name": "typescript-npm-package-boilerplate",
+  "name": "camadb",
   "version": "0.2.0",
-  "description": "TypeScript NPM Package Boilerplate",
+  "description": "A TypeScript embedded database",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -11,23 +11,24 @@
     "lint:fix": "eslint src --fix --ext .js,.ts",
     "test": "jest --config jest.config.js",
     "publish": "npm publish",
-    "demo": "node ./demo/test-insert.js"
+    "demo": "node ./demo/test-insert.js",
+    "generate-docs": "typedoc --out docs ./src"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DZuz14/typescript-npm-package-boilerplate.git"
+    "url": "git+https://github.com/elmarti/camadb"
   },
   "keywords": [
-    "boilerplate",
+    "camadb",
     "typescript",
-    "npm package boilerplate"
+    "embedded database"
   ],
-  "author": "Daniel Zuzevich",
+  "author": "elmarti",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DZuz14/typescript-npm-package-boilerplate/issues"
+    "url": "https://github.com/elmarti/camadb/issues"
   },
-  "homepage": "https://github.com/DZuz14/typescript-npm-package-boilerplate#readme",
+  "homepage": "https://www.camadb.com",
   "devDependencies": {
     "@types/jest": "^26.0.15",
     "@types/uuid": "^8.3.1",
@@ -38,6 +39,7 @@
     "jest": "^26.6.0",
     "prettier": "^2.3.0",
     "ts-jest": "^26.4.1",
+    "typedoc": "^0.22.5",
     "typescript": "^4.0.3"
   },
   "files": [

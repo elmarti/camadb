@@ -1,17 +1,15 @@
 import { inject, injectable } from 'inversify';
-import { IPaging } from '../../../interfaces/paging.interface';
-import { IPagingAllocation } from '../../../interfaces/paging-allocation.interface';
-import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { IMetaStructure } from '../../../interfaces/meta-structure.interface';
 import { TYPES } from '../../../types';
 import { IFS } from '../../../interfaces/fs.interface';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
-import { IPage } from '../../../interfaces/page.interface';
 import { IPagingMap } from '../../../interfaces/paging-map.interface';
 import PQueue from 'p-queue';
 import { batchArray } from '../../../util/batch-array';
+import { IPaging } from '../../../interfaces/paging.interface';
+import { IPagingAllocation } from '../../../interfaces/paging-allocation.interface';
+import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
 
 @injectable()
 export class FsPaging<T> implements IPaging<T> {
@@ -26,6 +24,14 @@ export class FsPaging<T> implements IPaging<T> {
   private allocation?: Array<IPagingAllocation<T>>;
   private collectionFolder?: string;
   constructor(@inject(TYPES.FS) private fs: IFS, @inject(TYPES.CamaConfig) private config: ICamaConfig) {}
+
+  /**
+   * Initialise the pager
+   * @private
+   * @remarks Internal method - don't call it
+   * @param collectionName - The name of the collection
+   * @param config - The collection config
+   */
   async init(collectionName: string, config: ICollectionConfig): Promise<void> {
     this.dbPath = path.join(process.cwd(), './.cama');
     this.fileName = `paging.json`;
@@ -40,6 +46,10 @@ export class FsPaging<T> implements IPaging<T> {
     return this.fs.writeJSON<any>(this.collectionFolder, this.fileName, { freePages: [] });
   }
 
+  /**
+   * construct an allocation plan for the pages
+   * @param rows - The rows to be allocated
+   */
   async allocate(rows: Array<T>): Promise<Array<IPagingAllocation<T>>> {
     const rowCopy = [...rows];
     const allocation: Array<IPagingAllocation<T>> = [];
@@ -85,6 +95,10 @@ export class FsPaging<T> implements IPaging<T> {
     this.allocation = allocation;
     return allocation;
   }
+
+  /**
+   * Overwrite the paging file with the in-memory dataset
+   */
   async commit(): Promise<void> {
     console.log('calling with dbPath commit', this.dbPath);
     await this.fs.writeJSON<IPagingMap>(this.collectionFolder ||"", this.fileName, this.paging);

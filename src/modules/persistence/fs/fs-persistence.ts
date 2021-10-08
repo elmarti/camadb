@@ -9,25 +9,38 @@ import { IPagingAllocation } from '../../../interfaces/paging-allocation.interfa
 import { IFS } from '../../../interfaces/fs.interface';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 import * as path from 'path';
-import { ISerializer } from '../../../interfaces/serializer.interface';
 
 @injectable()
 export default class FSPersistence implements IPersistenceAdapter {
   queue = new PQueue({ concurrency: 50 });
   private collectionName = '';
+  private cache: Array<any> | null = null;
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
     @inject(TYPES.CollectionMeta) private collectionMeta: ICollectionMeta,
     @inject(TYPES.Paging) private paging: IPaging<any>,
     @inject(TYPES.FS) private fs: IFS,
   ) {}
+
+  /**
+   * Initialise the persistence adapter
+   * @private
+   * @remarks Internal method - don't call it
+   * @param name - The name of the collection
+   * @param config - The collection config
+   */
   async initCollection(name: string, config: ICollectionConfig): Promise<void> {
     this.collectionName = name;
     await this.collectionMeta.init(name, config);
     await this.paging.init(name, config);
   }
 
+  /**
+   * Insert rows into pages via the persistence adapter
+   * @param rows - The rows to be inserted
+   */
   async insert<T>(rows: Array<any>): Promise<any> {
+    this.cache = null;
     return this.queue.add(async () => {
       const allocations = await this.paging.allocate(rows);
       const outputPath = path.join(process.cwd(), this.config.path);
@@ -36,6 +49,10 @@ export default class FSPersistence implements IPersistenceAdapter {
       await this.paging.commit();
     });
   }
+
+  /**
+   * Load the data from either the cache or the pages
+   */
   async getData<T>(): Promise<Array<T>> {
     const outputPath = path.join(process.cwd(), this.config.path, this.collectionName);
     console.log('loading files', outputPath);
@@ -43,6 +60,9 @@ export default class FSPersistence implements IPersistenceAdapter {
     const files = await this.fs.readDir(outputPath);
     const promises = [];
     const data: Array<T> = [];
+    if(this.cache){
+      return this.cache;
+    }
     for (const file of files) {
       console.log(file, ['meta.json', 'paging.json'].indexOf(file))
       if(['meta.json', 'paging.json'].indexOf(file) !== -1){
@@ -57,7 +77,7 @@ export default class FSPersistence implements IPersistenceAdapter {
     }
     await Promise.all(promises);
     console.timeEnd('files loaded');
-
+    this.cache = data;
     return data;
   }
 }

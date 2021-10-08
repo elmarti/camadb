@@ -11,6 +11,12 @@ import { IQueryOptions } from '../../interfaces/query-options.interface';
 export class QueryService<T> implements IQueryService<T>{
   constructor(@inject(TYPES.PersistenceAdapter) private persistenceAdapter: IPersistenceAdapter) {
   }
+
+  /**
+   * Handle filtering of queries
+   * @param query - The query to be applied to the dataset
+   * @param options - Options for further data manipulation
+   */
   async filter(query: any = {}, options: IQueryOptions = {}): Promise<T> {
     let data = await this.persistenceAdapter.getData();
 
