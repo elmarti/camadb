@@ -8,4 +8,6 @@ export interface IPaging<T> {
   commit(): Promise<void>;
 
   init(collectionName: string, config: ICollectionConfig): Promise<void>;
+
+  rewrite(data: any):Promise<void> ;
 }

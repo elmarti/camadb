@@ -2,6 +2,9 @@ import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.int
 import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
 
 export default class IndexedDbPersistence implements IPersistenceAdapter{
+  update(indexes: void, delta: any): Promise<void> {
+    return Promise.resolve(undefined);
+  }
   getData(): Promise<any> {
     return Promise.resolve(undefined);
   }

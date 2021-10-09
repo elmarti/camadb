@@ -9,12 +9,15 @@ import { IPagingAllocation } from '../../../interfaces/paging-allocation.interfa
 import { IFS } from '../../../interfaces/fs.interface';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 import * as path from 'path';
+import sift from 'sift';
+const obop = require('obop')();
 
 @injectable()
 export default class FSPersistence implements IPersistenceAdapter {
+
   queue = new PQueue({ concurrency: 50 });
   private collectionName = '';
-  private cache: Array<any> | null = null;
+  private cache: any = null;
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
     @inject(TYPES.CollectionMeta) private collectionMeta: ICollectionMeta,
@@ -53,13 +56,13 @@ export default class FSPersistence implements IPersistenceAdapter {
   /**
    * Load the data from either the cache or the pages
    */
-  async getData<T>(): Promise<Array<T>> {
+  async getData<T>(): Promise<any> {
     const outputPath = path.join(process.cwd(), this.config.path, this.collectionName);
     console.log('loading files', outputPath);
     console.time('files loaded');
     const files = await this.fs.readDir(outputPath);
     const promises = [];
-    const data: Array<T> = [];
+    const data: any = {  };
     if(this.cache){
       return this.cache;
     }
@@ -69,10 +72,11 @@ export default class FSPersistence implements IPersistenceAdapter {
         console.log('continuing')
         continue;
       }
+
       promises.push(this.queue.add(() => (async (file) => {
         const filePath =  path.join(outputPath, file);
         const page = await this.fs.loadPage(filePath);
-        data.push(...page);
+        data[file] = page;
       })(file)));
     }
     await Promise.all(promises);
@@ -80,4 +84,23 @@ export default class FSPersistence implements IPersistenceAdapter {
     this.cache = data;
     return data;
   }
+  async update(query: any, delta: any): Promise<void> {
+    const data = await this.getData();
+    const promises = [];
+    for (const page in  data){
+      const updated = data[page].filter(sift(query));
+      if(updated.length > 0) {
+        obop.update(updated, delta);
+        promises.push(
+          this.queue.add(async () => {
+            await this.fs.writePage(page, this.config.path, this.collectionName, data[page]);
+          })
+        );
+      }
+
+    }
+    await Promise.all(promises);
+  }
+
+
 }

@@ -10,6 +10,7 @@ import { ISerializer } from '../../../interfaces/serializer.interface';
 @injectable()
 export class Fs implements IFS {
 
+
   queue = new PQueue({ concurrency: 50 });
 
   constructor(@inject(TYPES.Serializer) private serializer: ISerializer) {}
@@ -54,6 +55,7 @@ export class Fs implements IFS {
     const data = (await nodeFs.readFile(filePath)).toString();
     return JSON.parse(data);
   }
+
 
   /**
    * Write a collection to pages
@@ -149,6 +151,13 @@ export class Fs implements IFS {
 
 
   }
+
+  async writePage(page:string, camaFolder: string, camaCollection: string, data: any): Promise<void> {
+    const output = path.join(camaFolder, camaCollection, page);
+    const serialized = this.serializer.serialize(data);
+    await nodeFs.writeFile(output, serialized);
+  }
+
 
 
 }
