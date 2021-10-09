@@ -8,12 +8,17 @@ import { sort } from 'fast-sort';
 import { IQueryOptions } from '../../interfaces/query-options.interface';
 import { ILogger } from '../../interfaces/logger.interface';
 import { IFilterResult } from '../../interfaces/filter-result.interface';
+import { ICamaConfig } from '../../interfaces/cama-config.interface';
+import { ICollectionMeta } from '../../interfaces/collection-meta.interface';
 
 @injectable()
 export class QueryService<T> implements IQueryService<T>{
-
-  constructor(@inject(TYPES.PersistenceAdapter) private persistenceAdapter: IPersistenceAdapter,
+  private dateColumns = [];
+  constructor(
+    @inject(TYPES.CollectionMeta) private collectionMeta: ICollectionMeta,
+    @inject(TYPES.PersistenceAdapter) private persistenceAdapter: IPersistenceAdapter,
               @inject(TYPES.Logger) private logger:ILogger) {
+
   }
 
   /**
@@ -22,6 +27,21 @@ export class QueryService<T> implements IQueryService<T>{
    * @param options - Options for further data manipulation
    */
   async filter(query: any = {}, options: IQueryOptions = {}): Promise<IFilterResult<T>> {
+    const meta = await this.collectionMeta.get();
+    const dateColumns:any = [];
+    // @ts-ignore
+    if(meta.columns && meta.columns.length > 0){
+      console.log('meta columns')
+      // @ts-ignore
+      for(const col of meta.columns){
+        console.log(col, ['date', 'datetime'].indexOf(col.type));
+        if(['date', 'datetime'].indexOf(col.type) > -1){
+          console.log('setting date');
+          dateColumns.push(col.title);
+        }
+      }
+
+    }
     const filterResult:any = {
 
     };
@@ -43,7 +63,12 @@ export class QueryService<T> implements IQueryService<T>{
     }
     filterResult['count'] = data.length;
 
-    filterResult['rows'] = data;
+    filterResult['rows'] = data.map((row:any) => {
+      for(const dateColumn of dateColumns){
+        row[dateColumn] = new Date(row[dateColumn]);
+      }
+      return row;
+    });
     return  filterResult;
   }
 

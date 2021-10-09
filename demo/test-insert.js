@@ -14,7 +14,10 @@ async function demo() {
   });
 
   const collection = await database.initCollection('test', {
-    columns: [],
+    columns: [{
+      type:'date',
+      title:'date'
+    }],
     indexes: [],
   });
 
@@ -92,7 +95,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
   const updated = await collection.findMany({
     _id: {$in:[3,2]},
   });
-  console.log({updated});
+  console.log(updated.rows);
 }
 console.time('demo');
 demo()
