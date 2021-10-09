@@ -51,6 +51,7 @@
     "dist/**/*"
   ],
   "dependencies": {
+    "@msgpack/msgpack": "^2.7.1",
     "fast-sort": "^3.0.3",
     "flatted": "^3.2.2",
     "inversify": "^5.1.1",
