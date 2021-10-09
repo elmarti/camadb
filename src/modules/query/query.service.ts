@@ -7,6 +7,7 @@ import { sort } from 'fast-sort';
 
 import { IQueryOptions } from '../../interfaces/query-options.interface';
 import { ILogger } from '../../interfaces/logger.interface';
+import { IFilterResult } from '../../interfaces/filter-result.interface';
 
 @injectable()
 export class QueryService<T> implements IQueryService<T>{
@@ -20,7 +21,10 @@ export class QueryService<T> implements IQueryService<T>{
    * @param query - The query to be applied to the dataset
    * @param options - Options for further data manipulation
    */
-  async filter(query: any = {}, options: IQueryOptions = {}): Promise<any> {
+  async filter(query: any = {}, options: IQueryOptions = {}): Promise<IFilterResult<T>> {
+    const filterResult:any = {
+
+    };
     const data = await this.persistenceAdapter.getData();
     let rows = [];
     for(const key in data){
@@ -30,6 +34,7 @@ export class QueryService<T> implements IQueryService<T>{
       console.log({query});
       rows = rows.filter(sift(query));
     }
+    filterResult['totalCount'] = rows.length;
     if(options.sort){
       rows = sort(rows).by(options.sort)
     }
@@ -39,10 +44,13 @@ export class QueryService<T> implements IQueryService<T>{
     if(options.limit){
       rows = rows.slice(0, options.limit);
     }
-    return rows.map((d:any) => {
+    filterResult['count'] = rows.length;
+
+    filterResult['rows'] = rows.map((d:any) => {
       delete d.$$camaMeta;
       return d;
     });
+    return  filterResult;
   }
   async retrieveIndexes(query: any): Promise<any> {
     const data = await this.persistenceAdapter.getData();

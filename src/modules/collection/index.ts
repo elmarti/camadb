@@ -7,6 +7,7 @@ import { IQueryService } from '../../interfaces/query-service.interface';
 import { IQueryOptions } from '../../interfaces/query-options.interface';
 import { ILogger } from '../../interfaces/logger.interface';
 import { LogLevel } from '../../interfaces/logger-level.enum';
+import { IFilterResult } from '../../interfaces/filter-result.interface';
 
 @injectable()
 export class Collection  implements ICollection   {
@@ -72,7 +73,7 @@ export class Collection  implements ICollection   {
    * @param query - Query Object
    * @param options - Query options
    */
-  async findMany<T>(query: any, options:IQueryOptions): Promise<Array<T>> {
+  async findMany<T>(query: any, options:IQueryOptions): Promise<IFilterResult<T>> {
     this.logger.log(LogLevel.Debug, 'Finding many');
     const pointer = this.logger.startTimer();
     const result = await this.queryService.filter(query, options);

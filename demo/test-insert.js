@@ -1,3 +1,4 @@
+
 require('reflect-metadata');
 const { Cama } = require('../dist');
 const fs = require('fs');
@@ -10,6 +11,7 @@ async function demo() {
     path: './.cama',
     pageLength: 10000,
     persistenceAdapter: 'fs',
+    logLevel: 'debug'
   });
 
   const collection = await database.initCollection('test', {
@@ -22,6 +24,7 @@ async function demo() {
   for (let i = 0, ii = 100000; i < ii; i++) {
     dummyData.push({
       _id: i,
+      date: new Date(),
       name: 'Dummy field',
       description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fermentum dolor enim. Nullam mattis dolor faucibus mauris accumsan ultrices. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam erat volutpat. Nullam accumsan nisl ut nulla semper luctus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur justo lorem, laoreet nec convallis ac, varius non nisl. Phasellus iaculis consequat tellus, id venenatis diam euismod efficitur. Nulla ac tellus vitae augue pharetra convallis. Proin volutpat quam elit, id tristique neque interdum id. Aliquam enim magna, pretium ac purus et, hendrerit semper nunc.
 
@@ -88,6 +91,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
   const updated = await collection.findMany({
     _id: {$in:[3,2]},
   });
+  console.log({updated});
 }
 console.time('demo');
 demo()

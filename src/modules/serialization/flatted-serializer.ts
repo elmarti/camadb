@@ -1,17 +1,27 @@
 import { ISerializer } from '../../interfaces/serializer.interface';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
+import { TYPES } from '../../types';
+import { ILogger } from '../../interfaces/logger.interface';
+import { LogLevel } from '../../interfaces/logger-level.enum';
+
 const {parse, stringify} = require('flatted');
 
 @injectable()
 export class FlattedSerializer implements ISerializer {
-
+  constructor(@inject(TYPES.Logger) private logger:ILogger) {
+  }
   deserialize(payload: any): any {
-    const result = parse(payload);
+    const pointer = this.logger.startTimer();
+    const result = JSON.parse(payload);
+    this.logger.endTimer(LogLevel.Perf, pointer, 'deserialize')
     return result;
   }
 
   serialize(payload: any): any {
-    const result = stringify(payload);
+    const pointer = this.logger.startTimer();
+    const result = JSON.stringify(payload);
+    this.logger.endTimer(LogLevel.Perf, pointer, 'serialize')
+
     return result;
   }
 
