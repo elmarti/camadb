@@ -37,8 +37,12 @@ export default class FSPersistence implements IPersistenceAdapter {
    */
   async initCollection(name: string, config: ICollectionConfig): Promise<void> {
     this.collectionName = name;
+    console.log('initting collection');
     await this.collectionMeta.init(name, config);
+    console.log('meta initialised');
     await this.paging.init(name, config);
+    console.log('paging initialised');
+
   }
 
   /**
@@ -48,9 +52,13 @@ export default class FSPersistence implements IPersistenceAdapter {
   async insert<T>(rows: Array<any>): Promise<any> {
     this.cache = null;
     return this.queue.add(async () => {
+      console.log('allocating');
       const allocations = await this.paging.allocate(rows);
+      console.log('allocated');
       const outputPath = path.join(process.cwd(), this.config.path);
+      console.log(outputPath, this.collectionName, allocations)
       const filePaths = await this.fs.writePages(outputPath, this.collectionName, allocations);
+      console.log({filePaths})
       await this.fs.commitPages(filePaths);
       await this.paging.commit();
     });

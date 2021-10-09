@@ -18,6 +18,10 @@ async function demo() {
     columns: [],
     indexes: [],
   });
+  const collection2 = await database.initCollection('test2', {
+    columns: [],
+    indexes: [],
+  });
   console.log('generating dummy data');
   console.time('dummy data generated');
   const dummyData = [];
@@ -52,8 +56,11 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
 
 `,
   });
-
+  console.log('insert col1');
   await collection.insertMany(dummyData);
+  console.log('insert col2');
+
+  await collection2.insertMany(dummyData);
   const findResult = await collection.findMany({
     _id: {
       $gte: 50000,

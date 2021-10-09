@@ -62,6 +62,7 @@ export class WinstonLogger implements ILogger {
     }
   }
   log(level: LogLevel, message:any): void {
+    console.log('prelog', level, message);
     if(this.logger){
       this.logger.log({
         level,

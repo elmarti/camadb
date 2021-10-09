@@ -34,7 +34,7 @@ export class Fs implements IFS {
     this.logger.log(LogLevel.Debug, 'Checking if cama folder exists');
     if (!(await this.exists(camaFolder))) {
       this.logger.log(LogLevel.Debug, 'Creating cama folder');
-      await nodeFs.mkdir(camaFolder);
+      await this.mkdir(camaFolder);
     }
     const filePath = path.join(camaFolder, fileName);
     this.logger.log(LogLevel.Debug, 'Writing to temp file');
@@ -80,7 +80,7 @@ export class Fs implements IFS {
     allocations: Array<IPagingAllocation<T>>,
   ): Promise<Array<string>> {
     const filePaths: Array<string> = [];
-    this.logger.log(LogLevel.Debug, `writing ${allocations.length} allocations`);
+    this.logger.log(LogLevel.Debug, `writing ${allocations.length} allocations ` + collectionName);
     const promises = [];
     for await (const allocation of allocations) {
       this.logger.log(LogLevel.Debug, 'adding allocation to queue: '+allocation.pageKey);
@@ -147,8 +147,8 @@ export class Fs implements IFS {
    * Create a directory
    * @param path - The location of the new directory
    */
-  mkdir(path: string): Promise<void> {
-    return nodeFs.mkdir(path);
+  async mkdir(path: string): Promise<void> {
+    await nodeFs.mkdir(path, {recursive:true});
   }
 
   /**
