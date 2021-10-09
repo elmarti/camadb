@@ -11,6 +11,7 @@ const {parse, stringify} = require('flatted');
 export class FlattedSerializer implements ISerializer {
   constructor(@inject(TYPES.Logger) private logger:ILogger) {
   }
+
   deserialize(payload: any): any {
     const pointer = this.logger.startTimer();
     const result = decode(payload);
