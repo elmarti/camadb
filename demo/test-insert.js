@@ -88,6 +88,28 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
     });
   console.log('result', cachedFindResult.length);
   console.timeEnd('cached find');
+  console.log('find updateable');
+  console.time('find updateable');
+  const updateable = await collection.findMany({
+      _id: 3,
+    });
+  console.timeEnd('find updateable');
+
+  console.log({updateable});
+  console.time('updated');
+  await collection.updateMany({
+    _id:3
+  }, {
+    $set: {
+      steve:"steve"
+    }
+  });
+  console.timeEnd('updated');
+
+  const updated = await collection.findMany({
+    _id: {$in:[3,2]},
+  });
+  console.log({updated});
 }
 console.time('demo');
 demo()

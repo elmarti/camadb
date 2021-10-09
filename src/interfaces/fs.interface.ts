@@ -11,5 +11,7 @@ export interface IFS {
   mkdir(path: string):Promise<void>;
   readDir(path:string): Promise<any>;
 
-  loadPage(file: string):Promise<any> ;
+  loadPage(file: string):Promise<any>;
+
+  writePage(page:string, camaFolder:string, camaCollection:string, data: any):Promise<void>;
 }

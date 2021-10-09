@@ -13,6 +13,7 @@ import { ICollectionConfig } from '../../../interfaces/collection-config.interfa
 
 @injectable()
 export class FsPaging<T> implements IPaging<T> {
+
   queue = new PQueue({ concurrency: 1 });
 
   private dbPath: any;
@@ -102,5 +103,13 @@ export class FsPaging<T> implements IPaging<T> {
   async commit(): Promise<void> {
     console.log('calling with dbPath commit', this.dbPath);
     await this.fs.writeJSON<IPagingMap>(this.collectionFolder ||"", this.fileName, this.paging);
+  }
+
+  /**
+   * rewrite pages with new data
+   * @param data
+   */
+  async rewrite(data: any): Promise<void> {
+    return Promise.resolve(undefined);
   }
 }

@@ -63,4 +63,16 @@ export class Collection  implements ICollection   {
     return await this.queryService.filter(query, options);
   }
 
+  /**
+   * Update all matched rows
+   * @param query
+   * @param delta
+   */
+  async updateMany<T>(query: any, delta?: any): Promise<void> {
+    const indexes = await this.queryService.retrieveIndexes(query);
+    console.log({indexes})
+    await this.persistenceAdapter.update(query, delta)
+  }
+
+
 }
