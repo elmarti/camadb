@@ -11,6 +11,8 @@ import SerializationModule from  './modules/serialization';
 import QueryModule from  './modules/query';
 
 import 'reflect-metadata';
+import { WinstonLogger } from './modules/logger/winston';
+import { ILogger } from './interfaces/logger.interface';
 
 
 export class Cama implements ICama {
@@ -25,6 +27,7 @@ export class Cama implements ICama {
     this.container.load(persistenceModule);
     this.container.load(SerializationModule);
     this.container.load(QueryModule);
+    this.container.bind<ILogger>(TYPES.Logger).to(WinstonLogger).inSingletonScope();
     this.container.bind<ICollection>(TYPES.Collection).to(Collection).inRequestScope();
     this.container.bind<ICamaConfig>(TYPES.CamaConfig).toConstantValue(camaConfig);
 

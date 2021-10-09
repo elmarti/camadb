@@ -6,11 +6,13 @@ import sift from "sift";
 import { sort } from 'fast-sort';
 
 import { IQueryOptions } from '../../interfaces/query-options.interface';
+import { ILogger } from '../../interfaces/logger.interface';
 
 @injectable()
 export class QueryService<T> implements IQueryService<T>{
 
-  constructor(@inject(TYPES.PersistenceAdapter) private persistenceAdapter: IPersistenceAdapter) {
+  constructor(@inject(TYPES.PersistenceAdapter) private persistenceAdapter: IPersistenceAdapter,
+              @inject(TYPES.Logger) private logger:ILogger) {
   }
 
   /**

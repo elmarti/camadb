@@ -7,6 +7,8 @@ import { ICollectionMeta } from '../../../interfaces/collection-meta.interface';
 import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 import { IMetaStructure } from '../../../interfaces/meta-structure.interface';
+import { ILogger } from '../../../interfaces/logger.interface';
+import { LogLevel } from '../../../interfaces/logger-level.enum';
 
 @injectable()
 export class CollectionMeta implements ICollectionMeta {
@@ -16,7 +18,8 @@ export class CollectionMeta implements ICollectionMeta {
   private fileName?: string;
   private collectionName?: string;
   private camaPath?: string;
-  constructor(@inject(TYPES.FS) private fs: IFS, @inject(TYPES.CamaConfig) private config: ICamaConfig) {}
+  constructor(@inject(TYPES.FS) private fs: IFS, @inject(TYPES.CamaConfig) private config: ICamaConfig,
+              @inject(TYPES.Logger) private logger:ILogger) {}
 
   /**
    * Initialise the collection meta
@@ -30,19 +33,27 @@ export class CollectionMeta implements ICollectionMeta {
     this.dbPath = path.join(this.camaPath, collectionName);
     this.fileName = `meta.json`;
     this.collectionName = collectionName;
+    this.logger.log(LogLevel.Info, 'Ensuring cama folder exists: ' + this.camaPath);
     if ((!await this.fs.exists(this.camaPath))) {
+      this.logger.log(LogLevel.Info, "Doesn't exist, creating: " + this.camaPath);
+
       await this.fs.mkdir(path.join(this.camaPath));
     }
+    this.logger.log(LogLevel.Info, 'Checking if folder exists for collection' + this.fileName);
+
     if (await this.fs.exists(path.join(this.dbPath, this.fileName))) {
+      this.logger.log(LogLevel.Info, 'Already exists');
       return;
     }
+    this.logger.log(LogLevel.Info, 'Does not exist, creating' + this.fileName);
 
     await this.fs.mkdir(path.join(this.dbPath));
     this.meta = {
       ...config,
       collectionName,
     };
-    console.log('calling with dbPath collcetion meta init', this.dbPath);
+    this.logger.log(LogLevel.Info, 'Writing meta file');
+
     return this.fs.writeJSON<IMetaStructure>(this.dbPath, this.fileName, this.meta);
   }
 
@@ -52,11 +63,14 @@ export class CollectionMeta implements ICollectionMeta {
    * @param metaStructure - the value to be to be applied to the meta
    */
   async update(collectionName: string, metaStructure: IMetaStructure): Promise<void> {
+
+    this.logger.log(LogLevel.Info, 'Updating meta file');
+
     const dbPath = this.config.path || path.join(process.cwd(), './.cama', collectionName);
     this.meta = metaStructure;
     await this.queue.add(() => {
       this.meta = Object.assign({}, this.meta, metaStructure);
-      console.log('calling with dbPath collection meta update', dbPath);
+      this.logger.log(LogLevel.Info, 'Writing meta file');
       return this.fs.writeJSON<IMetaStructure>(dbPath, 'meta.json', this.meta);
     });
   }
@@ -65,6 +79,7 @@ export class CollectionMeta implements ICollectionMeta {
    * Gets the in-memory meta value
    */
   async get(): Promise<IMetaStructure|undefined> {
+    this.logger.log(LogLevel.Info, 'Getting data from cache');
     return this.meta;
   }
 }
