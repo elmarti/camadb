@@ -5,6 +5,8 @@ import { TYPES } from '../../types';
 import { IPersistenceAdapter } from '../../interfaces/persistence-adapter.interface';
 import { IQueryService } from '../../interfaces/query-service.interface';
 import { IQueryOptions } from '../../interfaces/query-options.interface';
+import { ILogger } from '../../interfaces/logger.interface';
+import { LogLevel } from '../../interfaces/logger-level.enum';
 
 @injectable()
 export class Collection  implements ICollection   {
@@ -14,7 +16,8 @@ export class Collection  implements ICollection   {
   private name?: string;
   constructor(
     @inject(TYPES.PersistenceAdapter) private persistenceAdapter: IPersistenceAdapter,
-    @inject(TYPES.QueryService) private queryService: IQueryService<any>) {
+    @inject(TYPES.QueryService) private queryService: IQueryService<any>,
+    @inject(TYPES.Logger) private logger:ILogger) {
   }
 
   /**
@@ -26,9 +29,13 @@ export class Collection  implements ICollection   {
    * @param config - The collection config
    */
   async init(name: string, config: ICollectionConfig): Promise<void> {
+    this.logger.log(LogLevel.Debug, 'Initializing collection');
     this.name = name;
     this.config = config;
+    this.logger.log(LogLevel.Debug, 'Initializing persistence adapter');
+    const pointer = this.logger.startTimer();
     await this.persistenceAdapter.initCollection(name, config);
+    this.logger.endTimer(LogLevel.Perf, pointer, "init collection");
   }
 
   /**
@@ -36,7 +43,10 @@ export class Collection  implements ICollection   {
    * @param rows - The values to be inserted
    */
   async insertMany(rows:Array<any>):Promise<void> {
-    return this.persistenceAdapter.insert(rows);
+    this.logger.log(LogLevel.Debug, 'Inserting many');
+    const pointer = this.logger.startTimer();
+    await this.persistenceAdapter.insert(rows);
+    this.logger.endTimer(LogLevel.Perf, pointer, "insert  rows");
   }
 
   /**
@@ -47,7 +57,10 @@ export class Collection  implements ICollection   {
    * @param row
    */
   async insertOne(row: any):Promise<void> {
-    return this.persistenceAdapter.insert([row]);
+    this.logger.log(LogLevel.Debug, 'Inserting many');
+    const pointer = this.logger.startTimer();
+    await this.persistenceAdapter.insert([row]);
+    this.logger.endTimer(LogLevel.Perf, pointer, "insert row");
   }
 
   /**
@@ -60,7 +73,12 @@ export class Collection  implements ICollection   {
    * @param options - Query options
    */
   async findMany<T>(query: any, options:IQueryOptions): Promise<Array<T>> {
-    return await this.queryService.filter(query, options);
+    this.logger.log(LogLevel.Debug, 'Finding many');
+    const pointer = this.logger.startTimer();
+    const result = await this.queryService.filter(query, options);
+    this.logger.endTimer(LogLevel.Perf, pointer, "find many");
+    return result;
+
   }
 
   /**
@@ -69,9 +87,12 @@ export class Collection  implements ICollection   {
    * @param delta
    */
   async updateMany<T>(query: any, delta?: any): Promise<void> {
-    const indexes = await this.queryService.retrieveIndexes(query);
-    console.log({indexes})
-    await this.persistenceAdapter.update(query, delta)
+    this.logger.log(LogLevel.Debug, 'Updating many');
+    const pointer = this.logger.startTimer();
+
+    await this.persistenceAdapter.update(query, delta);
+    this.logger.endTimer(LogLevel.Perf, pointer, "Updating many");
+
   }
 
 

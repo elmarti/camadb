@@ -9,7 +9,8 @@ const TYPES = {
   CamaConfig: Symbol.for("CamaConfig"),
   Paging: Symbol.for("Paging"),
   Serializer: Symbol.for("Serializer"),
-  QueryService: Symbol.for("QueryService")
+  QueryService: Symbol.for("QueryService"),
+  Logger: Symbol.for("Logger")
 
 };
 

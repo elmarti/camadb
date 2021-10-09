@@ -58,6 +58,7 @@
     "p-queue": "6.6.2",
     "reflect-metadata": "^0.1.13",
     "sift": "^15.0.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "winston": "^3.3.3"
   }
 }

@@ -5,21 +5,17 @@ async function demo() {
   fs.rmdirSync('./.cama', {
     recursive: true
   });
-  console.info('creating database');
-  console.time('Database created');
+
   const database = new Cama({
     path: './.cama',
     pageLength: 10000,
     persistenceAdapter: 'fs',
   });
-  console.timeEnd('Database created');
-  console.log('initializing collection');
-  console.time('collection initialized');
+
   const collection = await database.initCollection('test', {
     columns: [],
     indexes: [],
   });
-  console.timeEnd('collection initialized');
   console.log('generating dummy data');
   console.time('dummy data generated');
   const dummyData = [];
@@ -39,8 +35,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
     });
   }
   console.timeEnd('dummy data generated');
-  console.log(`Inserting 1 dummy row`);
-  console.time('1 inserted');
+
   await collection.insertOne({
     _id: 'test',
     name: 'Dummy field',
@@ -54,12 +49,8 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
 
 `,
   });
-  console.timeEnd(`1 inserted`);
-  console.log(`Inserting ${dummyData.length} rows`);
-  console.time('insert complete');
+
   await collection.insertMany(dummyData);
-  console.timeEnd('insert complete');
-  console.time('uncached find');
   const findResult = await collection.findMany({
     _id: {
       $gte: 50000,
@@ -72,9 +63,6 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
       offset: 100,
       limit: 100
     });
-  console.log('result', findResult.length);
-  console.timeEnd('uncached find');
-  console.time('cached find');
   const cachedFindResult = await collection.findMany({
       _id: {
         $gte: 50000,
@@ -86,17 +74,9 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
       },
 
     });
-  console.log('result', cachedFindResult.length);
-  console.timeEnd('cached find');
-  console.log('find updateable');
-  console.time('find updateable');
   const updateable = await collection.findMany({
       _id: 3,
     });
-  console.timeEnd('find updateable');
-
-  console.log({updateable});
-  console.time('updated');
   await collection.updateMany({
     _id:3
   }, {
@@ -104,12 +84,10 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
       steve:"steve"
     }
   });
-  console.timeEnd('updated');
 
   const updated = await collection.findMany({
     _id: {$in:[3,2]},
   });
-  console.log({updated});
 }
 console.time('demo');
 demo()
