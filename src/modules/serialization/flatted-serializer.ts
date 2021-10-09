@@ -12,14 +12,14 @@ export class FlattedSerializer implements ISerializer {
   }
   deserialize(payload: any): any {
     const pointer = this.logger.startTimer();
-    const result = JSON.parse(payload);
+    const result = parse(payload);
     this.logger.endTimer(LogLevel.Perf, pointer, 'deserialize')
     return result;
   }
 
   serialize(payload: any): any {
     const pointer = this.logger.startTimer();
-    const result = JSON.stringify(payload);
+    const result = stringify(payload);
     this.logger.endTimer(LogLevel.Perf, pointer, 'serialize')
 
     return result;
