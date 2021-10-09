@@ -67,6 +67,7 @@ export class QueryService<T> implements IQueryService<T>{
       for(const dateColumn of dateColumns){
         row[dateColumn] = new Date(row[dateColumn]);
       }
+
       return row;
     });
     return  filterResult;
