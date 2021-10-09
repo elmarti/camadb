@@ -11,7 +11,7 @@
     "lint:fix": "eslint src --fix --ext .js,.ts",
     "test": "jest --config jest.config.js",
     "publish": "npm publish",
-    "demo": "node ./demo/test-insert.js",
+    "demo": "yarn build && node ./demo/test-insert.js",
     "generate-docs": "typedoc --out docs ./src"
   },
   "repository": {

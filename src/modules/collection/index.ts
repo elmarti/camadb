@@ -34,9 +34,6 @@ export class Collection  implements ICollection   {
     collectionConfig: ICollectionConfig,
     camaConfig: ICamaConfig
     ) {
-    if(!camaConfig.pageLength){
-      camaConfig.pageLength = 10000;
-    }
     this.container = new Container();
     const persistenceModule = selectPersistenceAdapterClass(camaConfig.persistenceAdapter);
     this.container.load(persistenceModule);

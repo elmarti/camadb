@@ -1,7 +1,6 @@
 import { IFS } from '../../../interfaces/fs.interface';
 import { promises as nodeFs } from 'fs';
 import * as path from 'path';
-import { IPagingAllocation } from '../../../interfaces/paging-allocation.interface';
 import PQueue from 'p-queue';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
@@ -11,6 +10,7 @@ import { LogLevel } from '../../../interfaces/logger-level.enum';
 
 @injectable()
 export class Fs implements IFS {
+
 
 
   queue = new PQueue({ concurrency: 50 });
@@ -69,78 +69,14 @@ export class Fs implements IFS {
 
 
   /**
-   * Write a collection to pages
-   * @param camaFolder - The DB storage folder
-   * @param collectionName - The name of the collection
-   * @param allocations - The pages into which the rows will be allocated
-   */
-  async writePages<T>(
-    camaFolder: string,
-    collectionName: string,
-    allocations: Array<IPagingAllocation<T>>,
-  ): Promise<Array<string>> {
-    const filePaths: Array<string> = [];
-    this.logger.log(LogLevel.Debug, `writing ${allocations.length} allocations ` + collectionName);
-    const promises = [];
-    for await (const allocation of allocations) {
-      this.logger.log(LogLevel.Debug, 'adding allocation to queue: '+allocation.pageKey);
-
-      promises.push(this.queue.add(() =>(async (allocation) => {
-        const pageFile = path.join(camaFolder,collectionName, `${allocation.pageKey}`);
-        const tempPageFile = `${pageFile}~`;
-        filePaths.push(tempPageFile);
-        if (!allocation.new) {
-          this.logger.log(LogLevel.Debug, 'Handling old allocation');
-          this.logger.log(LogLevel.Debug, 'Copying page to temp file');
-          await nodeFs.copyFile(pageFile, tempPageFile);
-          this.logger.log(LogLevel.Debug, 'Reading copied field');
-          const content = await nodeFs.readFile(tempPageFile);
-          this.logger.log(LogLevel.Debug, 'Deserializing file');
-          const deserializationPointer = this.logger.startTimer();
-          const deserialized = this.serializer.deserialize(content);
-          this.logger.endTimer(LogLevel.Perf, deserializationPointer, 'deserialization');
-          this.logger.log(LogLevel.Debug, 'Adding new rows');
-          deserialized.push(...allocation.rows);
-          this.logger.log(LogLevel.Debug, 'Reserializing');
-          const reserializationPointer = this.logger.startTimer();
-          const serialized = this.serializer.serialize(deserialized);
-          this.logger.endTimer(LogLevel.Perf, reserializationPointer, 'reserialization');
-          this.logger.log(LogLevel.Debug, 'Writing to temp file');
-          return await nodeFs.writeFile(tempPageFile, serialized);
-        } else {
-          this.logger.log(LogLevel.Debug, 'Handling new allocation');
-          this.logger.log(LogLevel.Debug, 'Serializing allocation');
-          const serializationPointer = this.logger.startTimer();
-          const serialized = this.serializer.serialize(allocation.rows);
-          this.logger.endTimer(LogLevel.Perf, serializationPointer, 'serialization');
-          this.logger.log(LogLevel.Debug, 'Writing to file');
-
-          const writingPointer = this.logger.startTimer();
-          await nodeFs.writeFile(tempPageFile, serialized);
-          this.logger.endTimer(LogLevel.Perf, writingPointer, 'writing to file');
-        }
-
-      })(allocation) ));
-    }
-    await Promise.all(promises);
-    return filePaths;
-  }
-
-  /**
-   * Overwrite the main pages with the updated ones
+   * Overwrite the data with the updated dataset
    * @param filePaths
    */
-  async commitPages(filePaths: Array<string>): Promise<void> {
-    const promises = [];
-    this.logger.log(LogLevel.Debug, `committing ${filePaths.length} pages`);
-    this.logger.log(LogLevel.Debug, filePaths);
-
-    for await (const filePath of filePaths) {
-      promises.push(this.queue.add(async () => nodeFs.rename(filePath, filePath.replace('~', ''))));
-    }
-    console.time('rename');
-    await Promise.all(promises);
-    console.timeEnd('rename');
+  async commit(folderPath: string, collection:string): Promise<void> {
+    this.logger.log(LogLevel.Debug, `committing`);
+    this.logger.log(LogLevel.Debug, collection);
+    const outputPath = path.join(folderPath, `${collection}/data~`)
+    await this.queue.add(async () => nodeFs.rename(outputPath, outputPath.replace('~', '')))
   }
 
   /**
@@ -159,36 +95,18 @@ export class Fs implements IFS {
     return nodeFs.readdir(path);
   }
 
-  /**
-   * Load and deserialize a page
-   * @param file - the path of the file
-   */
-  async loadPage(file: string): Promise<any> {
-    try {
-      const data = await nodeFs.readFile(file);
-      try{
-        return this.serializer.deserialize(data);
-      }
-      catch (e){
-        console.log('serialiser fail')
-        console.error(e);
-        return [];
-      }
-    } catch (e) {
-      console.log('read fail')
-      console.error(e);
-      return [];
-    }
 
 
-  }
-
-  async writePage(page:string, camaFolder: string, camaCollection: string, data: any): Promise<void> {
-    const output = path.join(camaFolder, camaCollection, page);
+  async writeData(camaFolder: string, camaCollection: string, data: any): Promise<void> {
+    const output = path.join(camaFolder, camaCollection, 'data~');
+    console.log('writing temp file', output);
     const serialized = this.serializer.serialize(data);
     await nodeFs.writeFile(output, serialized);
   }
 
 
-
+  async readData<T>(path: string): Promise<T> {
+    const buffer = await nodeFs.readFile(path);
+    return this.serializer.deserialize(buffer);
+  }
 }

@@ -54,8 +54,10 @@ export class CollectionMeta implements ICollectionMeta {
       ...config,
       collectionName,
     };
+    console.log(this);
     this.logger.log(LogLevel.Info, 'Writing meta file');
-
+    await this.fs.writeData(this.camaPath, this.collectionName, []);
+    await this.fs.commit(this.camaPath, this.collectionName);
     return this.fs.writeJSON<IMetaStructure>(this.dbPath, this.fileName, this.meta);
   }
 
