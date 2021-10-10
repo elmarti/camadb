@@ -6,7 +6,7 @@ export interface IPersistenceAdapter {
   insert(ts: Array<any>): Promise<any>;
   getData():Promise<any>;
 
-  update(indexes: void, delta: any):Promise<void>;
+  update(updated:any):Promise<void>;
 
   destroy():Promise<void>;
 }

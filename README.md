@@ -34,9 +34,9 @@ npm install camadb --save
 
 ### Initializing the database
 All of these config options are optional:
-- `path` - Where you want the data to be stored - default is `./.cama`
+- `path` - Where you want the data to be stored - default is `./.cama` or `cama` for indexeddb
 - `persistenceAdapter` - How you want to persist your data - `fs` or `indexeddb`
-- `logLevel` - info, perf or debug
+- `logLevel` - info or debug
 ```
   import { Cama } from 'camadb'
   const database = new Cama({

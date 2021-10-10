@@ -11,9 +11,9 @@ import { IFilterResult } from '../../interfaces/filter-result.interface';
 import { selectPersistenceAdapterClass } from '../persistence';
 import SerializationModule from '../serialization';
 import QueryModule from '../query';
-import { WinstonLogger } from '../logger/winston';
 import { ICamaConfig } from '../../interfaces/cama-config.interface';
 import PQueue from 'p-queue';
+import { LoglevelLogger } from '../logger/loglevel';
 
 @injectable()
 export class Collection  implements ICollection   {
@@ -39,7 +39,7 @@ export class Collection  implements ICollection   {
     this.container.load(persistenceModule);
     this.container.load(SerializationModule);
     this.container.load(QueryModule);
-    this.container.bind<ILogger>(TYPES.Logger).to(WinstonLogger).inSingletonScope();
+    this.container.bind<ILogger>(TYPES.Logger).to(LoglevelLogger).inSingletonScope();
     this.container.bind<ICollection>(TYPES.Collection).to(Collection).inRequestScope();
     this.container.bind<ICamaConfig>(TYPES.CamaConfig).toConstantValue(camaConfig);
     this.logger = this.container.get<ILogger>(TYPES.Logger);
@@ -53,7 +53,7 @@ export class Collection  implements ICollection   {
       const pointer = this.logger.startTimer();
       console.log('initialising collection',  name,config);
       await this.persistenceAdapter.initCollection(name, config);
-      this.logger.endTimer(LogLevel.Perf, pointer, "init collection");
+      this.logger.endTimer(LogLevel.Debug, pointer, "init collection");
     })(collectionName, collectionConfig))
   }
 
@@ -69,7 +69,7 @@ export class Collection  implements ICollection   {
       const pointer = this.logger.startTimer();
       console.log('inserting')
       await this.persistenceAdapter.insert(rows);
-      this.logger.endTimer(LogLevel.Perf, pointer, "insert  rows");
+      this.logger.endTimer(LogLevel.Debug, pointer, "insert  rows");
     })(rows))
   }
 
@@ -85,7 +85,7 @@ export class Collection  implements ICollection   {
     this.logger.log(LogLevel.Debug, 'Inserting many');
     const pointer = this.logger.startTimer();
     await this.insertMany([row]);
-    this.logger.endTimer(LogLevel.Perf, pointer, "insert row");
+    this.logger.endTimer(LogLevel.Debug, pointer, "insert row");
   }
 
   /**
@@ -104,7 +104,7 @@ export class Collection  implements ICollection   {
     const result = await this.queue.add(() => (async (query, options) => {
       return await this.queryService.filter(query, options);
     })(query, options));
-    this.logger.endTimer(LogLevel.Perf, pointer, "find many");
+    this.logger.endTimer(LogLevel.Debug, pointer, "find many");
     return result;
 
   }
@@ -119,9 +119,9 @@ export class Collection  implements ICollection   {
     this.logger.log(LogLevel.Debug, 'Updating many');
     const pointer = this.logger.startTimer();
     await this.queue.add(() => (async (query, delta) => {
-      await this.persistenceAdapter.update(query, delta);
+      await this.queryService.update(query, delta);
     })(query, delta))
-    this.logger.endTimer(LogLevel.Perf, pointer, "Updating many");
+    this.logger.endTimer(LogLevel.Debug, pointer, "Updating many");
 
   }
 
