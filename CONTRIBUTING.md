@@ -1,0 +1,2 @@
+- Please use [gitmoji](https://gitmoji.dev/) commit formatted (for automated releases)
+- Please implement [typedocs](https://typedoc.org/guides/doccomments/) 
