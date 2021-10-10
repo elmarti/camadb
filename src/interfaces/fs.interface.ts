@@ -12,4 +12,6 @@ export interface IFS {
 
   writeData(camaFolder:string, camaCollection:string, data: any):Promise<void>;
   readData<T>(path:string): Promise<T>;
+
+  rmDir(outputPath: string, collectionName: string):Promise<void> ;
 }

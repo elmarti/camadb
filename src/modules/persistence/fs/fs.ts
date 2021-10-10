@@ -12,7 +12,6 @@ import { LogLevel } from '../../../interfaces/logger-level.enum';
 export class Fs implements IFS {
 
 
-
   queue = new PQueue({ concurrency: 50 });
 
   constructor(@inject(TYPES.Serializer) private serializer: ISerializer,
@@ -109,4 +108,18 @@ export class Fs implements IFS {
     const buffer = await nodeFs.readFile(path);
     return this.serializer.deserialize(buffer);
   }
+
+  /**
+   * Remove the collection dir
+   *
+   * @remarks This may need genericizing
+   * @param outputPath - The cama folder
+   * @param collectionName - The collection to be deleted
+   */
+  rmDir(outputPath: string, collectionName: string): Promise<void> {
+    const dirPath = path.join(outputPath, collectionName);
+    return nodeFs.rmdir(dirPath, {recursive:true});
+  }
+
+
 }

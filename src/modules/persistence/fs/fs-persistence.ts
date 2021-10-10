@@ -16,6 +16,7 @@ const obop = require('obop')();
 @injectable()
 export default class FSPersistence implements IPersistenceAdapter {
 
+
   queue = new PQueue({ concurrency: 1 });
   private collectionName = '';
   private cache: any = null;
@@ -120,5 +121,11 @@ export default class FSPersistence implements IPersistenceAdapter {
     }
   }
 
+  /**
+   * Destroy the collection within the persistence adapter
+   */
+  async destroy(): Promise<void> {
+    await this.fs.rmDir(this.outputPath, this.collectionName);
+  }
 
 }

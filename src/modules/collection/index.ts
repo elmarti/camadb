@@ -26,7 +26,7 @@ export class Collection  implements ICollection   {
   private persistenceAdapter: IPersistenceAdapter;
   private queryService: IQueryService<any>;
   private queue = new PQueue({ concurrency: 1 });
-
+  private destroyed = false;
 
 
   constructor(
@@ -63,6 +63,7 @@ export class Collection  implements ICollection   {
    * @param rows - The values to be inserted
    */
   async insertMany(rows:Array<any>):Promise<void> {
+    this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Inserting many');
     await this.queue.add(() => (async (rows) => {
       const pointer = this.logger.startTimer();
@@ -80,6 +81,7 @@ export class Collection  implements ICollection   {
    * @param row
    */
   async insertOne(row: any):Promise<void> {
+    this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Inserting many');
     const pointer = this.logger.startTimer();
     await this.insertMany([row]);
@@ -96,6 +98,7 @@ export class Collection  implements ICollection   {
    * @param options - Query options
    */
   async findMany<T>(query: any, options:IQueryOptions): Promise<IFilterResult<T>> {
+    this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Finding many');
     const pointer = this.logger.startTimer();
     const result = await this.queue.add(() => (async (query, options) => {
@@ -112,6 +115,7 @@ export class Collection  implements ICollection   {
    * @param delta
    */
   async updateMany<T>(query: any, delta?: any): Promise<void> {
+    this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Updating many');
     const pointer = this.logger.startTimer();
     await this.queue.add(() => (async (query, delta) => {
@@ -121,5 +125,19 @@ export class Collection  implements ICollection   {
 
   }
 
+  /**
+   * Destroy the collection
+   * @remarks After calling this, the collection instance becomes unusable
+   */
+  async destroy(): Promise<void> {
+    await this.persistenceAdapter.destroy();
+    this.destroyed = true;
+  }
+
+  private checkDestroyed(){
+    if(this.destroyed){
+      throw new Error('Collection has been destroyed. Call Cama.initCollection to recreate')
+    }
+  }
 
 }

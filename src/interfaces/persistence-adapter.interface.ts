@@ -8,4 +8,5 @@ export interface IPersistenceAdapter {
 
   update(indexes: void, delta: any):Promise<void>;
 
+  destroy():Promise<void>;
 }
