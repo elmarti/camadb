@@ -87,7 +87,15 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
   const updated = await collection.findMany({
     _id: {$in:[3,2]},
   });
-  console.log(updated.rows);
+  console.time('Aggregation');
+  const aggregationResult = await collection.aggregate([{
+    $match:{
+      _id:3
+    }
+  }]);
+  console.timeEnd('Aggregation');
+  console.log({aggregationResult})
+
 }
 console.time('demo');
 demo()

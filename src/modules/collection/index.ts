@@ -14,6 +14,8 @@ import QueryModule from '../query';
 import { ICamaConfig } from '../../interfaces/cama-config.interface';
 import PQueue from 'p-queue';
 import { LoglevelLogger } from '../logger/loglevel';
+import { IAggregator } from '../../interfaces/aggregator.interface';
+import { MingoAggregator } from './mingo-aggregator';
 
 @injectable()
 export class Collection  implements ICollection   {
@@ -27,6 +29,7 @@ export class Collection  implements ICollection   {
   private queryService: IQueryService<any>;
   private queue = new PQueue({ concurrency: 1 });
   private destroyed = false;
+  private aggregator: IAggregator;
 
 
   constructor(
@@ -40,11 +43,14 @@ export class Collection  implements ICollection   {
     this.container.load(SerializationModule);
     this.container.load(QueryModule);
     this.container.bind<ILogger>(TYPES.Logger).to(LoglevelLogger).inSingletonScope();
-    this.container.bind<ICollection>(TYPES.Collection).to(Collection).inRequestScope();
+    this.container.bind<IAggregator>(TYPES.Aggregator).to(MingoAggregator).inRequestScope();
+
     this.container.bind<ICamaConfig>(TYPES.CamaConfig).toConstantValue(camaConfig);
     this.logger = this.container.get<ILogger>(TYPES.Logger);
     this.persistenceAdapter = this.container.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
     this.queryService = this.container.get<IQueryService<any>>(TYPES.QueryService);
+    this.aggregator = this.container.get<IAggregator>(TYPES.Aggregator);
+
     this.logger.log(LogLevel.Debug, 'Initializing collection');
     this.name = collectionName;
     this.config = collectionConfig;
@@ -138,6 +144,14 @@ export class Collection  implements ICollection   {
     if(this.destroyed){
       throw new Error('Collection has been destroyed. Call Cama.initCollection to recreate')
     }
+  }
+
+  /**
+   * Perform MongoDB style aggregations
+   * @param pipeline
+   */
+  async aggregate(pipeline:Array<any>):Promise<any> {
+    return this.aggregator.aggregate(pipeline);
   }
 
 }
