@@ -25,21 +25,28 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
     this.db?.deleteObjectStore(this.storeName);
     this.destroyed = true;
   }
-  update(updated:any): Promise<void> {
-    return Promise.resolve(undefined);
+  async update(updated:any): Promise<void> {
+    this.checkDestroyed();
+    const tx = this.db?.transaction(this.storeName);
+    const store = tx?.objectStore(this.storeName) as any;
+    await store?.put('data', updated);
+    await tx?.done;
   }
   async getData(): Promise<any> {
+    this.checkDestroyed();
     if(this.cache){
       return this.cache
     }
-    this.cache = await this.db?.getAll(this.storeName);
+    const store = await this.db?.transaction(this.storeName).objectStore(this.storeName);
+    this.cache = await store?.get('data');
     return this.cache;
   }
   async insert(rows: Array<any>): Promise<any> {
+    this.checkDestroyed();
     await this.queue.add(async () => {
-      const tx = (this.db as any).transaction(this.storeName, 'readwrite');
-      await Promise.all([...rows.map(row => tx.store.add(row)),
-        tx.done]);
+      const data = await this.getData();
+      data.push(...rows);
+      await this.db?.put('data', data);
     });
 
   }
@@ -55,5 +62,9 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
       }
     );
   }
-
+  private checkDestroyed(){
+    if(this.destroyed){
+      throw new Error('Collection has been destroyed. Call Cama.initCollection to recreate')
+    }
+  }
 }

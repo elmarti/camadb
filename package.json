@@ -12,7 +12,8 @@
     "test": "jest --config jest.config.js",
     "publish": "npm publish",
     "demo": "yarn build && node ./demo/test-insert.js",
-    "generate-docs": "typedoc --out docs ./src"
+    "generate-docs": "typedoc --out docs ./src",
+    "browser-demo": "yarn link && cd demo/browser && yarn && yarn link camadb && yarn start"
   },
   "repository": {
     "type": "git",
