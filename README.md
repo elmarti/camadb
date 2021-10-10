@@ -19,7 +19,7 @@ I was struggling to find a solution for Electron-based projects that deal with l
 
 ## Current state
 This is still under active development and a few features are missing:
-- Indexes - We're find that this is fast even without these, but every little helps
+- Indexes - We're finding that this is fast even without these, but every little helps
 - Rich text search 
 
 ## Getting started
@@ -48,7 +48,7 @@ All of these config options are optional:
 ```
 
 ### Initializing a collection
-- Use the columns field to specific data types for rows. This does _need_ to be done for each column, but is essential for date queries
+- Use the columns field to add specific data types for rows. This does _need_ to be done for each column, but is essential for date objects
 - Indexes aren't currently implemented, but the lookup is still very fast across 10 million rows
 ```
  const collection = await database.initCollection('test', {
