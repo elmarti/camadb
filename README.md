@@ -106,3 +106,13 @@ Again we use a MongoDB style language for data updates, for this we use  [obop](
     }
   });
 ```
+
+### Aggregation
+We use [Mingo](https://github.com/kofrasa/mingo) for aggregation - currently lookup commands aren't supported.
+```
+ const aggregationResult = await collection.aggregate([{
+    $match:{
+      _id:3
+    }
+  }]);
+``` 
