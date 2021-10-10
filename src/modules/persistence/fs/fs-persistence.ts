@@ -42,8 +42,6 @@ export default class FSPersistence implements IPersistenceAdapter {
     console.log('initting collection');
     await this.collectionMeta.init(name, config);
     console.log('meta initialised');
-
-
   }
 
   /**

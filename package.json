@@ -53,6 +53,7 @@
   "dependencies": {
     "fast-sort": "^3.0.3",
     "flatted": "^3.2.2",
+    "idb": "^6.1.4",
     "inversify": "^5.1.1",
     "obop": "^0.2.1",
     "p-queue": "6.6.2",
