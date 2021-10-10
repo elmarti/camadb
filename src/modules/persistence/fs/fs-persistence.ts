@@ -11,7 +11,6 @@ import sift from 'sift';
 import { ILogger } from '../../../interfaces/logger.interface';
 import { LogLevel } from '../../../interfaces/logger-level.enum';
 
-const obop = require('obop')();
 
 @injectable()
 export default class FSPersistence implements IPersistenceAdapter {
@@ -100,23 +99,14 @@ export default class FSPersistence implements IPersistenceAdapter {
 
     return this.cache;
   }
-  async update(query: any, delta: any): Promise<void> {
-    const data = await this.getData();
-    const promises = [];
-    this.logger.log(LogLevel.Debug, "Iterating pages");
-    const siftPointer = this.logger.startTimer();
-    const updated = data.filter(sift(query));
-    this.logger.endTimer(LogLevel.Perf, siftPointer, 'Sifting data');
-    if(updated.length > 0) {
-      this.logger.log(LogLevel.Debug, `Updating sifted`);
-      const updatePointer = this.logger.startTimer();
-      obop.update(updated, delta);
-      this.logger.endTimer(LogLevel.Perf, updatePointer, 'Update sifted');
+  async update(updated:any): Promise<void> {
+
+
       await this.queue.add(async () => {
-          this.logger.log(LogLevel.Debug, `Writing page`);
-          await this.fs.writeData(this.outputPath, this.collectionName, data);
+          this.logger.log(LogLevel.Debug, `Writing file`);
+          await this.fs.writeData(this.outputPath, this.collectionName, updated);
         })
-    }
+
   }
 
   /**

@@ -119,7 +119,7 @@ export class Collection  implements ICollection   {
     this.logger.log(LogLevel.Debug, 'Updating many');
     const pointer = this.logger.startTimer();
     await this.queue.add(() => (async (query, delta) => {
-      await this.persistenceAdapter.update(query, delta);
+      await this.queryService.update(query, delta);
     })(query, delta))
     this.logger.endTimer(LogLevel.Perf, pointer, "Updating many");
 

@@ -9,11 +9,11 @@ import { IDBPDatabase, openDB } from 'idb';
 import PQueue from 'p-queue';
 
 export default class IndexedDbPersistence implements IPersistenceAdapter{
-  private db: IDBPDatabase;
+  private db?: IDBPDatabase;
   queue = new PQueue({ concurrency: 1 });
-  private dbName: string;
+  private dbName? = "";
   private destroyed = false;
-  private storeName: string;
+  private storeName = "";
   private cache: any;
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
@@ -25,19 +25,19 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
     this.db?.deleteObjectStore(this.storeName);
     this.destroyed = true;
   }
-  update(indexes: void, delta: any): Promise<void> {
+  update(updated:any): Promise<void> {
     return Promise.resolve(undefined);
   }
   async getData(): Promise<any> {
     if(this.cache){
       return this.cache
     }
-    this.cache = await this.db.getAll(this.storeName);
+    this.cache = await this.db?.getAll(this.storeName);
     return this.cache;
   }
   async insert(rows: Array<any>): Promise<any> {
     await this.queue.add(async () => {
-      const tx = this.db.transaction(this.storeName, 'readwrite');
+      const tx = (this.db as any).transaction(this.storeName, 'readwrite');
       await Promise.all([...rows.map(row => tx.store.add(row)),
         tx.done]);
     });

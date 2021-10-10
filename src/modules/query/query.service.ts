@@ -8,11 +8,13 @@ import { sort } from 'fast-sort';
 import { IQueryOptions } from '../../interfaces/query-options.interface';
 import { ILogger } from '../../interfaces/logger.interface';
 import { IFilterResult } from '../../interfaces/filter-result.interface';
-import { ICamaConfig } from '../../interfaces/cama-config.interface';
 import { ICollectionMeta } from '../../interfaces/collection-meta.interface';
+import { LogLevel } from '../../interfaces/logger-level.enum';
+const obop = require('obop')();
 
 @injectable()
 export class QueryService<T> implements IQueryService<T>{
+
   private dateColumns = [];
   constructor(
     @inject(TYPES.CollectionMeta) private collectionMeta: ICollectionMeta,
@@ -51,5 +53,19 @@ export class QueryService<T> implements IQueryService<T>{
     return  filterResult;
   }
 
+  async update(query: any, delta: any): Promise<void> {
+    const data = await this.persistenceAdapter.getData();
+    this.logger.log(LogLevel.Debug, "Iterating pages");
+    const siftPointer = this.logger.startTimer();
+    const updated = data.filter(sift(query));
+    this.logger.endTimer(LogLevel.Perf, siftPointer, 'Sifting data');
+    if(updated.length > 0) {
+      this.logger.log(LogLevel.Debug, `Updating sifted`);
+      const updatePointer = this.logger.startTimer();
+      obop.update(updated, delta);
+      this.logger.endTimer(LogLevel.Perf, updatePointer, 'Update sifted');
+      await this.persistenceAdapter.update(updated);
+    }
+  }
 
 }
