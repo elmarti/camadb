@@ -15,7 +15,7 @@ I was struggling to find a solution for Electron-based projects that deal with l
 - Frictionless integration with all JS runtimes
 - Rich API 
 - Full TypeScript support
-- Simplicity and versatility - This is built for storing data in inconsistent structures
+- Simplicity and versatility - This is built for storing data in dynamic structures
 
 ## Current state
 This is still under active development and a few features are missing:
