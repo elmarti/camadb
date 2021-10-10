@@ -32,7 +32,6 @@ export class QueryService<T> implements IQueryService<T>{
 
     };
     let data = await this.persistenceAdapter.getData();
-    console.log(data[1]);
     if(Object.keys(query).length > 0){
       console.log({query});
       data = data.filter(sift(query));
@@ -48,7 +47,7 @@ export class QueryService<T> implements IQueryService<T>{
       data = data.slice(0, options.limit);
     }
     filterResult['count'] = data.length;
-
+    filterResult['rows'] = data;
     return  filterResult;
   }
 
