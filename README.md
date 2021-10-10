@@ -1,6 +1,6 @@
 # CamaDB
 
-CamaDB is a NoSQL embedded database written in pure TypeScript for both node, electron and browser-based environments.
+CamaDB is a NoSQL embedded database written in pure TypeScript for Node, Electron and browser-based environments.
 
 ## Why?
 I was struggling to find a solution for Electron-based projects that deal with larger datasets in the main thread.
@@ -15,6 +15,7 @@ I was struggling to find a solution for Electron-based projects that deal with l
 - Frictionless integration with all JS runtimes
 - Rich API 
 - Full TypeScript support
+- Simplicity and versatility - This is built for storing data in inconsistent structures
 
 ## Current state
 This is still under active development and a few features are missing:
@@ -70,10 +71,10 @@ All of these config options are optional:
 ### Insert many
 ```
   await collection.insertMany([{
-                                   _id: 'test',
-                                   name: 'Dummy field',
-                                   description: `Data`,
-                                 }]);
+       _id: 'test',
+       name: 'Dummy field',
+       description: `Data`,
+  }]);
 
 ```
 
