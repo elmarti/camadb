@@ -1,18 +1,21 @@
 import { IFS } from '../../../interfaces/fs.interface';
 import { promises as nodeFs } from 'fs';
 import * as path from 'path';
-import { IPagingAllocation } from '../../../interfaces/paging-allocation.interface';
 import PQueue from 'p-queue';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
 import { ISerializer } from '../../../interfaces/serializer.interface';
+import { ILogger } from '../../../interfaces/logger.interface';
+import { LogLevel } from '../../../interfaces/logger-level.enum';
 
 @injectable()
 export class Fs implements IFS {
 
+
   queue = new PQueue({ concurrency: 50 });
 
-  constructor(@inject(TYPES.Serializer) private serializer: ISerializer) {}
+  constructor(@inject(TYPES.Serializer) private serializer: ISerializer,
+              @inject(TYPES.Logger) private logger:ILogger) {}
 
   /**
    * Write a JSON object to a file
@@ -23,12 +26,19 @@ export class Fs implements IFS {
    * @param data - The data to be written to the file
    */
   async writeJSON<T>(camaFolder: string, fileName: string, data: T): Promise<void> {
+    this.logger.log(LogLevel.Debug, 'Writing JSON file');
+
     const output = JSON.stringify(data, null, 2);
+    this.logger.log(LogLevel.Debug, 'Stringified JSON');
+    this.logger.log(LogLevel.Debug, 'Checking if cama folder exists');
     if (!(await this.exists(camaFolder))) {
-      await nodeFs.mkdir(camaFolder);
+      this.logger.log(LogLevel.Debug, 'Creating cama folder');
+      await this.mkdir(camaFolder);
     }
     const filePath = path.join(camaFolder, fileName);
+    this.logger.log(LogLevel.Debug, 'Writing to temp file');
     await nodeFs.writeFile(`${filePath}~`, output);
+    this.logger.log(LogLevel.Debug, 'Renaming temp file');
     await nodeFs.rename(`${filePath}~`, `${filePath}`);
   }
 
@@ -51,71 +61,29 @@ export class Fs implements IFS {
    * @param filePath - The path to the file
    */
   async loadJSON<T>(filePath: string): Promise<T> {
+    this.logger.log(LogLevel.Debug, 'Loading JSON from file');
     const data = (await nodeFs.readFile(filePath)).toString();
     return JSON.parse(data);
   }
 
-  /**
-   * Write a collection to pages
-   * @param camaFolder - The DB storage folder
-   * @param collectionName - The name of the collection
-   * @param allocations - The pages into which the rows will be allocated
-   */
-  async writePages<T>(
-    camaFolder: string,
-    collectionName: string,
-    allocations: Array<IPagingAllocation<T>>,
-  ): Promise<Array<string>> {
-    const filePaths: Array<string> = [];
-    console.log(`writing ${allocations.length} allocations`);
-    const promises = [];
-    for await (const allocation of allocations) {
-      console.log('adding allocation to queue', allocation.pageKey);
-      promises.push(this.queue.add(() =>(async (allocation) => {
-        const pageFile = path.join(camaFolder,collectionName, `${allocation.pageKey}`);
-        const tempPageFile = `${pageFile}~`;
-        filePaths.push(tempPageFile);
-        if (!allocation.new) {
-          await nodeFs.copyFile(pageFile, tempPageFile);
-          const content = await nodeFs.readFile(tempPageFile);
-          const deserialized = this.serializer.deserialize(content);
-          deserialized.push(...allocation.rows);
-          const serialized = this.serializer.serialize(deserialized);
-          return await nodeFs.writeFile(tempPageFile, serialized);
-        }
-        const serialized = this.serializer.serialize(allocation.rows);
-        console.log('writing  file', tempPageFile);
-        console.time(`writing ${allocation.pageKey}`);
-        await nodeFs.writeFile(tempPageFile, serialized);
-        console.timeEnd(`writing ${allocation.pageKey}`);
-
-      })(allocation) ));
-    }
-    await Promise.all(promises);
-    return filePaths;
-  }
 
   /**
-   * Overwrite the main pages with the updated ones
+   * Overwrite the data with the updated dataset
    * @param filePaths
    */
-  async commitPages(filePaths: Array<string>): Promise<void> {
-    const promises = [];
-    console.log('committing', filePaths);
-    for await (const filePath of filePaths) {
-      promises.push(this.queue.add(async () => nodeFs.rename(filePath, filePath.replace('~', ''))));
-    }
-    console.time('rename');
-    await Promise.all(promises);
-    console.timeEnd('rename');
+  async commit(folderPath: string, collection:string): Promise<void> {
+    this.logger.log(LogLevel.Debug, `committing`);
+    this.logger.log(LogLevel.Debug, collection);
+    const outputPath = path.join(folderPath, `${collection}/data~`)
+    await this.queue.add(async () => nodeFs.rename(outputPath, outputPath.replace('~', '')))
   }
 
   /**
    * Create a directory
    * @param path - The location of the new directory
    */
-  mkdir(path: string): Promise<void> {
-    return nodeFs.mkdir(path);
+  async mkdir(path: string): Promise<void> {
+    await nodeFs.mkdir(path, {recursive:true});
   }
 
   /**
@@ -126,28 +94,31 @@ export class Fs implements IFS {
     return nodeFs.readdir(path);
   }
 
+
+
+  async writeData(camaFolder: string, camaCollection: string, data: any): Promise<void> {
+    const output = path.join(camaFolder, camaCollection, 'data~');
+    console.log('writing temp file', output);
+    const serialized = this.serializer.serialize(data);
+    await nodeFs.writeFile(output, serialized);
+  }
+
+
+  async readData<T>(path: string): Promise<T> {
+    const buffer = await nodeFs.readFile(path);
+    return this.serializer.deserialize(buffer);
+  }
+
   /**
-   * Load and deserialize a page
-   * @param file - the path of the file
+   * Remove the collection dir
+   *
+   * @remarks This may need genericizing
+   * @param outputPath - The cama folder
+   * @param collectionName - The collection to be deleted
    */
-  async loadPage(file: string): Promise<any> {
-    try {
-      const data = await nodeFs.readFile(file);
-      try{
-        return this.serializer.deserialize(data);
-      }
-      catch (e){
-        console.log('serialiser fail')
-        console.error(e);
-        return [];
-      }
-    } catch (e) {
-      console.log('read fail')
-      console.error(e);
-      return [];
-    }
-
-
+  rmDir(outputPath: string, collectionName: string): Promise<void> {
+    const dirPath = path.join(outputPath, collectionName);
+    return nodeFs.rmdir(dirPath, {recursive:true});
   }
 
 

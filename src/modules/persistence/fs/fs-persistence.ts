@@ -4,23 +4,30 @@ import { ICollectionConfig } from '../../../interfaces/collection-config.interfa
 import { TYPES } from '../../../types';
 import { ICollectionMeta } from '../../../interfaces/collection-meta.interface';
 import PQueue from 'p-queue';
-import { IPaging } from '../../../interfaces/paging.interface';
-import { IPagingAllocation } from '../../../interfaces/paging-allocation.interface';
 import { IFS } from '../../../interfaces/fs.interface';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 import * as path from 'path';
+import sift from 'sift';
+import { ILogger } from '../../../interfaces/logger.interface';
+import { LogLevel } from '../../../interfaces/logger-level.enum';
+
 
 @injectable()
 export default class FSPersistence implements IPersistenceAdapter {
-  queue = new PQueue({ concurrency: 50 });
+
+
+  queue = new PQueue({ concurrency: 1 });
   private collectionName = '';
-  private cache: Array<any> | null = null;
+  private cache: any = null;
+  private outputPath: string;
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
     @inject(TYPES.CollectionMeta) private collectionMeta: ICollectionMeta,
-    @inject(TYPES.Paging) private paging: IPaging<any>,
     @inject(TYPES.FS) private fs: IFS,
-  ) {}
+    @inject(TYPES.Logger) private logger:ILogger
+  ) {
+    this.outputPath = this.config.path || '.cama'
+  }
 
   /**
    * Initialise the persistence adapter
@@ -31,8 +38,9 @@ export default class FSPersistence implements IPersistenceAdapter {
    */
   async initCollection(name: string, config: ICollectionConfig): Promise<void> {
     this.collectionName = name;
+    console.log('initting collection');
     await this.collectionMeta.init(name, config);
-    await this.paging.init(name, config);
+    console.log('meta initialised');
   }
 
   /**
@@ -40,44 +48,72 @@ export default class FSPersistence implements IPersistenceAdapter {
    * @param rows - The rows to be inserted
    */
   async insert<T>(rows: Array<any>): Promise<any> {
-    this.cache = null;
-    return this.queue.add(async () => {
-      const allocations = await this.paging.allocate(rows);
-      const outputPath = path.join(process.cwd(), this.config.path);
-      const filePaths = await this.fs.writePages(outputPath, this.collectionName, allocations);
-      await this.fs.commitPages(filePaths);
-      await this.paging.commit();
+    return await this.queue.add(async () => {
+      console.log('allocating');
+      console.log('allocated');
+      const outputPath = path.join(process.cwd(), this.outputPath);
+      const data = [...(await this.getData()), ...rows];
+      await this.fs.writeData(outputPath, this.collectionName, data);
+      await this.fs.commit(outputPath, this.collectionName);
+      this.cache = null;
     });
   }
 
   /**
    * Load the data from either the cache or the pages
    */
-  async getData<T>(): Promise<Array<T>> {
-    const outputPath = path.join(process.cwd(), this.config.path, this.collectionName);
-    console.log('loading files', outputPath);
-    console.time('files loaded');
-    const files = await this.fs.readDir(outputPath);
-    const promises = [];
-    const data: Array<T> = [];
+  async getData<T>(): Promise<any> {
+    const meta = await this.collectionMeta.get();
+    const dateColumns:any = [];
+    // @ts-ignore
+    if(meta.columns && meta.columns.length > 0){
+      console.log('meta columns')
+      // @ts-ignore
+      for(const col of meta.columns){
+        console.log(col, ['date', 'datetime'].indexOf(col.type));
+        if(['date', 'datetime'].indexOf(col.type) > -1){
+          console.log('setting date');
+          dateColumns.push(col.title);
+        }
+      }
+
+    }
+    this.logger.log(LogLevel.Info, "Loading data");
     if(this.cache){
+      this.logger.log(LogLevel.Info, "Loading data from cache");
       return this.cache;
     }
-    for (const file of files) {
-      console.log(file, ['meta.json', 'paging.json'].indexOf(file))
-      if(['meta.json', 'paging.json'].indexOf(file) !== -1){
-        console.log('continuing')
-        continue;
+    this.logger.log(LogLevel.Info, "Loading data from disk");
+
+    const outputPath = path.join(process.cwd(), this.outputPath , this.collectionName, 'data');
+
+    const data:any = await this.fs.readData(outputPath);
+
+    this.cache = data.map((row:any) => {
+      for(const dateColumn of dateColumns){
+        row[dateColumn] = new Date(row[dateColumn]);
       }
-      promises.push(this.queue.add(() => (async (file) => {
-        const filePath =  path.join(outputPath, file);
-        const page = await this.fs.loadPage(filePath);
-        data.push(...page);
-      })(file)));
-    }
-    await Promise.all(promises);
-    console.timeEnd('files loaded');
-    this.cache = data;
-    return data;
+
+      return row;
+    });
+
+    return this.cache;
   }
+  async update(updated:any): Promise<void> {
+
+
+      await this.queue.add(async () => {
+          this.logger.log(LogLevel.Debug, `Writing file`);
+          await this.fs.writeData(this.outputPath, this.collectionName, updated);
+        })
+
+  }
+
+  /**
+   * Destroy the collection within the persistence adapter
+   */
+  async destroy(): Promise<void> {
+    await this.fs.rmDir(this.outputPath, this.collectionName);
+  }
+
 }
