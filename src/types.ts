@@ -10,7 +10,8 @@ const TYPES = {
   Paging: Symbol.for("Paging"),
   Serializer: Symbol.for("Serializer"),
   QueryService: Symbol.for("QueryService"),
-  Logger: Symbol.for("Logger")
+  Logger: Symbol.for("Logger"),
+  Aggregator: Symbol.for("Aggregator")
 
 };
 

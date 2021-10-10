@@ -8,5 +8,6 @@ export interface ICollection  {
   findMany<T>(query: any, options?:IQueryOptions):Promise<IFilterResult<T>>;
   updateMany<T>(query:any, delta:any): Promise<void>;
   destroy():Promise<void>;
+  aggregate(pipeline:Array<any>): Promise<any>;
 
 }
