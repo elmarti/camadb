@@ -30,7 +30,7 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
     this.checkDestroyed();
     const tx = this.db?.transaction(this.storeName, 'readwrite');
     const store = tx?.objectStore(this.storeName) as any;
-    await store?.put('data', updated);
+    await store?.put(updated, 'data');
     await tx?.done;
   }
   async getData(): Promise<any> {
@@ -38,8 +38,12 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
     if(this.cache){
       return this.cache
     }
-    const store = await this.db?.transaction(this.storeName).objectStore(this.storeName);
+    console.log('getting data', this.storeName);
+    const store = this.db?.transaction(this.storeName).objectStore(this.storeName);
+    console.log({store})
     this.cache = await store?.get('data');
+    console.log(this.cache);
+
     return this.cache;
   }
   async insert(rows: Array<any>): Promise<any> {
@@ -51,6 +55,7 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
       const tx = this.db?.transaction(this.storeName, 'readwrite');
       const store = tx?.objectStore(this.storeName) as any;
       await store?.put(data, 'data');
+      this.cache = data;
     });
 
   }

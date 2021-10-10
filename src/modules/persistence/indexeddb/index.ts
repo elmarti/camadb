@@ -12,6 +12,6 @@ import { CollectionMeta } from './collection-meta';
  * Initialise the IndexedDb adapter module
  */
 export default new ContainerModule((bind: interfaces.Bind, unbind: interfaces.Unbind) => {
-  bind<IPersistenceAdapter>(TYPES.PersistenceAdapter).to(IndexedDbPersistence);
-  bind<ICollectionMeta>(TYPES.CollectionMeta).to(CollectionMeta);
+  bind<IPersistenceAdapter>(TYPES.PersistenceAdapter).to(IndexedDbPersistence).inSingletonScope();
+  bind<ICollectionMeta>(TYPES.CollectionMeta).to(CollectionMeta).inSingletonScope();
 });
