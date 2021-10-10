@@ -1,6 +1,6 @@
 import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.interface';
 import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 
@@ -8,13 +8,14 @@ import { ILogger } from '../../../interfaces/logger.interface';
 import { IDBPDatabase, openDB } from 'idb';
 import PQueue from 'p-queue';
 
+@injectable()
 export default class IndexedDbPersistence implements IPersistenceAdapter{
   private db?: IDBPDatabase;
   queue = new PQueue({ concurrency: 1 });
   private dbName? = "";
   private destroyed = false;
   private storeName = "";
-  private cache: any;
+  private cache: any = null;
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
     @inject(TYPES.Logger) private logger:ILogger
@@ -27,7 +28,7 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
   }
   async update(updated:any): Promise<void> {
     this.checkDestroyed();
-    const tx = this.db?.transaction(this.storeName);
+    const tx = this.db?.transaction(this.storeName, 'readwrite');
     const store = tx?.objectStore(this.storeName) as any;
     await store?.put('data', updated);
     await tx?.done;
@@ -45,8 +46,11 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
     this.checkDestroyed();
     await this.queue.add(async () => {
       const data = await this.getData();
+      console.log({data,rows})
       data.push(...rows);
-      await this.db?.put('data', data);
+      const tx = this.db?.transaction(this.storeName, 'readwrite');
+      const store = tx?.objectStore(this.storeName) as any;
+      await store?.put(data, 'data');
     });
 
   }
@@ -54,9 +58,10 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
     this.dbName = this.config.path || 'cama';
     this.storeName = name;
     this.db = await openDB(this.dbName, 1, {
-      upgrade(db: IDBPDatabase) {
+      upgrade: async (db: IDBPDatabase) => {
           if (!db.objectStoreNames.contains(name)) {
-            db.createObjectStore(name);
+            const store = db.createObjectStore(name);
+            store.put([], 'data');
           }
         }
       }

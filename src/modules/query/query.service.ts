@@ -58,12 +58,12 @@ export class QueryService<T> implements IQueryService<T>{
     this.logger.log(LogLevel.Debug, "Iterating pages");
     const siftPointer = this.logger.startTimer();
     const updated = data.filter(sift(query));
-    this.logger.endTimer(LogLevel.Perf, siftPointer, 'Sifting data');
+    this.logger.endTimer(LogLevel.Debug, siftPointer, 'Sifting data');
     if(updated.length > 0) {
       this.logger.log(LogLevel.Debug, `Updating sifted`);
       const updatePointer = this.logger.startTimer();
       obop.update(updated, delta);
-      this.logger.endTimer(LogLevel.Perf, updatePointer, 'Update sifted');
+      this.logger.endTimer(LogLevel.Debug, updatePointer, 'Update sifted');
       await this.persistenceAdapter.update(updated);
     }
   }

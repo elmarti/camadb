@@ -4,6 +4,8 @@ import { ContainerModule, interfaces } from 'inversify';
 import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.interface';
 import { TYPES } from '../../../types';
 import IndexedDbPersistence from './indexeddb-persistence';
+import { ICollectionMeta } from '../../../interfaces/collection-meta.interface';
+import { CollectionMeta } from './collection-meta';
 
 
 /**
@@ -11,4 +13,5 @@ import IndexedDbPersistence from './indexeddb-persistence';
  */
 export default new ContainerModule((bind: interfaces.Bind, unbind: interfaces.Unbind) => {
   bind<IPersistenceAdapter>(TYPES.PersistenceAdapter).to(IndexedDbPersistence);
+  bind<ICollectionMeta>(TYPES.CollectionMeta).to(CollectionMeta);
 });

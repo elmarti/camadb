@@ -19,6 +19,10 @@
     "type": "git",
     "url": "git+https://github.com/elmarti/camadb"
   },
+  "browser": {
+    "fs": false,
+    "path": false
+  },
   "keywords": [
     "camadb",
     "typescript",
@@ -56,11 +60,12 @@
     "flatted": "^3.2.2",
     "idb": "^6.1.4",
     "inversify": "^5.1.1",
+    "loglevel": "^1.7.1",
     "obop": "^0.2.1",
     "p-queue": "6.6.2",
+    "path-browserify": "^1.0.1",
     "reflect-metadata": "^0.1.13",
     "sift": "^15.0.0",
-    "uuid": "^8.3.2",
-    "winston": "^3.3.3"
+    "uuid": "^8.3.2"
   }
 }
