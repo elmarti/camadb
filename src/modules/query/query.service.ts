@@ -27,21 +27,7 @@ export class QueryService<T> implements IQueryService<T>{
    * @param options - Options for further data manipulation
    */
   async filter(query: any = {}, options: IQueryOptions = {}): Promise<IFilterResult<T>> {
-    const meta = await this.collectionMeta.get();
-    const dateColumns:any = [];
-    // @ts-ignore
-    if(meta.columns && meta.columns.length > 0){
-      console.log('meta columns')
-      // @ts-ignore
-      for(const col of meta.columns){
-        console.log(col, ['date', 'datetime'].indexOf(col.type));
-        if(['date', 'datetime'].indexOf(col.type) > -1){
-          console.log('setting date');
-          dateColumns.push(col.title);
-        }
-      }
 
-    }
     const filterResult:any = {
 
     };
@@ -63,13 +49,6 @@ export class QueryService<T> implements IQueryService<T>{
     }
     filterResult['count'] = data.length;
 
-    filterResult['rows'] = data.map((row:any) => {
-      for(const dateColumn of dateColumns){
-        row[dateColumn] = new Date(row[dateColumn]);
-      }
-
-      return row;
-    });
     return  filterResult;
   }
 

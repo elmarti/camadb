@@ -65,6 +65,21 @@ export default class FSPersistence implements IPersistenceAdapter {
    * Load the data from either the cache or the pages
    */
   async getData<T>(): Promise<any> {
+    const meta = await this.collectionMeta.get();
+    const dateColumns:any = [];
+    // @ts-ignore
+    if(meta.columns && meta.columns.length > 0){
+      console.log('meta columns')
+      // @ts-ignore
+      for(const col of meta.columns){
+        console.log(col, ['date', 'datetime'].indexOf(col.type));
+        if(['date', 'datetime'].indexOf(col.type) > -1){
+          console.log('setting date');
+          dateColumns.push(col.title);
+        }
+      }
+
+    }
     this.logger.log(LogLevel.Info, "Loading data");
     if(this.cache){
       this.logger.log(LogLevel.Info, "Loading data from cache");
@@ -74,10 +89,17 @@ export default class FSPersistence implements IPersistenceAdapter {
 
     const outputPath = path.join(process.cwd(), this.outputPath , this.collectionName, 'data');
 
-    const data = await this.fs.readData(outputPath);
+    const data:any = await this.fs.readData(outputPath);
 
-    this.cache = data;
-    return data;
+    this.cache = data.map((row:any) => {
+      for(const dateColumn of dateColumns){
+        row[dateColumn] = new Date(row[dateColumn]);
+      }
+
+      return row;
+    });
+
+    return this.cache;
   }
   async update(query: any, delta: any): Promise<void> {
     const data = await this.getData();
