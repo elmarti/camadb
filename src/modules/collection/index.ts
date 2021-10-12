@@ -57,7 +57,6 @@ export class Collection  implements ICollection   {
     this.logger.log(LogLevel.Debug, 'Initializing persistence adapter');
     this.queue.add(() => (async (name,config)=> {
       const pointer = this.logger.startTimer();
-      console.log('initialising collection',  name,config);
       await this.persistenceAdapter.initCollection(name, config);
       this.logger.endTimer(LogLevel.Debug, pointer, "init collection");
     })(collectionName, collectionConfig))
@@ -73,7 +72,6 @@ export class Collection  implements ICollection   {
     this.logger.log(LogLevel.Debug, 'Inserting many');
     await this.queue.add(() => (async (rows) => {
       const pointer = this.logger.startTimer();
-      console.log('inserting')
       await this.persistenceAdapter.insert(rows);
       this.logger.endTimer(LogLevel.Debug, pointer, "insert  rows");
     })(rows))

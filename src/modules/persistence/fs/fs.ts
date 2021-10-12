@@ -98,7 +98,6 @@ export class Fs implements IFS {
 
   async writeData(camaFolder: string, camaCollection: string, data: any): Promise<void> {
     const output = path.join(camaFolder, camaCollection, 'data~');
-    console.log('writing temp file', output);
     const serialized = this.serializer.serialize(data);
     await nodeFs.writeFile(output, serialized);
   }
