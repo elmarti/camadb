@@ -67,6 +67,7 @@
     "path-browserify": "^1.0.1",
     "reflect-metadata": "^0.1.13",
     "sift": "^15.0.0",
+    "tiny-tree": "^0.3.0",
     "uuid": "^8.3.2"
   }
 }

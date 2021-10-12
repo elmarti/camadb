@@ -48,7 +48,9 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
     description: `Data`,
   });
   console.log('insert col1');
+  console.time('insertMany')
   await collection.insertMany(dummyData);
+  console.timeEnd('insertMany')
 
   const findResult = await collection.findMany({
     _id: {

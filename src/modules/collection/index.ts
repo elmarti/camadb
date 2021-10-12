@@ -11,6 +11,8 @@ import { IFilterResult } from '../../interfaces/filter-result.interface';
 import { selectPersistenceAdapterClass } from '../persistence';
 import SerializationModule from '../serialization';
 import QueryModule from '../query';
+import IndexingModule from '../indexing';
+
 import { ICamaConfig } from '../../interfaces/cama-config.interface';
 import PQueue from 'p-queue';
 import { LoglevelLogger } from '../logger/loglevel';
@@ -42,6 +44,7 @@ export class Collection  implements ICollection   {
     this.container.load(persistenceModule);
     this.container.load(SerializationModule);
     this.container.load(QueryModule);
+    this.container.load(IndexingModule);
     this.container.bind<ILogger>(TYPES.Logger).to(LoglevelLogger).inSingletonScope();
     this.container.bind<IAggregator>(TYPES.Aggregator).to(MingoAggregator).inRequestScope();
 
@@ -71,6 +74,7 @@ export class Collection  implements ICollection   {
   async insertMany(rows:Array<any>):Promise<void> {
     this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Inserting many');
+
     await this.queue.add(() => (async (rows) => {
       const pointer = this.logger.startTimer();
       console.log('inserting')

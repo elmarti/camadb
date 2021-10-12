@@ -11,8 +11,9 @@ const TYPES = {
   Serializer: Symbol.for("Serializer"),
   QueryService: Symbol.for("QueryService"),
   Logger: Symbol.for("Logger"),
-  Aggregator: Symbol.for("Aggregator")
-
+  Aggregator: Symbol.for("Aggregator"),
+  CamaIndexer: Symbol.for("CamaIndexer"),
+  BTreeIndexer: Symbol.for("BTreeIndexer"),
 };
 
 export { TYPES };

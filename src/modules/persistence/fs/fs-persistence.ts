@@ -10,6 +10,7 @@ import * as path from 'path';
 import sift from 'sift';
 import { ILogger } from '../../../interfaces/logger.interface';
 import { LogLevel } from '../../../interfaces/logger-level.enum';
+import { IIndexer } from '../../../interfaces/indexer.interface';
 
 
 @injectable()
@@ -24,7 +25,9 @@ export default class FSPersistence implements IPersistenceAdapter {
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
     @inject(TYPES.CollectionMeta) private collectionMeta: ICollectionMeta,
     @inject(TYPES.FS) private fs: IFS,
-    @inject(TYPES.Logger) private logger:ILogger
+    @inject(TYPES.Logger) private logger:ILogger,
+    @inject(TYPES.CamaIndexer) private camaIndexer:IIndexer
+
   ) {
     this.outputPath = this.config.path || '.cama'
   }
@@ -52,7 +55,12 @@ export default class FSPersistence implements IPersistenceAdapter {
       console.log('allocating');
       console.log('allocated');
       const outputPath = path.join(process.cwd(), this.outputPath);
-      const data = [...(await this.getData()), ...rows];
+      const oldData = await this.getData();
+      console.time('indexing');
+      const indexedData = await this.camaIndexer.addMetaData(oldData, rows);
+      console.timeEnd('indexing');
+      const data = [...oldData, ...indexedData];
+
       await this.fs.writeData(outputPath, this.collectionName, data);
       await this.fs.commit(outputPath, this.collectionName);
       this.cache = null;

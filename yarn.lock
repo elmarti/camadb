@@ -6057,6 +6057,11 @@ tiny-relative-date@^1.3.0:
   resolved "https://registry.yarnpkg.com/tiny-relative-date/-/tiny-relative-date-1.3.0.tgz#fa08aad501ed730f31cc043181d995c39a935e07"
   integrity sha512-MOQHpzllWxDCHHaDno30hhLfbouoYlOI8YlMNtvKe1zXbjEVhbcEovQxvZrPvtiYW630GQDoMMarCnjfyfHA+A==
 
+tiny-tree@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/tiny-tree/-/tiny-tree-0.3.0.tgz#ae38bf5bc915194295cfa300e2e03f1d09b18361"
+  integrity sha512-EwSGzB0pjETJFla7sL+YVRdduucMNk5DSQBjsNpCEGW9uqZbWe9WgsXgnQGRFmj7fyoqotg/F4Jv4GD4JWCmCA==
+
 tmpl@1.0.x:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.5.tgz#8683e0b902bb9c20c4f726e3c0b69f36518c07cc"
