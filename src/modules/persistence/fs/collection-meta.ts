@@ -33,7 +33,6 @@ export class CollectionMeta implements ICollectionMeta {
     this.dbPath = path.join(this.camaPath, collectionName);
     this.fileName = `meta.json`;
     this.collectionName = collectionName;
-    console.log('daver');
     this.logger.log(LogLevel.Info, 'Ensuring cama folder exists: ' + this.camaPath);
     if ((!await this.fs.exists(this.camaPath))) {
       console.log("doesn't exist");
@@ -54,7 +53,6 @@ export class CollectionMeta implements ICollectionMeta {
       ...config,
       collectionName,
     };
-    console.log(this);
     this.logger.log(LogLevel.Info, 'Writing meta file');
     await this.fs.writeData(this.camaPath, this.collectionName, []);
     await this.fs.commit(this.camaPath, this.collectionName);
