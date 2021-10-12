@@ -107,6 +107,7 @@ export default class FSPersistence implements IPersistenceAdapter {
    */
   async destroy(): Promise<void> {
     await this.fs.rmDir(this.outputPath, this.collectionName);
+    this.cache = null;
   }
 
 }
