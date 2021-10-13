@@ -11,6 +11,8 @@ export const selectPersistenceAdapterClass = (adapter:PersistenceAdapterEnum) =>
       return require('./indexeddb').default;
     case 'localstorage':
       return require('./localstorage').default;
+    case 'inmemory':
+      return require('./inmemory').default;
     default:
       throw new Error();
   }
