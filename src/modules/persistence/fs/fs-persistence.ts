@@ -41,9 +41,7 @@ export default class FSPersistence implements IPersistenceAdapter {
    */
   async initCollection(name: string, config: ICollectionConfig): Promise<void> {
     this.collectionName = name;
-    console.log('initting collection');
     await this.collectionMeta.init(name, config);
-    console.log('meta initialised');
   }
 
   /**
@@ -52,8 +50,6 @@ export default class FSPersistence implements IPersistenceAdapter {
    */
   async insert<T>(rows: Array<any>): Promise<any> {
     return await this.queue.add(async () => {
-      console.log('allocating');
-      console.log('allocated');
       const outputPath = path.join(process.cwd(), this.outputPath);
       const oldData = await this.getData();
       console.time('indexing');
@@ -75,12 +71,9 @@ export default class FSPersistence implements IPersistenceAdapter {
     const dateColumns:any = [];
     // @ts-ignore
     if(meta.columns && meta.columns.length > 0){
-      console.log('meta columns')
       // @ts-ignore
       for(const col of meta.columns){
-        console.log(col, ['date', 'datetime'].indexOf(col.type));
         if(['date', 'datetime'].indexOf(col.type) > -1){
-          console.log('setting date');
           dateColumns.push(col.title);
         }
       }
@@ -122,6 +115,7 @@ export default class FSPersistence implements IPersistenceAdapter {
    */
   async destroy(): Promise<void> {
     await this.fs.rmDir(this.outputPath, this.collectionName);
+    this.cache = null;
   }
 
 }

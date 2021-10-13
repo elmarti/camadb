@@ -5,16 +5,14 @@ import { TYPES } from '../../../types';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 
 import { ILogger } from '../../../interfaces/logger.interface';
-import { IDBPDatabase, openDB } from 'idb';
 import PQueue from 'p-queue';
 
 @injectable()
-export default class IndexedDbPersistence implements IPersistenceAdapter{
-  private db?: IDBPDatabase;
+export default class LocalstoragePersistence implements IPersistenceAdapter{
   queue = new PQueue({ concurrency: 1 });
   private dbName? = "";
   private destroyed = false;
-  private storeName = "";
+  private collectionName = "";
   private cache: any = null;
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
@@ -23,24 +21,21 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
 
   }
   async destroy(): Promise<void> {
-    this.db?.deleteObjectStore(this.storeName);
-    this.cache = null;
+    //@ts-ignore
+    window.localStorage.removeItem(`${this.dbName}-${this.collectionName}-data`);
     this.destroyed = true;
   }
   async update(updated:any): Promise<void> {
     this.checkDestroyed();
-    const tx = this.db?.transaction(this.storeName, 'readwrite');
-    const store = tx?.objectStore(this.storeName) as any;
-    await store?.put(updated, 'data');
-    await tx?.done;
+    //@ts-ignore
+    await this.setData(updated);
   }
   async getData(): Promise<any> {
     this.checkDestroyed();
     if(this.cache){
       return this.cache
     }
-    const store = this.db?.transaction(this.storeName).objectStore(this.storeName);
-    this.cache = await store?.get('data');
+    this.cache = await this.loadData();
 
     return this.cache;
   }
@@ -49,25 +44,27 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
     await this.queue.add(async () => {
       const data = await this.getData();
       data.push(...rows);
-      const tx = this.db?.transaction(this.storeName, 'readwrite');
-      const store = tx?.objectStore(this.storeName) as any;
-      await store?.put(data, 'data');
-      this.cache = data;
+      await this.setData(data);
     });
+
+  }
+  private async loadData(){
+    //@ts-ignore
+    const result = await window.localStorage.getItem(`${this.dbName}-${this.collectionName}-data`);
+    if(!result){
+      return [];
+    }
+    return JSON.parse(result);
+  }
+
+  private async setData(data:any){
+    //@ts-ignore
+    await window.localStorage.setItem(`${this.dbName}-${this.collectionName}-data`, JSON.stringify(data));
 
   }
   async initCollection(name: string, config: ICollectionConfig): Promise<void> {
     this.dbName = this.config.path || 'cama';
-    this.storeName = name;
-    this.db = await openDB(this.dbName, 1, {
-      upgrade: async (db: IDBPDatabase) => {
-          if (!db.objectStoreNames.contains(name)) {
-            const store = db.createObjectStore(name);
-            store.put([], 'data');
-          }
-        }
-      }
-    );
+    this.collectionName = name;
   }
   private checkDestroyed(){
     if(this.destroyed){

@@ -15,7 +15,7 @@ I was struggling to find a solution for Electron-based projects that deal with l
 - Frictionless integration with all JS runtimes
 - Rich API 
 - Full TypeScript support
-- Simplicity and versatility - This is built for storing data in inconsistent structures
+- Simplicity and versatility - This is built for storing data in dynamic structures
 
 ## Current state
 This is still under active development and a few features are missing:
@@ -35,8 +35,8 @@ npm install camadb --save
 
 ### Initializing the database
 All of these config options are optional:
-- `path` - Where you want the data to be stored - default is `./.cama` or `cama` for indexeddb
-- `persistenceAdapter` - How you want to persist your data - `fs` or `indexeddb`
+- `path` - Where you want the data to be stored - default is `./.cama` or `cama` for indexeddb and localstorage
+- `persistenceAdapter` - How you want to persist your data - `fs`, `indexeddb`, `localstorage` or `inmemory`
 - `logLevel` - info or debug
 ```
   import { Cama } from 'camadb'
@@ -116,3 +116,4 @@ We use [Mingo](https://github.com/kofrasa/mingo) for aggregation - currently loo
     }
   }]);
 ``` 
+

@@ -35,7 +35,6 @@ export class QueryService<T> implements IQueryService<T>{
     };
     let data = await this.persistenceAdapter.getData();
     if(Object.keys(query).length > 0){
-      console.log({query});
       data = data.filter(sift(query));
     }
     filterResult['totalCount'] = data.length;
@@ -64,7 +63,7 @@ export class QueryService<T> implements IQueryService<T>{
       const updatePointer = this.logger.startTimer();
       obop.update(updated, delta);
       this.logger.endTimer(LogLevel.Debug, updatePointer, 'Update sifted');
-      await this.persistenceAdapter.update(updated);
+      await this.persistenceAdapter.update(data);
     }
   }
 

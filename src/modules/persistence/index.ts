@@ -9,6 +9,10 @@ export const selectPersistenceAdapterClass = (adapter:PersistenceAdapterEnum) =>
       }
     case 'indexeddb':
       return require('./indexeddb').default;
+    case 'localstorage':
+      return require('./localstorage').default;
+    case 'inmemory':
+      return require('./inmemory').default;
     default:
       throw new Error();
   }
