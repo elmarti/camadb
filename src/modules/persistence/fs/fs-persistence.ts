@@ -16,42 +16,32 @@ export default class FSPersistence implements IPersistenceAdapter {
 
 
   queue = new PQueue({ concurrency: 1 });
-  private collectionName = '';
   private cache: any = null;
-  private outputPath: string;
+  private readonly outputPath: string;
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
     @inject(TYPES.CollectionMeta) private collectionMeta: ICollectionMeta,
     @inject(TYPES.FS) private fs: IFS,
-    @inject(TYPES.Logger) private logger:ILogger
+    @inject(TYPES.Logger) private logger:ILogger,
+    @inject(TYPES.CollectionName) private collectionName: string
   ) {
     this.outputPath = this.config.path || '.cama'
   }
 
-  /**
-   * Initialise the persistence adapter
-   * @private
-   * @remarks Internal method - don't call it
-   * @param name - The name of the collection
-   * @param config - The collection config
-   */
-  async initCollection(name: string, config: ICollectionConfig): Promise<void> {
-    this.collectionName = name;
-    await this.collectionMeta.init(name, config);
-  }
+
 
   /**
    * Insert rows into pages via the persistence adapter
    * @param rows - The rows to be inserted
    */
   async insert<T>(rows: Array<any>): Promise<any> {
-    return await this.queue.add(async () => {
+    return await this.queue.add(()=> (async (rows) => {
       const outputPath = path.join(process.cwd(), this.outputPath);
       const data = [...(await this.getData()), ...rows];
       await this.fs.writeData(outputPath, this.collectionName, data);
       await this.fs.commit(outputPath, this.collectionName);
       this.cache = data;
-    });
+    })(rows));
   }
 
   /**
@@ -92,11 +82,11 @@ export default class FSPersistence implements IPersistenceAdapter {
     return this.cache;
   }
   async update(updated:any): Promise<void> {
-      await this.queue.add(async () => {
+      await this.queue.add(() => (async (updated) => {
           this.logger.log(LogLevel.Debug, `Writing file`);
           await this.fs.writeData(this.outputPath, this.collectionName, updated);
           this.cache = updated;
-      })
+      })(updated))
   }
 
   /**

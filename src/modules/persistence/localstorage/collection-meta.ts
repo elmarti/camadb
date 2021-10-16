@@ -10,16 +10,7 @@ export class CollectionMeta implements ICollectionMeta {
   private meta:any;
   constructor() {}
 
-  /**
-   * Initialise the collection meta
-   * @private
-   * @remarks Internal method - don't call it
-   * @param collectionName - The name of the collection
-   * @param config - The collection config
-   */
-  async init(collectionName: string, config: ICollectionConfig): Promise<void> {
-    return Promise.resolve();
-     }
+
 
   /**
    * Update the meta value
