@@ -1,5 +1,4 @@
 import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.interface';
-import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
@@ -27,11 +26,13 @@ export default class InmemoryPersistence implements IPersistenceAdapter{
   }
   async update(updated:any): Promise<void> {
     this.checkDestroyed();
-    this.cache = updated;
+    return this.queue.add(() => (updated => {
+      this.cache = updated;
+    })(updated));
   }
   async getData(): Promise<any> {
     this.checkDestroyed();
-    return this.cache;
+    return this.queue.add(()=> this.cache);
   }
   async insert(rows: Array<any>): Promise<any> {
     this.checkDestroyed();
@@ -44,10 +45,6 @@ export default class InmemoryPersistence implements IPersistenceAdapter{
   }
 
 
-
-  async initCollection(name: string, config: ICollectionConfig): Promise<void> {
-
-  }
   private checkDestroyed(){
     if(this.destroyed){
       throw new Error('Collection has been destroyed. Call Cama.initCollection to recreate')

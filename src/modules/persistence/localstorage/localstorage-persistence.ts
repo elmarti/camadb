@@ -1,5 +1,4 @@
 import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.interface';
-import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
@@ -10,15 +9,15 @@ import PQueue from 'p-queue';
 @injectable()
 export default class LocalstoragePersistence implements IPersistenceAdapter{
   queue = new PQueue({ concurrency: 1 });
-  private dbName? = "";
+  private readonly dbName;
   private destroyed = false;
-  private collectionName = "";
   private cache: any = null;
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
-    @inject(TYPES.Logger) private logger:ILogger
+    @inject(TYPES.Logger) private logger:ILogger,
+    @inject(TYPES.CollectionName) private collectionName: string
   ) {
-
+    this.dbName = this.config.path || 'cama';
   }
   async destroy(): Promise<void> {
     //@ts-ignore
@@ -27,17 +26,22 @@ export default class LocalstoragePersistence implements IPersistenceAdapter{
   }
   async update(updated:any): Promise<void> {
     this.checkDestroyed();
+    return this.queue.add(() =>(async updated => {
+      await this.setData(updated);
+    })())
     //@ts-ignore
-    await this.setData(updated);
   }
   async getData(): Promise<any> {
     this.checkDestroyed();
-    if(this.cache){
-      return this.cache
-    }
-    this.cache = await this.loadData();
+    return this.queue.add(async () => {
+      if(this.cache){
+        return this.cache
+      }
+      this.cache = await this.loadData();
 
-    return this.cache;
+      return this.cache;
+    });
+
   }
   async insert(rows: Array<any>): Promise<any> {
     this.checkDestroyed();
@@ -59,13 +63,11 @@ export default class LocalstoragePersistence implements IPersistenceAdapter{
 
   private async setData(data:any){
     //@ts-ignore
+
     await window.localStorage.setItem(`${this.dbName}-${this.collectionName}-data`, JSON.stringify(data));
 
   }
-  async initCollection(name: string, config: ICollectionConfig): Promise<void> {
-    this.dbName = this.config.path || 'cama';
-    this.collectionName = name;
-  }
+
   private checkDestroyed(){
     if(this.destroyed){
       throw new Error('Collection has been destroyed. Call Cama.initCollection to recreate')

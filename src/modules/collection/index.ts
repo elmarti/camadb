@@ -32,7 +32,7 @@ export class Collection  implements ICollection   {
     collectionConfig: ICollectionConfig,
     camaConfig: ICamaConfig
     ) {
-    this.container = containerFactory(camaConfig)
+    this.container = containerFactory(collectionName, camaConfig, collectionConfig)
     this.logger = this.container.get<ILogger>(TYPES.Logger);
     this.persistenceAdapter = this.container.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
     this.queryService = this.container.get<IQueryService<any>>(TYPES.QueryService);
@@ -41,11 +41,7 @@ export class Collection  implements ICollection   {
     this.name = collectionName;
     this.config = collectionConfig;
     this.logger.log(LogLevel.Debug, 'Initializing persistence adapter');
-    this.queue.add(() => (async (name,config)=> {
-      const pointer = this.logger.startTimer();
-      await this.persistenceAdapter.initCollection(name, config);
-      this.logger.endTimer(LogLevel.Debug, pointer, "init collection");
-    })(collectionName, collectionConfig))
+
   }
 
 

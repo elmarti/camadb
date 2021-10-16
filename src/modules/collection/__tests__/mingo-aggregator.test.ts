@@ -8,8 +8,11 @@ import { IAggregator } from '../../../interfaces/aggregator.interface';
 let container:any = null;
 
 beforeEach(() =>  {
-  container = createMockContainer({
+  container = createMockContainer('test-collection', {
     persistenceAdapter: PersistenceAdapterEnum.InMemory
+  }, {
+    columns:[],
+    indexes:[]
   })
   container.rebind(TYPES.Aggregator)
     .to(MingoAggregator);
