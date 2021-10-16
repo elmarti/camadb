@@ -13,7 +13,7 @@
     "publish": "npm publish",
     "demo": "yarn build && node ./demo/test-insert.js",
     "generate-docs": "typedoc --out docs ./src",
-    "browser-demo": "yarn link && cd demo/browser && yarn && yarn link camadb && yarn start"
+    "browser-demo": "yarn build && cd demo/browser && yarn && yarn start"
   },
   "repository": {
     "type": "git",

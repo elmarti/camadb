@@ -19,6 +19,8 @@ jobs:
           node-version: 'lts/*'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+      - name: Test project
+        run: yarn test
       - name: Build project
         run: yarn build
       - name: Release
