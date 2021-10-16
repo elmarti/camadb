@@ -73,7 +73,13 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
       },
 
     });
-  const updateable = await collection.findMany({
+  console.log('find many without options');
+  await collection.findMany({
+    _id: {
+      $gte: 50000,
+    },
+  })
+  await collection.findMany({
       _id: 3,
     });
   await collection.updateMany({
@@ -84,7 +90,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
     }
   });
 
-  const updated = await collection.findMany({
+ await collection.findMany({
     _id: {$in:[3,2]},
   });
   console.time('Aggregation');

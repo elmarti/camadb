@@ -3,4 +3,4 @@ export enum PersistenceAdapterEnum {
   IndexedDb = 'indexeddb',
   LocalStorage = 'localstorage',
   InMemory = 'inmemory'
-};
+}
