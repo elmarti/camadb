@@ -7,7 +7,6 @@ import PQueue from 'p-queue';
 import { IFS } from '../../../interfaces/fs.interface';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 import * as path from 'path';
-import sift from 'sift';
 import { ILogger } from '../../../interfaces/logger.interface';
 import { LogLevel } from '../../../interfaces/logger-level.enum';
 
@@ -51,7 +50,7 @@ export default class FSPersistence implements IPersistenceAdapter {
       const data = [...(await this.getData()), ...rows];
       await this.fs.writeData(outputPath, this.collectionName, data);
       await this.fs.commit(outputPath, this.collectionName);
-      this.cache = null;
+      this.cache = data;
     });
   }
 
