@@ -104,7 +104,7 @@ export class Collection  implements ICollection   {
    * @param query
    * @param delta
    */
-  async updateMany<T>(query: any, delta?: any): Promise<void> {
+  async updateMany<T>(query: any, delta: any): Promise<void> {
     this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Updating many');
     const pointer = this.logger.startTimer();

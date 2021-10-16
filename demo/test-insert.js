@@ -73,6 +73,12 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
       },
 
     });
+  console.log('find many without options');
+  await collection.findMany({
+    _id: {
+      $gte: 50000,
+    },
+  })
   const updateable = await collection.findMany({
       _id: 3,
     });
