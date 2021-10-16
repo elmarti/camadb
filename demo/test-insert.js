@@ -50,7 +50,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
   console.log('insert col1');
   await collection.insertMany(dummyData);
 
-  const findResult = await collection.findMany({
+  await collection.findMany({
     _id: {
       $gte: 50000,
     },
@@ -62,7 +62,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
       offset: 100,
       limit: 100
     });
-  const cachedFindResult = await collection.findMany({
+  await collection.findMany({
       _id: {
         $gte: 50000,
       },
