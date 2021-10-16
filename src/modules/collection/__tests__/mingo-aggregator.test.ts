@@ -1,7 +1,6 @@
 import { createMockContainer } from '../../../mocks/createMockContainer';
 import { PersistenceAdapterEnum } from '../../../interfaces/perisistence-adapter.enum';
 import { TYPES } from '../../../types';
-import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.interface';
 import { MingoAggregator } from '../mingo-aggregator';
 import { IAggregator } from '../../../interfaces/aggregator.interface';
 

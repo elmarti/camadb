@@ -2,7 +2,6 @@ import { createMockContainer } from '../../../mocks/createMockContainer';
 import { PersistenceAdapterEnum } from '../../../interfaces/perisistence-adapter.enum';
 import { TYPES } from '../../../types';
 import { FlattedSerializer } from '../flatted-serializer';
-import { ISerializer } from '../../../interfaces/serializer.interface';
 
 let container:any = null;
 
