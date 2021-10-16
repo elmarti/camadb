@@ -18,7 +18,10 @@ async function demo() {
       type:'date',
       title:'date'
     }],
-    indexes: [],
+    indexes: [{
+      column: 'name',
+      index: 'fulltext'
+    }],
   });
 
   console.log('generating dummy data');
@@ -28,7 +31,7 @@ async function demo() {
     dummyData.push({
       _id: i,
       date: new Date(),
-      name: 'Dummy field',
+      name: i + ' Dummy field ' + i,
       description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fermentum dolor enim. Nullam mattis dolor faucibus mauris accumsan ultrices. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam erat volutpat. Nullam accumsan nisl ut nulla semper luctus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur justo lorem, laoreet nec convallis ac, varius non nisl. Phasellus iaculis consequat tellus, id venenatis diam euismod efficitur. Nulla ac tellus vitae augue pharetra convallis. Proin volutpat quam elit, id tristique neque interdum id. Aliquam enim magna, pretium ac purus et, hendrerit semper nunc.
 
 Aenean accumsan pretium odio, id euismod metus dapibus a. Morbi laoreet nibh a dui accumsan sollicitudin. Mauris mollis scelerisque felis, ac dignissim est bibendum id. Fusce ut leo leo. Cras ultricies turpis nec nisi imperdiet laoreet. Maecenas mattis risus id lectus interdum congue. Sed euismod venenatis ipsum, a porta mauris tincidunt et. Cras rutrum scelerisque molestie.
@@ -52,7 +55,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
   await collection.insertMany(dummyData);
   console.timeEnd('insertMany')
 
-  const findResult = await collection.findMany({
+  await collection.findMany({
     _id: {
       $gte: 50000,
     },
@@ -64,7 +67,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
       offset: 100,
       limit: 100
     });
-  const cachedFindResult = await collection.findMany({
+  await collection.findMany({
       _id: {
         $gte: 50000,
       },
@@ -75,7 +78,13 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
       },
 
     });
-  const updateable = await collection.findMany({
+  console.log('find many without options');
+  await collection.findMany({
+    _id: {
+      $gte: 50000,
+    },
+  })
+  await collection.findMany({
       _id: 3,
     });
   await collection.updateMany({
@@ -86,7 +95,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
     }
   });
 
-  const updated = await collection.findMany({
+ await collection.findMany({
     _id: {$in:[3,2]},
   });
   console.time('Aggregation');

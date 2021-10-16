@@ -14,6 +14,7 @@ const TYPES = {
   Aggregator: Symbol.for("Aggregator"),
   CamaIndexer: Symbol.for("CamaIndexer"),
   BTreeIndexer: Symbol.for("BTreeIndexer"),
+  FullTextIndexer: Symbol.for("FullTextIndexer")
 };
 
 export { TYPES };

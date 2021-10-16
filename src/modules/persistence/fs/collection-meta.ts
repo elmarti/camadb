@@ -18,7 +18,8 @@ export class CollectionMeta implements ICollectionMeta {
   private fileName?: string;
   private collectionName?: string;
   private camaPath?: string;
-  constructor(@inject(TYPES.FS) private fs: IFS, @inject(TYPES.CamaConfig) private config: ICamaConfig,
+  constructor(@inject(TYPES.FS) private fs: IFS,
+              @inject(TYPES.CamaConfig) private config: ICamaConfig,
               @inject(TYPES.Logger) private logger:ILogger) {}
 
   /**

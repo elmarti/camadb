@@ -10,10 +10,9 @@
     "lint": "eslint src --ext .js,.ts",
     "lint:fix": "eslint src --fix --ext .js,.ts",
     "test": "jest --config jest.config.js",
-    "publish": "npm publish",
     "demo": "yarn build && node ./demo/test-insert.js",
     "generate-docs": "typedoc --out docs ./src",
-    "browser-demo": "yarn link && cd demo/browser && yarn && yarn link camadb && yarn start"
+    "browser-demo": "yarn build && cd demo/browser && yarn && yarn start"
   },
   "repository": {
     "type": "git",
@@ -56,8 +55,10 @@
     "dist/**/*"
   ],
   "dependencies": {
+    "@types/flexsearch": "^0.7.1",
     "fast-sort": "^3.0.3",
     "flatted": "^3.2.2",
+    "flexsearch": "^0.7.21",
     "idb": "^6.1.4",
     "inversify": "^5.1.1",
     "loglevel": "^1.7.1",

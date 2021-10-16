@@ -3,7 +3,7 @@ import { IIndexer } from '../../interfaces/indexer.interface';
 
 
 @injectable()
-export class CamaIndexer implements IIndexer{
+export class CamaIndexer implements IIndexer {
 
   async index(rows: Array<any>): Promise<Array<any>> {
     return rows;
@@ -22,5 +22,7 @@ export class CamaIndexer implements IIndexer{
     console.time('indexing');
     return rows;
   }
-
+  async search(query: any): Promise<Array<any>> {
+    return [];
+  }
 }

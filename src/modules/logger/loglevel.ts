@@ -3,7 +3,6 @@ import { ILogger } from '../../interfaces/logger.interface';
 import { LogLevel } from '../../interfaces/logger-level.enum';
 import { TYPES } from '../../types';
 import { ICamaConfig } from '../../interfaces/cama-config.interface';
-import {v4 as v4uuid} from 'uuid';
 
 
 @injectable()

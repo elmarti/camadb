@@ -5,4 +5,5 @@ export interface ICamaConfig {
   persistenceAdapter: PersistenceAdapterEnum;
   path?: string;
   logLevel?: LogLevel
+  test?: boolean
 }

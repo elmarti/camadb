@@ -1,3 +1,4 @@
 export enum IndexEnum {
-  BTree  = "btree"
+  BTree  = "btree",
+  FullText = 'fulltext'
 }

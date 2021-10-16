@@ -7,7 +7,6 @@ import PQueue from 'p-queue';
 import { IFS } from '../../../interfaces/fs.interface';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 import * as path from 'path';
-import sift from 'sift';
 import { ILogger } from '../../../interfaces/logger.interface';
 import { LogLevel } from '../../../interfaces/logger-level.enum';
 import { IIndexer } from '../../../interfaces/indexer.interface';
@@ -26,7 +25,8 @@ export default class FSPersistence implements IPersistenceAdapter {
     @inject(TYPES.CollectionMeta) private collectionMeta: ICollectionMeta,
     @inject(TYPES.FS) private fs: IFS,
     @inject(TYPES.Logger) private logger:ILogger,
-    @inject(TYPES.CamaIndexer) private camaIndexer:IIndexer
+    @inject(TYPES.CamaIndexer) private camaIndexer:IIndexer,
+    @inject(TYPES.FullTextIndexer) private fullTextIndexer:IIndexer
 
   ) {
     this.outputPath = this.config.path || '.cama'
@@ -55,11 +55,15 @@ export default class FSPersistence implements IPersistenceAdapter {
       console.time('indexing');
       const indexedData = await this.camaIndexer.addMetaData(oldData, rows);
       console.timeEnd('indexing');
+      console.time('fullTextIndex');
+      await this.fullTextIndexer.index(indexedData);
+      console.timeEnd('fullTextIndex');
+
       const data = [...oldData, ...indexedData];
 
       await this.fs.writeData(outputPath, this.collectionName, data);
       await this.fs.commit(outputPath, this.collectionName);
-      this.cache = null;
+      this.cache = data;
     });
   }
 
@@ -101,13 +105,11 @@ export default class FSPersistence implements IPersistenceAdapter {
     return this.cache;
   }
   async update(updated:any): Promise<void> {
-
-
       await this.queue.add(async () => {
           this.logger.log(LogLevel.Debug, `Writing file`);
           await this.fs.writeData(this.outputPath, this.collectionName, updated);
-        })
-
+          this.cache = updated;
+      })
   }
 
   /**
