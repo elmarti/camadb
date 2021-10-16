@@ -96,8 +96,9 @@ it('destroyed collections should throw an error on usage', async () => {
 
   const persistenceAdapter = collection.container.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
   await collection.destroy();
-  expect(collection.insertMany([{}])).rejects.toThrow('Collection has been destroyed. Call Cama.initCollection to recreate');
-  expect(collection.insertOne({})).rejects.toThrow('Collection has been destroyed. Call Cama.initCollection to recreate');
-  expect(collection.findMany({})).rejects.toThrow('Collection has been destroyed. Call Cama.initCollection to recreate');
-  expect(collection.updateMany({}, {})).rejects.toThrow('Collection has been destroyed. Call Cama.initCollection to recreate');
+  const errorMessage = 'Collection has been destroyed. Call Cama.initCollection to recreate';
+  expect(collection.insertMany([{}])).rejects.toThrow(errorMessage);
+  expect(collection.insertOne({})).rejects.toThrow(errorMessage);
+  expect(collection.findMany({})).rejects.toThrow(errorMessage);
+  expect(collection.updateMany({}, {})).rejects.toThrow(errorMessage);
 });

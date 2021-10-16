@@ -1,12 +1,8 @@
 import { Container } from 'inversify';
-import { selectPersistenceAdapterClass } from '../modules/persistence';
-import SerializationModule from '../modules/serialization';
-import QueryModule from '../modules/query';
+
 import { ILogger } from '../interfaces/logger.interface';
 import { TYPES } from '../types';
-import { LoglevelLogger } from '../modules/logger/loglevel';
 import { IAggregator } from '../interfaces/aggregator.interface';
-import { MingoAggregator } from '../modules/collection/mingo-aggregator';
 import { ICamaConfig } from '../interfaces/cama-config.interface';
 import { ISerializer } from '../interfaces/serializer.interface';
 import { SerializerMock } from './serializer';
