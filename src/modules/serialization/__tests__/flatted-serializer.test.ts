@@ -6,9 +6,12 @@ import { FlattedSerializer } from '../flatted-serializer';
 let container:any = null;
 
 beforeEach(() =>  {
-  container = createMockContainer({
+  container = createMockContainer('test-collection', {
     persistenceAdapter: PersistenceAdapterEnum.InMemory
-  })
+  }, {
+    columns:[],
+    indexes:[]
+  });
   container.rebind(TYPES.Serializer)
     .to(FlattedSerializer);
 })
