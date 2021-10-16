@@ -26,10 +26,12 @@ This is still under active development and a few features are missing:
 
 ### Installing
 ```
+yarn add reflect-metadata
 yarn add camadb
 ```
 OR 
 ```
+npm install reflect-metadata --save
 npm install camadb --save
 ```
 
