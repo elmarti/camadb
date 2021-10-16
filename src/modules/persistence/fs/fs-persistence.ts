@@ -1,6 +1,5 @@
 import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.interface';
 import { inject, injectable } from 'inversify';
-import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
 import { TYPES } from '../../../types';
 import { ICollectionMeta } from '../../../interfaces/collection-meta.interface';
 import PQueue from 'p-queue';

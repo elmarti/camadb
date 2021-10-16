@@ -1,4 +1,3 @@
-import { ICollectionConfig } from './collection-config.interface';
 
 export interface IPersistenceAdapter {
 

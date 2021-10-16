@@ -1,5 +1,4 @@
 import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.interface';
-import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';

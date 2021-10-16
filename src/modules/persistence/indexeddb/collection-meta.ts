@@ -1,7 +1,6 @@
 import { injectable } from 'inversify';
 import PQueue from 'p-queue';
 import { ICollectionMeta } from '../../../interfaces/collection-meta.interface';
-import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
 import { IMetaStructure } from '../../../interfaces/meta-structure.interface';
 
 

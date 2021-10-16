@@ -1,4 +1,3 @@
-import { ICollectionConfig } from './collection-config.interface';
 import { IMetaStructure } from './meta-structure.interface';
 
 export interface ICollectionMeta {
