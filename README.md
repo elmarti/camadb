@@ -23,7 +23,7 @@ This is still under active development and a few features are missing:
 - Rich text search 
 
 ## Getting started
-
+[Documentation](https://elmarti.github.io/camadb/classes/Collection.html)
 ### Installing
 ```
 yarn add reflect-metadata
