@@ -32,7 +32,7 @@
         console.time('dummy data generated');
         const dummyData = [];
         const dummyCount = button.dataset.type === 'localstorage' ? 1000 : 100000;
-        for (let i = 0, ii = 100000; i < ii; i++) {
+        for (let i = 0, ii = dummyCount; i < ii; i++) {
           dummyData.push({
             _id: i,
             date: new Date(),
@@ -58,7 +58,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
         console.log('insert col1');
         await collection.insertMany(dummyData);
 
-        const findResult = await collection.findMany({
+        await collection.findMany({
             _id: {
               $gte: 50000,
             },
@@ -70,7 +70,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
             offset: 100,
             limit: 100
           });
-        const cachedFindResult = await collection.findMany({
+        await collection.findMany({
             _id: {
               $gte: 50000,
             },
@@ -86,7 +86,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
           _id: {
             $gte: 50000,
           },
-        })
+        });
         await collection.findMany({
           _id: 3,
         });

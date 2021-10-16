@@ -39,7 +39,7 @@ export class QueryService<T> implements IQueryService<T>{
     }
     filterResult['totalCount'] = data.length;
     if(options.sort){
-      data = sort(data).by(options.sort)
+      data = sort(data).by(options.sort);
     }
     if(options.offset){
       data = data.slice(options.offset, data.length);

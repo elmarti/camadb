@@ -1,6 +1,6 @@
 import { ICollection } from '../../interfaces/collection.interface';
 import { ICollectionConfig } from '../../interfaces/collection-config.interface';
-import { Container, inject, injectable } from 'inversify';
+import { Container, injectable } from 'inversify';
 import { TYPES } from '../../types';
 import { IPersistenceAdapter } from '../../interfaces/persistence-adapter.interface';
 import { IQueryService } from '../../interfaces/query-service.interface';

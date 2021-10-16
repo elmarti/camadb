@@ -1,20 +1,14 @@
-import { inject, injectable } from 'inversify';
-import * as path from 'path';
+import { injectable } from 'inversify';
 import PQueue from 'p-queue';
-import { TYPES } from '../../../types';
-import { IFS } from '../../../interfaces/fs.interface';
 import { ICollectionMeta } from '../../../interfaces/collection-meta.interface';
 import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
-import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 import { IMetaStructure } from '../../../interfaces/meta-structure.interface';
-import { ILogger } from '../../../interfaces/logger.interface';
-import { LogLevel } from '../../../interfaces/logger-level.enum';
+
 
 @injectable()
 export class CollectionMeta implements ICollectionMeta {
   queue = new PQueue({ concurrency: 1 });
   private meta:any;
-  constructor() {}
 
   /**
    * Initialise the collection meta

@@ -1,4 +1,3 @@
-import { ICollectionConfig } from './collection-config.interface';
 import { IQueryOptions } from './query-options.interface';
 import { IFilterResult } from './filter-result.interface';
 import { Container } from 'inversify';
