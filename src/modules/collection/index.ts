@@ -87,7 +87,7 @@ export class Collection  implements ICollection   {
    * @param query - Query Object
    * @param options - Query options
    */
-  async findMany<T>(query: any, options:IQueryOptions): Promise<IFilterResult<T>> {
+  async findMany<T>(query: any, options?: IQueryOptions): Promise<IFilterResult<T>> {
     this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Finding many');
     const pointer = this.logger.startTimer();
