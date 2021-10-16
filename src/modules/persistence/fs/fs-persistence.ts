@@ -92,13 +92,11 @@ export default class FSPersistence implements IPersistenceAdapter {
     return this.cache;
   }
   async update(updated:any): Promise<void> {
-
-
       await this.queue.add(async () => {
           this.logger.log(LogLevel.Debug, `Writing file`);
           await this.fs.writeData(this.outputPath, this.collectionName, updated);
-        })
-
+          this.cache = updated;
+      })
   }
 
   /**
