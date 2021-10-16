@@ -8,18 +8,14 @@ import { IQueryOptions } from '../../interfaces/query-options.interface';
 import { ILogger } from '../../interfaces/logger.interface';
 import { LogLevel } from '../../interfaces/logger-level.enum';
 import { IFilterResult } from '../../interfaces/filter-result.interface';
-import { selectPersistenceAdapterClass } from '../persistence';
-import SerializationModule from '../serialization';
-import QueryModule from '../query';
+
 import { ICamaConfig } from '../../interfaces/cama-config.interface';
 import PQueue from 'p-queue';
-import { LoglevelLogger } from '../logger/loglevel';
 import { IAggregator } from '../../interfaces/aggregator.interface';
-import { MingoAggregator } from './mingo-aggregator';
+import { containerFactory } from '../../util/container.factory';
 
 @injectable()
 export class Collection  implements ICollection   {
-
 
   private config?: ICollectionConfig;
   private name?: string;
@@ -37,20 +33,11 @@ export class Collection  implements ICollection   {
     collectionConfig: ICollectionConfig,
     camaConfig: ICamaConfig
     ) {
-    this.container = new Container();
-    const persistenceModule = selectPersistenceAdapterClass(camaConfig.persistenceAdapter);
-    this.container.load(persistenceModule);
-    this.container.load(SerializationModule);
-    this.container.load(QueryModule);
-    this.container.bind<ILogger>(TYPES.Logger).to(LoglevelLogger).inSingletonScope();
-    this.container.bind<IAggregator>(TYPES.Aggregator).to(MingoAggregator).inRequestScope();
-
-    this.container.bind<ICamaConfig>(TYPES.CamaConfig).toConstantValue(camaConfig);
+    this.container = containerFactory(camaConfig)
     this.logger = this.container.get<ILogger>(TYPES.Logger);
     this.persistenceAdapter = this.container.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
     this.queryService = this.container.get<IQueryService<any>>(TYPES.QueryService);
     this.aggregator = this.container.get<IAggregator>(TYPES.Aggregator);
-
     this.logger.log(LogLevel.Debug, 'Initializing collection');
     this.name = collectionName;
     this.config = collectionConfig;
