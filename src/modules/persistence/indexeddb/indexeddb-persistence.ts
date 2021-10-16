@@ -1,5 +1,4 @@
 import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.interface';
-import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
@@ -18,9 +17,22 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
   private cache: any = null;
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
-    @inject(TYPES.Logger) private logger:ILogger
+    @inject(TYPES.Logger) private logger:ILogger,
+    @inject(TYPES.CollectionName) private collectionName: string
   ) {
-
+    this.queue.add(() => (async (collectionName) => {
+      this.dbName = this.config.path || 'cama';
+      this.storeName = collectionName;
+      this.db = await openDB(this.dbName, 1, {
+          upgrade: async (db: IDBPDatabase) => {
+            if (!db.objectStoreNames.contains(collectionName)) {
+              const store = db.createObjectStore(collectionName);
+              store.put([], 'data');
+            }
+          }
+        }
+      );
+    })(collectionName));
   }
   async destroy(): Promise<void> {
     this.db?.deleteObjectStore(this.storeName);
@@ -29,20 +41,26 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
   }
   async update(updated:any): Promise<void> {
     this.checkDestroyed();
-    const tx = this.db?.transaction(this.storeName, 'readwrite');
-    const store = tx?.objectStore(this.storeName) as any;
-    await store?.put(updated, 'data');
-    await tx?.done;
+    return this.queue.add(() => (async (updated) => {
+      const tx = this.db?.transaction(this.storeName, 'readwrite');
+      const store = tx?.objectStore(this.storeName) as any;
+      await store?.put(updated, 'data');
+      await tx?.done;
+    })(updated))
+
   }
   async getData(): Promise<any> {
     this.checkDestroyed();
-    if(this.cache){
-      return this.cache
-    }
-    const store = this.db?.transaction(this.storeName).objectStore(this.storeName);
-    this.cache = await store?.get('data');
+    return this.queue.add(async () => {
+      if(this.cache){
+        return this.cache
+      }
+      const store = this.db?.transaction(this.storeName).objectStore(this.storeName);
+      this.cache = await store?.get('data');
 
-    return this.cache;
+      return this.cache;
+    });
+
   }
   async insert(rows: Array<any>): Promise<any> {
     this.checkDestroyed();
@@ -56,19 +74,7 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
     });
 
   }
-  async initCollection(name: string, config: ICollectionConfig): Promise<void> {
-    this.dbName = this.config.path || 'cama';
-    this.storeName = name;
-    this.db = await openDB(this.dbName, 1, {
-      upgrade: async (db: IDBPDatabase) => {
-          if (!db.objectStoreNames.contains(name)) {
-            const store = db.createObjectStore(name);
-            store.put([], 'data');
-          }
-        }
-      }
-    );
-  }
+
   private checkDestroyed(){
     if(this.destroyed){
       throw new Error('Collection has been destroyed. Call Cama.initCollection to recreate')
