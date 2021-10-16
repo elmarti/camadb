@@ -16,10 +16,9 @@ import { containerFactory } from '../../util/container.factory';
 
 @injectable()
 export class Collection  implements ICollection   {
-
+  public container: Container;
   private config?: ICollectionConfig;
   private name?: string;
-  private container: Container;
   private logger: ILogger;
   private persistenceAdapter: IPersistenceAdapter;
   private queryService: IQueryService<any>;
