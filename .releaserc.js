@@ -27,8 +27,14 @@ module.exports = {
         template,
         partials: { commitTemplate },
         helpers: {
-          datetime: function (format = 'UTC:yyyy-mm-dd') {
-            return new Date();
+          datetime: function () {
+            const date = new Date();
+            return date.toLocaleString('en-US', {
+              weekday: 'short',
+              month: 'long',
+              day: '2-digit',
+              year: 'numeric'
+            });
           }
         },
         issueResolution: {
