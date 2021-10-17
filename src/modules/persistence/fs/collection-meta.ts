@@ -29,7 +29,6 @@ export class CollectionMeta implements ICollectionMeta {
       this.collectionName = collectionName;
       this.logger.log(LogLevel.Info, 'Ensuring cama folder exists: ' + this.camaPath);
       if ((!await this.fs.exists(this.camaPath))) {
-        console.log("doesn't exist");
         this.logger.log(LogLevel.Info, "Doesn't exist, creating: " + this.camaPath);
 
         await this.fs.mkdir(path.join(this.camaPath));
