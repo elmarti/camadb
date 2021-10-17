@@ -7,8 +7,6 @@ import { IMetaStructure } from '../../../interfaces/meta-structure.interface';
 export class CollectionMeta implements ICollectionMeta {
   queue = new PQueue({ concurrency: 1 });
   private meta:any;
-  constructor() {}
-
 
 
   /**
