@@ -18,6 +18,8 @@ export default class LocalstoragePersistence implements IPersistenceAdapter{
     @inject(TYPES.CollectionName) private collectionName: string
   ) {
     this.dbName = this.config.path || 'cama';
+    this.queue.add(() => this.getData());
+
   }
   async destroy(): Promise<void> {
     //@ts-ignore

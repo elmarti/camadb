@@ -29,6 +29,7 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
               const store = db.createObjectStore(collectionName);
               store.put([], 'data');
             }
+            await this.getData()
           }
         }
       );
