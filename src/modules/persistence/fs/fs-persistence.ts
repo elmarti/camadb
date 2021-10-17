@@ -25,6 +25,7 @@ export default class FSPersistence implements IPersistenceAdapter {
     @inject(TYPES.CollectionName) private collectionName: string
   ) {
     this.outputPath = this.config.path || '.cama'
+    this.queue.add(() => this.getData());
   }
 
 
