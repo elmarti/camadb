@@ -5,12 +5,11 @@ import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 
 import { ILogger } from '../../../interfaces/logger.interface';
 import { IDBPDatabase, openDB } from 'idb';
-import PQueue from 'p-queue';
+import { IQueueService } from '../../../interfaces/queue-service.interface';
 
 @injectable()
 export default class IndexedDbPersistence implements IPersistenceAdapter{
   private db?: IDBPDatabase;
-  queue = new PQueue({ concurrency: 1 });
   private dbName? = "";
   private destroyed = false;
   private storeName = "";
@@ -18,6 +17,7 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
     @inject(TYPES.Logger) private logger:ILogger,
+    @inject(TYPES.QueueService) private queue: IQueueService,
     @inject(TYPES.CollectionName) private collectionName: string
   ) {
     this.queue.add(() => (async (collectionName) => {

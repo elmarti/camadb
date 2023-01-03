@@ -2,19 +2,19 @@ import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.int
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
 import { ICollectionMeta } from '../../../interfaces/collection-meta.interface';
-import PQueue from 'p-queue';
 import { IFS } from '../../../interfaces/fs.interface';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 import * as path from 'path';
 import { ILogger } from '../../../interfaces/logger.interface';
 import { LogLevel } from '../../../interfaces/logger-level.enum';
+import { ISystem } from '../../../interfaces/system.interface';
+import { IQueueService } from '../../../interfaces/queue-service.interface';
 
 
 @injectable()
 export default class FSPersistence implements IPersistenceAdapter {
 
 
-  queue = new PQueue({ concurrency: 1 });
   private cache: any = null;
   private readonly outputPath: string;
   constructor(
@@ -22,7 +22,9 @@ export default class FSPersistence implements IPersistenceAdapter {
     @inject(TYPES.CollectionMeta) private collectionMeta: ICollectionMeta,
     @inject(TYPES.FS) private fs: IFS,
     @inject(TYPES.Logger) private logger:ILogger,
-    @inject(TYPES.CollectionName) private collectionName: string
+    @inject(TYPES.CollectionName) private collectionName: string,
+    @inject(TYPES.System) private system: ISystem,
+    @inject(TYPES.QueueService) private queue: IQueueService
   ) {
     this.outputPath = this.config.path || '.cama'
     this.queue.add(() => this.getData());
@@ -67,7 +69,7 @@ export default class FSPersistence implements IPersistenceAdapter {
     }
     this.logger.log(LogLevel.Info, "Loading data from disk");
 
-    const outputPath = path.join(process.cwd(), this.outputPath , this.collectionName, 'data');
+    const outputPath = path.join(this.system.getOutputPath(), this.collectionName, 'data');
 
     const data:any = await this.fs.readData(outputPath);
 

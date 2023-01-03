@@ -13,8 +13,9 @@ const TYPES = {
   Serializer: Symbol.for("Serializer"),
   QueryService: Symbol.for("QueryService"),
   Logger: Symbol.for("Logger"),
-  Aggregator: Symbol.for("Aggregator")
-
+  Aggregator: Symbol.for("Aggregator"),
+  System: Symbol.for('System'),
+  QueueService: Symbol.for('QueueService')
 };
 
 export { TYPES };

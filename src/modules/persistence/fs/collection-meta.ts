@@ -1,6 +1,5 @@
 import { inject, injectable } from 'inversify';
 import * as path from 'path';
-import PQueue from 'p-queue';
 import { TYPES } from '../../../types';
 import { IFS } from '../../../interfaces/fs.interface';
 import { ICollectionMeta } from '../../../interfaces/collection-meta.interface';
@@ -9,10 +8,11 @@ import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 import { IMetaStructure } from '../../../interfaces/meta-structure.interface';
 import { ILogger } from '../../../interfaces/logger.interface';
 import { LogLevel } from '../../../interfaces/logger-level.enum';
+import { ISystem } from '../../../interfaces/system.interface';
+import { IQueueService } from '../../../interfaces/queue-service.interface';
 
 @injectable()
 export class CollectionMeta implements ICollectionMeta {
-  queue = new PQueue({ concurrency: 1 });
   private meta?: IMetaStructure;
   private dbPath?: string;
   private fileName?: string;
@@ -21,9 +21,11 @@ export class CollectionMeta implements ICollectionMeta {
               @inject(TYPES.CamaConfig) private config: ICamaConfig,
               @inject(TYPES.CollectionConfig) private collectionConfig: ICollectionConfig,
               @inject(TYPES.CollectionName) private collectionName: string,
-              @inject(TYPES.Logger) private logger:ILogger) {
+              @inject(TYPES.Logger) private logger:ILogger,
+              @inject(TYPES.System) private system: ISystem,
+              @inject(TYPES.QueueService) private queue: IQueueService) {
     this.queue.add(async () => {
-      this.camaPath =  path.join(process.cwd(), './.cama');
+      this.camaPath =  this.system.getOutputPath();
       this.dbPath = path.join(this.camaPath, collectionName);
       this.fileName = `meta.json`;
       this.collectionName = collectionName;

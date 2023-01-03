@@ -10,9 +10,9 @@ import { LogLevel } from '../../interfaces/logger-level.enum';
 import { IFilterResult } from '../../interfaces/filter-result.interface';
 
 import { ICamaConfig } from '../../interfaces/cama-config.interface';
-import PQueue from 'p-queue';
 import { IAggregator } from '../../interfaces/aggregator.interface';
 import { containerFactory } from '../../util/container.factory';
+import { IQueueService } from '../../interfaces/queue-service.interface';
 
 @injectable()
 export class Collection  implements ICollection   {
@@ -22,7 +22,7 @@ export class Collection  implements ICollection   {
   private logger: ILogger;
   private persistenceAdapter: IPersistenceAdapter;
   private queryService: IQueryService<any>;
-  private queue = new PQueue({ concurrency: 1 });
+  private queue: IQueueService;
   private destroyed = false;
   private aggregator: IAggregator;
 
@@ -36,6 +36,8 @@ export class Collection  implements ICollection   {
     this.logger = this.container.get<ILogger>(TYPES.Logger);
     this.persistenceAdapter = this.container.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
     this.queryService = this.container.get<IQueryService<any>>(TYPES.QueryService);
+    this.queue = this.container.get<IQueueService>(TYPES.QueueService);
+
     this.aggregator = this.container.get<IAggregator>(TYPES.Aggregator);
     this.logger.log(LogLevel.Debug, 'Initializing collection');
     this.name = collectionName;
@@ -68,7 +70,7 @@ export class Collection  implements ICollection   {
    */
   async insertOne(row: any):Promise<void> {
     this.checkDestroyed();
-    this.logger.log(LogLevel.Debug, 'Inserting many');
+    this.logger.log(LogLevel.Debug, 'Inserting one');
     const pointer = this.logger.startTimer();
     await this.insertMany([row]);
     this.logger.endTimer(LogLevel.Debug, pointer, "insert row");

@@ -2,6 +2,8 @@ import { Container } from 'inversify';
 import { selectPersistenceAdapterClass } from '../modules/persistence';
 import SerializationModule from '../modules/serialization';
 import QueryModule from '../modules/query';
+import SystemModule from '../modules/system';
+import QueueModule from '../modules/queue';
 import { ILogger } from '../interfaces/logger.interface';
 import { TYPES } from '../types';
 import { LoglevelLogger } from '../modules/logger/loglevel';
@@ -21,6 +23,8 @@ export const containerFactory = (collectionName: string, camaConfig: ICamaConfig
   container.load(persistenceModule);
   container.load(SerializationModule);
   container.load(QueryModule);
+  container.load(SystemModule);
+  container.load(QueueModule);
   container.bind<ILogger>(TYPES.Logger).to(LoglevelLogger).inSingletonScope();
   container.bind<IAggregator>(TYPES.Aggregator).to(MingoAggregator).inRequestScope();
 

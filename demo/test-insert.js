@@ -2,17 +2,29 @@
 require('reflect-metadata');
 const { Cama } = require('../dist');
 const fs = require('fs');
-async function demo() {
-  fs.rmdirSync('./.cama', {
-    recursive: true
-  });
+const path = require ('path');
 
+const outputPath = path.join(__dirname, 'collection.cama');
+
+async function demo() {
+  try {
+    console.log('cleaning output');
+    fs.rmdirSync(outputPath, {
+      recursive: true
+    });
+} catch(err){
+    if(err.code !== 'ENOENT'){
+      throw err;
+    }
+}
+
+  console.log('initializing cama')
   const database = new Cama({
-    path: './.cama',
+    path: outputPath,
     persistenceAdapter: 'fs',
     logLevel: 'debug'
   });
-
+  console.log('initializing "Test" collection');
   const collection = await database.initCollection('test', {
     columns: [{
       type:'date',

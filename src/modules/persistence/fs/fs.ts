@@ -1,21 +1,21 @@
 import { IFS } from '../../../interfaces/fs.interface';
 import { promises as nodeFs } from 'fs';
 import * as path from 'path';
-import PQueue from 'p-queue';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
 import { ISerializer } from '../../../interfaces/serializer.interface';
 import { ILogger } from '../../../interfaces/logger.interface';
 import { LogLevel } from '../../../interfaces/logger-level.enum';
+import { IQueueService } from '../../../interfaces/queue-service.interface';
 
 @injectable()
 export class Fs implements IFS {
 
 
-  queue = new PQueue({ concurrency: 50 });
 
   constructor(@inject(TYPES.Serializer) private serializer: ISerializer,
-              @inject(TYPES.Logger) private logger:ILogger) {}
+              @inject(TYPES.Logger) private logger:ILogger,
+              @inject(TYPES.QueueService) private queue: IQueueService) {}
 
   /**
    * Write a JSON object to a file
