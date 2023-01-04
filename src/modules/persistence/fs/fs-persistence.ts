@@ -26,8 +26,9 @@ export default class FSPersistence implements IPersistenceAdapter {
     @inject(TYPES.System) private system: ISystem,
     @inject(TYPES.QueueService) private queue: IQueueService
   ) {
-    this.outputPath = this.config.path || '.cama'
-    this.queue.add(() => this.getData());
+    this.outputPath = system.getOutputPath();
+    // const getDataTask = () => this.getData();
+    // this.queue.add(getDataTask);
   }
 
 
@@ -37,13 +38,11 @@ export default class FSPersistence implements IPersistenceAdapter {
    * @param rows - The rows to be inserted
    */
   async insert<T>(rows: Array<any>): Promise<any> {
-    return await this.queue.add(()=> (async (rows) => {
-      const outputPath = path.join(process.cwd(), this.outputPath);
-      const data = [...(await this.getData()), ...rows];
-      await this.fs.writeData(outputPath, this.collectionName, data);
-      await this.fs.commit(outputPath, this.collectionName);
-      this.cache = data;
-    })(rows));
+    const data = [...(await this.getData()), ...rows];
+    await this.fs.writeData(this.outputPath, this.collectionName, data);
+    await this.fs.commit(this.outputPath, this.collectionName);
+    this.cache = data;
+    
   }
 
   /**
@@ -84,11 +83,10 @@ export default class FSPersistence implements IPersistenceAdapter {
     return this.cache;
   }
   async update(updated:any): Promise<void> {
-      await this.queue.add(() => (async (updated) => {
-          this.logger.log(LogLevel.Debug, `Writing file`);
-          await this.fs.writeData(this.outputPath, this.collectionName, updated);
-          this.cache = updated;
-      })(updated))
+      this.logger.log(LogLevel.Debug, `Writing file`);
+      await this.fs.writeData(this.outputPath, this.collectionName, updated);
+      this.cache = updated;
+      
   }
 
   /**

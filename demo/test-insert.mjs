@@ -1,12 +1,10 @@
 
-require('reflect-metadata');
-const { Cama } = require('../dist');
-const fs = require('fs');
-const path = require ('path');
+import 'reflect-metadata';
+import { Cama } from '../dist/index.js';
+import fs from 'fs';
+import path from 'path';
+const outputPath = path.join(process.cwd(), 'collection.cama');
 
-const outputPath = path.join(__dirname, 'collection.cama');
-
-async function demo() {
   try {
     console.log('cleaning output');
     fs.rmdirSync(outputPath, {
@@ -54,15 +52,15 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
   }
   console.timeEnd('dummy data generated');
 
-  await collection.insertOne({
+  const insertOneResult = await collection.insertOne({
     _id: 'test',
     name: 'Dummy field',
     description: `Data`,
   });
-  console.log('insert col1');
-  await collection.insertMany(dummyData);
-
-  await collection.findMany({
+  console.log({insertOneResult});
+  const insertManyResult = await collection.insertMany(dummyData);
+  console.log({insertManyResult});
+  const findManyResult = await collection.findMany({
     _id: {
       $gte: 50000,
     },
@@ -74,6 +72,7 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
       offset: 100,
       limit: 100
     });
+    console.log({findManyResult});
   await collection.findMany({
       _id: {
         $gte: 50000,
@@ -114,8 +113,6 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
   console.timeEnd('Aggregation');
   console.log({aggregationResult})
 
-}
+
 console.time('demo');
-demo()
-  .then(() => console.timeEnd('demo'))
-  .catch((err) => console.error(err));
+

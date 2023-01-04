@@ -24,35 +24,37 @@ export class CollectionMeta implements ICollectionMeta {
               @inject(TYPES.Logger) private logger:ILogger,
               @inject(TYPES.System) private system: ISystem,
               @inject(TYPES.QueueService) private queue: IQueueService) {
-    this.queue.add(async () => {
-      this.camaPath =  this.system.getOutputPath();
-      this.dbPath = path.join(this.camaPath, collectionName);
-      this.fileName = `meta.json`;
-      this.collectionName = collectionName;
-      this.logger.log(LogLevel.Info, 'Ensuring cama folder exists: ' + this.camaPath);
-      if ((!await this.fs.exists(this.camaPath))) {
-        this.logger.log(LogLevel.Info, "Doesn't exist, creating: " + this.camaPath);
-
-        await this.fs.mkdir(path.join(this.camaPath));
-      }
-      this.logger.log(LogLevel.Info, 'Checking if folder exists for collection' + this.fileName);
-
-      if (await this.fs.exists(path.join(this.dbPath, this.fileName))) {
-        this.logger.log(LogLevel.Info, 'Already exists');
-        return;
-      }
-      this.logger.log(LogLevel.Info, 'Does not exist, creating' + this.fileName);
-
-      await this.fs.mkdir(path.join(this.dbPath));
-      this.meta = {
-        ...collectionConfig,
-        collectionName,
-      };
-      this.logger.log(LogLevel.Info, 'Writing meta file');
-      await this.fs.writeData(this.camaPath, this.collectionName, []);
-      await this.fs.commit(this.camaPath, this.collectionName);
-      return this.fs.writeJSON<IMetaStructure>(this.dbPath, this.fileName, this.meta);
-    });
+                const initializeCollectionMetaTask = async () => {
+                  this.camaPath =  this.system.getOutputPath();
+                  this.dbPath = path.join(this.system.getOutputPath(), collectionName);
+                  this.fileName = `meta.json`;
+                  this.collectionName = collectionName;
+                  this.logger.log(LogLevel.Info, 'Ensuring cama folder exists: ' + this.camaPath);
+                  if (!(await this.fs.exists(this.camaPath))) {
+                    this.logger.log(LogLevel.Info, "Doesn't exist, creating: " + this.camaPath);
+            
+                    await this.fs.mkdir(path.join(this.camaPath));
+                  }
+                  this.logger.log(LogLevel.Info, 'Checking if folder exists for collection ' + this.fileName);
+            
+                  if (await this.fs.exists(path.join(this.dbPath, this.fileName))) {
+                    this.logger.log(LogLevel.Info, 'Already exists');
+                    return;
+                  }
+                  this.logger.log(LogLevel.Info, 'Does not exist, creating' + this.fileName);
+            
+                  await this.fs.mkdir(this.dbPath);
+                  this.meta = {
+                    ...collectionConfig,
+                    collectionName,
+                  };
+                  this.logger.log(LogLevel.Info, 'Initialising empty collection');
+                  await this.fs.writeData(this.camaPath, this.collectionName, []);
+                  await this.fs.commit(this.camaPath, this.collectionName);
+                  this.logger.log(LogLevel.Info, 'Writing meta file');
+                  return await this.fs.writeJSON<IMetaStructure>(this.dbPath, this.fileName, this.meta);
+                };
+    this.queue.add(initializeCollectionMetaTask);
   }
 
   /**
@@ -61,8 +63,7 @@ export class CollectionMeta implements ICollectionMeta {
    * @param metaStructure - the value to be to be applied to the meta
    */
   async update(collectionName: string, metaStructure: IMetaStructure): Promise<void> {
-
-    await this.queue.add(() => {
+    const updateCollectionMetaTask = () => {
 
       this.logger.log(LogLevel.Info, 'Updating meta file');
 
@@ -71,17 +72,19 @@ export class CollectionMeta implements ICollectionMeta {
       this.meta = Object.assign({}, this.meta, metaStructure);
       this.logger.log(LogLevel.Info, 'Writing meta file');
       return this.fs.writeJSON<IMetaStructure>(dbPath, 'meta.json', this.meta);
-    });
+    };
+    await this.queue.add(updateCollectionMetaTask);
   }
 
   /**
    * Gets the in-memory meta value
    */
   async get(): Promise<IMetaStructure|undefined> {
-    return await this.queue.add(() => {
+    const getCollectionMetaTask = () => {
       this.logger.log(LogLevel.Info, 'Getting data from cache');
       return this.meta;
-    });
+    };
+    return await this.queue.add(getCollectionMetaTask);
 
   }
 }

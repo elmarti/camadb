@@ -6,7 +6,6 @@ import { TYPES } from '../../../types';
 import { ISerializer } from '../../../interfaces/serializer.interface';
 import { ILogger } from '../../../interfaces/logger.interface';
 import { LogLevel } from '../../../interfaces/logger-level.enum';
-import { IQueueService } from '../../../interfaces/queue-service.interface';
 
 @injectable()
 export class Fs implements IFS {
@@ -14,8 +13,7 @@ export class Fs implements IFS {
 
 
   constructor(@inject(TYPES.Serializer) private serializer: ISerializer,
-              @inject(TYPES.Logger) private logger:ILogger,
-              @inject(TYPES.QueueService) private queue: IQueueService) {}
+              @inject(TYPES.Logger) private logger:ILogger) {}
 
   /**
    * Write a JSON object to a file
@@ -74,8 +72,9 @@ export class Fs implements IFS {
   async commit(folderPath: string, collection:string): Promise<void> {
     this.logger.log(LogLevel.Debug, `committing`);
     this.logger.log(LogLevel.Debug, collection);
-    const outputPath = path.join(folderPath, `${collection}/data~`)
-    await this.queue.add(async () => nodeFs.rename(outputPath, outputPath.replace('~', '')))
+    const outputPath = path.join(folderPath, `${collection}/data~`);
+   
+    await nodeFs.rename(outputPath, outputPath.replace('~', ''))
   }
 
   /**

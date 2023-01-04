@@ -13,6 +13,7 @@
     const buttons = document.querySelectorAll('.test');
     for(const button of  buttons){
       button.addEventListener('click', async () => {
+        try {
         console.time(button.dataset.type);
         const database = new camadb.Cama({
           path: './.cama',
@@ -110,7 +111,10 @@ Sed pellentesque ante quis nunc accumsan sodales. Nam vitae dui a quam bibendum 
         console.timeEnd('Aggregation');
         console.log({aggregationResult});
         console.timeEnd(button.dataset.type);
-
+      }catch(err){
+        console.log('failed');
+        console.error(err);
+      }
       });
     }
   </script>

@@ -22,7 +22,7 @@ export class Collection  implements ICollection   {
   private logger: ILogger;
   private persistenceAdapter: IPersistenceAdapter;
   private queryService: IQueryService<any>;
-  private queue: IQueueService;
+  public queue: IQueueService;
   private destroyed = false;
   private aggregator: IAggregator;
 
@@ -54,11 +54,11 @@ export class Collection  implements ICollection   {
   async insertMany(rows:Array<any>):Promise<void> {
     this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Inserting many');
-    await this.queue.add(() => (async (rows) => {
       const pointer = this.logger.startTimer();
+
       await this.persistenceAdapter.insert(rows);
       this.logger.endTimer(LogLevel.Debug, pointer, "insert  rows");
-    })(rows))
+
   }
 
   /**
@@ -89,12 +89,9 @@ export class Collection  implements ICollection   {
     this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Finding many');
     const pointer = this.logger.startTimer();
-    const result = await this.queue.add(() => (async (query, options) => {
-      return await this.queryService.filter(query, options);
-    })(query, options));
-    this.logger.endTimer(LogLevel.Debug, pointer, "find many");
+    const result = await this.queryService.filter(query, options);
+    this.logger.endTimer(LogLevel.Debug, pointer, "Finding many");
     return result;
-
   }
 
   /**
@@ -106,9 +103,7 @@ export class Collection  implements ICollection   {
     this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Updating many');
     const pointer = this.logger.startTimer();
-    await this.queue.add(() => (async (query, delta) => {
-      await this.queryService.update(query, delta);
-    })(query, delta))
+    await this.queryService.update(query, delta);
     this.logger.endTimer(LogLevel.Debug, pointer, "Updating many");
 
   }
