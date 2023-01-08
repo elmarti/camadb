@@ -1,5 +1,5 @@
 import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.interface';
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 
 
 @injectable()
