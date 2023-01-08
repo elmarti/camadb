@@ -1,12 +1,10 @@
 import { injectable } from 'inversify';
-import PQueue from 'p-queue';
 import { ICollectionMeta } from '../../../interfaces/collection-meta.interface';
 import { IMetaStructure } from '../../../interfaces/meta-structure.interface';
 
 
 @injectable()
 export class CollectionMeta implements ICollectionMeta {
-  queue = new PQueue({ concurrency: 1 });
   private meta:any;
 
   /**
