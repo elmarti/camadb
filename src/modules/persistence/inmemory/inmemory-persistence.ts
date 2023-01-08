@@ -1,10 +1,6 @@
 import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.interface';
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../../../types';
-import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 
-import { ILogger } from '../../../interfaces/logger.interface';
-import { IQueueService } from '../../../interfaces/queue-service.interface';
 
 @injectable()
 export default class InmemoryPersistence implements IPersistenceAdapter{
@@ -13,7 +9,6 @@ export default class InmemoryPersistence implements IPersistenceAdapter{
   private collectionName = "";
   private cache: any = [];
   constructor(
-    @inject(TYPES.QueueService) private queue: IQueueService
   ) {
 
   }
@@ -24,21 +19,17 @@ export default class InmemoryPersistence implements IPersistenceAdapter{
   }
   async update(updated:any): Promise<void> {
     this.checkDestroyed();
-    return this.queue.add(() => (updated => {
-      this.cache = updated;
-    })(updated));
+    this.cache = updated;
   }
   async getData(): Promise<any> {
     this.checkDestroyed();
-    return this.queue.add(()=> this.cache);
+    return this.cache
   }
   async insert(rows: Array<any>): Promise<any> {
     this.checkDestroyed();
-    await this.queue.add(async () => {
       const data = await this.getData();
       data.push(...rows);
       this.cache = data;
-    });
 
   }
 
