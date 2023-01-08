@@ -4,22 +4,19 @@ import { TYPES } from '../../../types';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 
 import { ILogger } from '../../../interfaces/logger.interface';
-import PQueue from 'p-queue';
 
 @injectable()
 export default class LocalstoragePersistence implements IPersistenceAdapter{
-  queue = new PQueue({ concurrency: 1 });
   private readonly dbName;
   private destroyed = false;
   private cache: any = null;
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
     @inject(TYPES.Logger) private logger:ILogger,
-    @inject(TYPES.CollectionName) private collectionName: string
+    @inject(TYPES.CollectionName) private collectionName: string,
   ) {
     this.dbName = this.config.path || 'cama';
-    this.queue.add(() => this.getData());
-
+    this.getData();
   }
   async destroy(): Promise<void> {
     //@ts-ignore
@@ -28,30 +25,24 @@ export default class LocalstoragePersistence implements IPersistenceAdapter{
   }
   async update(updated:any): Promise<void> {
     this.checkDestroyed();
-    return this.queue.add(() =>(async updated => {
-      await this.setData(updated);
-    })())
+    await this.setData(updated);
     //@ts-ignore
   }
   async getData(): Promise<any> {
     this.checkDestroyed();
-    return this.queue.add(async () => {
       if(this.cache){
         return this.cache
       }
       this.cache = await this.loadData();
 
       return this.cache;
-    });
 
   }
   async insert(rows: Array<any>): Promise<any> {
     this.checkDestroyed();
-    await this.queue.add(async () => {
       const data = await this.getData();
       data.push(...rows);
       await this.setData(data);
-    });
 
   }
   private async loadData(){

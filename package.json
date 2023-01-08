@@ -10,7 +10,7 @@
     "lint": "eslint src --ext .js,.ts",
     "lint:fix": "eslint src --fix --ext .js,.ts",
     "test": "jest --config jest.config.js",
-    "demo": "yarn build && node ./demo/test-insert.js",
+    "demo": "yarn build && node ./demo/test-insert.mjs",
     "generate-docs": "typedoc --out docs ./src",
     "browser-demo": "yarn build && cd demo/browser && yarn && yarn start"
   },

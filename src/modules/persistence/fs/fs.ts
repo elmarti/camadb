@@ -1,7 +1,6 @@
 import { IFS } from '../../../interfaces/fs.interface';
 import { promises as nodeFs } from 'fs';
 import * as path from 'path';
-import PQueue from 'p-queue';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
 import { ISerializer } from '../../../interfaces/serializer.interface';
@@ -12,7 +11,6 @@ import { LogLevel } from '../../../interfaces/logger-level.enum';
 export class Fs implements IFS {
 
 
-  queue = new PQueue({ concurrency: 50 });
 
   constructor(@inject(TYPES.Serializer) private serializer: ISerializer,
               @inject(TYPES.Logger) private logger:ILogger) {}
@@ -74,8 +72,9 @@ export class Fs implements IFS {
   async commit(folderPath: string, collection:string): Promise<void> {
     this.logger.log(LogLevel.Debug, `committing`);
     this.logger.log(LogLevel.Debug, collection);
-    const outputPath = path.join(folderPath, `${collection}/data~`)
-    await this.queue.add(async () => nodeFs.rename(outputPath, outputPath.replace('~', '')))
+    const outputPath = path.join(folderPath, `${collection}/data~`);
+   
+    await nodeFs.rename(outputPath, outputPath.replace('~', ''))
   }
 
   /**

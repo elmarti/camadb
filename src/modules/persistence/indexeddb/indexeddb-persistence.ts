@@ -5,35 +5,34 @@ import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 
 import { ILogger } from '../../../interfaces/logger.interface';
 import { IDBPDatabase, openDB } from 'idb';
-import PQueue from 'p-queue';
 
 @injectable()
 export default class IndexedDbPersistence implements IPersistenceAdapter{
   private db?: IDBPDatabase;
-  queue = new PQueue({ concurrency: 1 });
   private dbName? = "";
   private destroyed = false;
   private storeName = "";
   private cache: any = null;
+  private initPromise: Promise<void> | null = null;
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
     @inject(TYPES.Logger) private logger:ILogger,
     @inject(TYPES.CollectionName) private collectionName: string
   ) {
-    this.queue.add(() => (async (collectionName) => {
       this.dbName = this.config.path || 'cama';
       this.storeName = collectionName;
-      this.db = await openDB(this.dbName, 1, {
-          upgrade: async (db: IDBPDatabase) => {
-            if (!db.objectStoreNames.contains(collectionName)) {
-              const store = db.createObjectStore(collectionName);
-              store.put([], 'data');
-            }
-            await this.getData()
+      this.initPromise = openDB(this.dbName, 1, {
+        upgrade: async (db: IDBPDatabase) => {
+          if (!db.objectStoreNames.contains(collectionName)) {
+            const store = db.createObjectStore(collectionName);
+            store.put([], 'data');
           }
+          await this.getData()
         }
-      );
-    })(collectionName));
+      }
+    ).then(db => {
+      this.db = db; 
+    });
   }
   async destroy(): Promise<void> {
     this.db?.deleteObjectStore(this.storeName);
@@ -42,17 +41,19 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
   }
   async update(updated:any): Promise<void> {
     this.checkDestroyed();
-    return this.queue.add(() => (async (updated) => {
-      const tx = this.db?.transaction(this.storeName, 'readwrite');
-      const store = tx?.objectStore(this.storeName) as any;
-      await store?.put(updated, 'data');
-      await tx?.done;
-    })(updated))
+    await this.initPromise;
+
+    const tx = this.db?.transaction(this.storeName, 'readwrite');
+    const store = tx?.objectStore(this.storeName) as any;
+    await store?.put(updated, 'data');
+    await tx?.done;
+
 
   }
   async getData(): Promise<any> {
     this.checkDestroyed();
-    return this.queue.add(async () => {
+    await this.initPromise;
+
       if(this.cache){
         return this.cache
       }
@@ -60,19 +61,18 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
       this.cache = await store?.get('data');
 
       return this.cache;
-    });
 
   }
   async insert(rows: Array<any>): Promise<any> {
     this.checkDestroyed();
-    await this.queue.add(async () => {
+    await this.initPromise;
+
       const data = await this.getData();
       data.push(...rows);
       const tx = this.db?.transaction(this.storeName, 'readwrite');
       const store = tx?.objectStore(this.storeName) as any;
       await store?.put(data, 'data');
       this.cache = data;
-    });
 
   }
 

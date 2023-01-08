@@ -2,8 +2,6 @@
 
 CamaDB is a NoSQL embedded database written in pure TypeScript for Node, Electron and browser-based environments.
 
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/elmarti/camadb.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/elmarti/camadb/alerts/)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/elmarti/camadb.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/elmarti/camadb/context:javascript)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 ## Why?
