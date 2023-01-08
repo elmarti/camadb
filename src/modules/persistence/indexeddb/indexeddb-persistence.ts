@@ -13,6 +13,7 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
   private destroyed = false;
   private storeName = "";
   private cache: any = null;
+  private initPromise: Promise<void> | null = null;
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
     @inject(TYPES.Logger) private logger:ILogger,
@@ -20,7 +21,7 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
   ) {
       this.dbName = this.config.path || 'cama';
       this.storeName = collectionName;
-      openDB(this.dbName, 1, {
+      this.initPromise = openDB(this.dbName, 1, {
         upgrade: async (db: IDBPDatabase) => {
           if (!db.objectStoreNames.contains(collectionName)) {
             const store = db.createObjectStore(collectionName);
@@ -40,6 +41,8 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
   }
   async update(updated:any): Promise<void> {
     this.checkDestroyed();
+    await this.initPromise;
+
     const tx = this.db?.transaction(this.storeName, 'readwrite');
     const store = tx?.objectStore(this.storeName) as any;
     await store?.put(updated, 'data');
@@ -49,6 +52,8 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
   }
   async getData(): Promise<any> {
     this.checkDestroyed();
+    await this.initPromise;
+
       if(this.cache){
         return this.cache
       }
@@ -60,6 +65,8 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
   }
   async insert(rows: Array<any>): Promise<any> {
     this.checkDestroyed();
+    await this.initPromise;
+
       const data = await this.getData();
       data.push(...rows);
       const tx = this.db?.transaction(this.storeName, 'readwrite');
