@@ -62,7 +62,6 @@
     "loglevel": "^1.7.1",
     "mingo": "^4.2.0",
     "obop": "^0.2.1",
-    "p-queue": "6.6.2",
     "path-browserify": "^1.0.1",
     "reflect-metadata": "^0.1.13",
     "sift": "^15.0.0",

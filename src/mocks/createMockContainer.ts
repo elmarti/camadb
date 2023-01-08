@@ -13,7 +13,8 @@ import { PersistenceAdapterMock } from './persistence-adapter';
 import { IQueryService } from '../interfaces/query-service.interface';
 import { QueryServiceMock } from './query.service';
 import { ICollectionConfig } from '../interfaces/collection-config.interface';
-
+import QueueModule from '../modules/queue';
+import SystemModule from '../modules/system';
 export const createMockContainer = (collectionName: string, camaConfig: ICamaConfig, collectionConfig: ICollectionConfig): Container => {
   const container = new Container();
 
@@ -23,7 +24,8 @@ export const createMockContainer = (collectionName: string, camaConfig: ICamaCon
   container.bind<ICamaConfig>(TYPES.CamaConfig).toConstantValue(camaConfig);
   container.bind<ICollectionConfig>(TYPES.CollectionConfig).toConstantValue(collectionConfig);
   container.bind<string>(TYPES.CollectionName).toConstantValue(collectionName);
-
+  container.load(SystemModule);
+  container.load(QueueModule);
   container.bind<IPersistenceAdapter>(TYPES.PersistenceAdapter).to(PersistenceAdapterMock).inSingletonScope();
   container.bind<IQueryService<any>>(TYPES.QueryService).to(QueryServiceMock).inSingletonScope()
   return container;
