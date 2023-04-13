@@ -8,12 +8,8 @@ export default class InmemoryPersistence implements IPersistenceAdapter{
   private destroyed = false;
   private collectionName = "";
   private cache: any = [];
-  constructor(
-  ) {
-
-  }
+  
   async destroy(): Promise<void> {
-    //@ts-ignore
     this.cache = null;
     this.destroyed = true;
   }
