@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+
+    "plugins": [ {
+      "transform": "ts-auto-mock/transformer",
+      "cacheBetweenTests": false
+    }],
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Basic Options */
@@ -66,6 +71,7 @@
     "skipLibCheck": true /* Skip type checking of declaration files. */,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*",  "src/mocks/*"]
+  "include": ["src", "global-just.d.ts"],
+  "exclude": ["node_modules", "**/__tests__/*",  "src/mocks/*"],
+  
 }
