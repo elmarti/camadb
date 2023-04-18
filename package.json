@@ -43,6 +43,7 @@
     "dateformat": "^5.0.1",
     "eslint": "^7.11.0",
     "eslint-plugin-jest": "^24.1.0",
+    "fake-indexeddb": "^4.0.1",
     "jest": "^26.6.0",
     "prettier": "^2.3.0",
     "semantic-release-gitmoji": "^1.4.2",

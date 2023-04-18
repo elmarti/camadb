@@ -5,4 +5,7 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(t|j)s$',
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
+  "setupFiles": [
+    "fake-indexeddb/auto"
+]
 };
