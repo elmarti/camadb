@@ -5,10 +5,11 @@ import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 
 import { ILogger } from '../../../interfaces/logger.interface';
 import { IDBPDatabase, openDB } from 'idb';
+import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
 
 @injectable()
 export default class IndexedDbPersistence implements IPersistenceAdapter{
-  private db?: IDBPDatabase;
+  public db?: IDBPDatabase;
   private dbName? = "";
   private destroyed = false;
   private storeName = "";
@@ -17,7 +18,8 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
   constructor(
     @inject(TYPES.CamaConfig) private config: ICamaConfig,
     @inject(TYPES.Logger) private logger:ILogger,
-    @inject(TYPES.CollectionName) private collectionName: string
+    @inject(TYPES.CollectionName) private collectionName: string,
+    @inject(TYPES.CollectionConfig) private collectionConfig: ICollectionConfig,
   ) {
       this.dbName = this.config.path || 'cama';
       this.storeName = collectionName;
@@ -25,9 +27,14 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
         upgrade: async (db: IDBPDatabase) => {
           if (!db.objectStoreNames.contains(collectionName)) {
             const store = db.createObjectStore(collectionName);
+          
             store.put([], 'data');
+            for(const index of this.collectionConfig.indexes){
+              store.createIndex(index.name,index.column, {unique: !!index.unique})
+            }
           }
-          await this.getData()
+          await this.getData();
+          
         }
       }
     ).then(db => {
