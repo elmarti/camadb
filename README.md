@@ -6,6 +6,8 @@ This repository is a workspace. The existing `camadb` import is preserved by a c
 
 See [workspace architecture](docs/architecture.md), [local development](docs/development.md), [versioning and publishing](docs/versioning-and-publishing.md), and the [2.x compatibility policy](docs/migration-2.x.md).
 
+Stable releases are automated through a Changesets release pull request on `main`. Pushes to `develop` publish unique snapshot releases under npm's `alpha` dist-tag.
+
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 ## Why?

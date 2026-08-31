@@ -1,0 +1,16 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [],
+  "linked": [],
+  "access": "restricted",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "bumpVersionsWithWorkspaceProtocolOnly": false,
+  "ignore": ["@camadb/benchmarks", "@camadb/studio", "@camadb/test-utils", "@camadb/example-basic"],
+  "privatePackages": {
+    "version": false,
+    "tag": false
+  }
+}

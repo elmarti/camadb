@@ -1,6 +1,7 @@
 - Run `yarn validate` before opening a pull request.
 - Keep cross-package imports on explicit public entry points and declare every workspace dependency.
 - Follow [local development](docs/development.md) and [versioning and publishing](docs/versioning-and-publishing.md).
+- Add a `yarn changeset` entry for every user-visible package change.
 - Please implement [TypeDoc](https://typedoc.org/guides/doccomments/) comments.
 - Open feature and fix pull requests against `develop`.
 - Merges to `develop` publish alpha versions (for example, `1.2.0-alpha.1`) under the npm `alpha` dist-tag.
