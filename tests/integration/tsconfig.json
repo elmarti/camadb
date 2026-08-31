@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "rootDir": ".", "outDir": "dist", "tsBuildInfoFile": "../../.cache/integration.tsbuildinfo" },
+  "include": ["*.ts"],
+  "references": [
+    { "path": "../../packages/core" },
+    { "path": "../../packages/camadb" },
+    { "path": "../../packages/test-utils" }
+  ]
+}

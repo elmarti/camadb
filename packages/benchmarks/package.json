@@ -1,0 +1,7 @@
+{
+  "name": "@camadb/benchmarks",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": { "build": "tsc --build", "typecheck": "tsc --build --pretty false" },
+  "dependencies": { "@camadb/core": "0.2.0", "@camadb/test-utils": "0.1.0" }
+}

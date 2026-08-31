@@ -1,0 +1,24 @@
+{
+  "name": "@camadb/memory",
+  "version": "0.1.0",
+  "description": "AI memory, retrieval, and embedding provenance contracts for CamaDB",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --build --pretty false",
+    "test": "jest --config ../../jest.config.js packages/memory/src --runInBand"
+  },
+  "dependencies": { "@camadb/core": "0.2.0" },
+  "engines": { "node": ">=18" },
+  "publishConfig": { "access": "public" }
+}

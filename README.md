@@ -2,6 +2,10 @@
 
 CamaDB is a NoSQL embedded database written in pure TypeScript for Node, Electron and browser-based environments.
 
+This repository is a workspace. The existing `camadb` import is preserved by a compatibility package; new development may use `@camadb/core`. AI memory and embedding provenance contracts live in `@camadb/memory`, while Studio and examples are private workspace applications.
+
+See [workspace architecture](docs/architecture.md), [local development](docs/development.md), [versioning and publishing](docs/versioning-and-publishing.md), and the [2.x compatibility policy](docs/migration-2.x.md).
+
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 ## Why?
@@ -28,12 +32,10 @@ This is still under active development and a few features are missing:
 [Documentation](https://elmarti.github.io/camadb/classes/Collection.html)
 ### Installing
 ```
-yarn add reflect-metadata
 yarn add camadb
 ```
 OR 
 ```
-npm install reflect-metadata --save
 npm install camadb --save
 ```
 
@@ -120,4 +122,3 @@ We use [Mingo](https://github.com/kofrasa/mingo) for aggregation - currently loo
     }
   }]);
 ``` 
-

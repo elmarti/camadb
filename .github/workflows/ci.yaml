@@ -38,8 +38,8 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build
-        run: yarn build
+      - name: Validate workspace
+        run: yarn validate
 
-      - name: Test
-        run: yarn test --runInBand
+      - name: Verify publish contents
+        run: yarn release:check

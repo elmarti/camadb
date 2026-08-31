@@ -1,0 +1,9 @@
+{
+  "name": "@camadb/test-utils",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "require": "./dist/index.js" } },
+  "scripts": { "build": "tsc --build", "typecheck": "tsc --build --pretty false" }
+}

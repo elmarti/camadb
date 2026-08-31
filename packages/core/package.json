@@ -1,0 +1,33 @@
+{
+  "name": "@camadb/core",
+  "version": "0.2.0",
+  "description": "CamaDB database, collections, queries, and shared public types",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "browser": { "fs": false, "path": false },
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --build --pretty false",
+    "test": "jest --config ../../jest.config.js --runInBand packages/core/src"
+  },
+  "dependencies": {
+    "fast-sort": "^3.4.1",
+    "flatted": "^3.3.3",
+    "idb": "^6.1.5",
+    "loglevel": "^1.9.2",
+    "mingo": "^6.7.1",
+    "obop": "^0.2.1",
+    "sift": "^17.1.3"
+  },
+  "engines": { "node": ">=18" },
+  "publishConfig": { "access": "public" }
+}

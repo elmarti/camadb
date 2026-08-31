@@ -1,71 +1,38 @@
 {
-  "name": "camadb",
+  "name": "camadb-workspace",
   "version": "0.2.0",
-  "description": "A TypeScript embedded database",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "tsc",
-    "format": "prettier --write \"src/**/*.(js|ts)\"",
-    "lint": "eslint src --ext .js,.ts",
-    "lint:fix": "eslint src --fix --ext .js,.ts",
-    "test": "jest --config jest.config.js",
-    "demo": "yarn build && node ./demo/test-insert.mjs",
-    "generate-docs": "typedoc --out docs ./src",
-    "browser-demo": "yarn build && cd demo/browser && yarn && yarn start"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/elmarti/camadb"
-  },
-  "browser": {
-    "fs": false,
-    "path": false
-  },
-  "keywords": [
-    "camadb",
-    "typescript",
-    "embedded database"
-  ],
-  "author": "elmarti",
+  "private": true,
+  "description": "CamaDB monorepo",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/elmarti/camadb/issues"
+  "workspaces": ["packages/*", "apps/*", "examples/*"],
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "typecheck": "tsc --build --pretty false",
+    "lint": "eslint packages tests scripts --ext .js,.ts",
+    "lint:fix": "yarn lint --fix",
+    "format": "prettier --write \"{packages,apps,examples,tests,docs}/**/*.{js,ts,json,md}\"",
+    "format:check": "prettier --check \"{packages,apps,examples,tests,docs}/**/*.{js,ts,json,md}\"",
+    "test": "jest --config jest.config.js",
+    "test:integration": "jest --config jest.config.js tests/integration --runInBand",
+    "check:boundaries": "node scripts/check-boundaries.js",
+    "check:packages": "node scripts/check-packages.js",
+    "validate": "yarn typecheck && yarn lint && yarn test --runInBand && yarn check:boundaries && yarn check:packages && yarn build",
+    "release:check": "yarn validate && node scripts/publish-workspaces.js --dry-run",
+    "release": "node scripts/publish-workspaces.js"
   },
-  "homepage": "https://www.camadb.com",
   "devDependencies": {
-    "@semantic-release/github": "^8.0.1",
-    "@semantic-release/npm": "^8.0.0",
-    "@types/jest": "^26.0.15",
-    "@types/uuid": "^8.3.1",
-    "@typescript-eslint/eslint-plugin": "^4.5.0",
-    "@typescript-eslint/parser": "^4.5.0",
-    "dateformat": "^5.0.1",
-    "eslint": "^7.11.0",
-    "eslint-plugin-jest": "^24.1.0",
-    "fake-indexeddb": "^4.0.1",
-    "jest": "^26.6.0",
-    "prettier": "^2.3.0",
-    "semantic-release-gitmoji": "^1.4.2",
-    "ts-jest": "^26.4.1",
-    "typedoc": "^0.22.5",
-    "typescript": "^4.0.3",
-    "util": "^0.12.4"
-  },
-  "files": [
-    "dist/**/*"
-  ],
-  "dependencies": {
-    "fast-sort": "^3.0.3",
-    "flatted": "^3.2.2",
-    "idb": "^6.1.4",
-    "inversify": "^5.1.1",
-    "loglevel": "^1.7.1",
-    "mingo": "^4.2.0",
-    "obop": "^0.2.1",
-    "path-browserify": "^1.0.1",
-    "reflect-metadata": "^0.1.13",
-    "sift": "^15.0.0",
-    "uuid": "^8.3.2"
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.15.0",
+    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/parser": "^8.41.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-jest": "^28.14.0",
+    "fake-indexeddb": "^6.2.2",
+    "jest": "^29.7.0",
+    "prettier": "^3.6.2",
+    "ts-jest": "^29.4.1",
+    "typedoc": "^0.28.12",
+    "typescript": "^5.9.2"
   }
 }

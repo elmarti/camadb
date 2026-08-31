@@ -1,8 +1,8 @@
 node_modules
 dist
-docs
 .idea
 .cama
 yarn-error.log
 .DS_Store
+.cache
 coverage
