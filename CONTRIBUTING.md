@@ -1,3 +1,6 @@
-- Please use [gitmoji](https://gitmoji.dev/) commit formatted (for automated releases)
-- Please implement [typedocs](https://typedoc.org/guides/doccomments/) 
-- PR into develop - This will trigger a development release
+- Please use [gitmoji](https://gitmoji.dev/) commit formatting for automated releases.
+- Please implement [TypeDoc](https://typedoc.org/guides/doccomments/) comments.
+- Open feature and fix pull requests against `develop`.
+- Merges to `develop` publish alpha versions (for example, `1.2.0-alpha.1`) under the npm `alpha` dist-tag.
+- When `develop` is ready, merge it into `main` to publish the stable version under npm's `latest` dist-tag.
+- Do not merge routine feature work directly into `main`.

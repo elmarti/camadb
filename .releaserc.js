@@ -7,10 +7,14 @@ const template = fs.readFileSync(path.join('semantic-release-templates', 'defaul
 const commitTemplate = fs.readFileSync(path.join('semantic-release-templates', 'commit-template.hbs'))
 
 module.exports = {
-  branches: ["main" ,{
-    name:"develop",
-    prerelease: true
-  }],
+  branches: [
+    'main',
+    {
+      name: 'develop',
+      channel: 'alpha',
+      prerelease: 'alpha'
+    }
+  ],
   plugins: [
     [
       'semantic-release-gitmoji', {

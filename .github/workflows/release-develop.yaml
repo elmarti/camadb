@@ -1,30 +1,50 @@
 name: Release
+
 on:
   push:
     branches:
       - develop
       - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   release:
-    name: Release
+    name: Release from ${{ github.ref_name }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v6
         with:
-          node-version: 'lts/*'
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Install Yarn Classic
+        run: npm install --global yarn@1.22.22
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+
       - name: Test project
-        run: yarn test
+        run: yarn test --runInBand
+
       - name: Build project
         run: yarn build
+
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
