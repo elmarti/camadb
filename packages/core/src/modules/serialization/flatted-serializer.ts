@@ -1,0 +1,27 @@
+import { ISerializer } from '../../interfaces/serializer.interface';
+import { TYPES } from '../../types';
+import { ILogger } from '../../interfaces/logger.interface';
+import { LogLevel } from '../../interfaces/logger-level.enum';
+
+const {parse, stringify} = require('flatted');
+
+export class FlattedSerializer implements ISerializer {
+  constructor(private logger:ILogger) {
+  }
+
+  deserialize(payload: any): any {
+    const pointer = this.logger.startTimer();
+    const result = parse(payload);
+    this.logger.endTimer(LogLevel.Debug, pointer, 'deserialize')
+    return result;
+  }
+
+  serialize(payload: any): any {
+    const pointer = this.logger.startTimer();
+    const result = stringify(payload);
+    this.logger.endTimer(LogLevel.Debug, pointer, 'serialize')
+
+    return result;
+  }
+
+}

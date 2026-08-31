@@ -1,11 +1,15 @@
 module.exports = {
+  rootDir: '.',
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    '^.+\\.ts$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.test.json' }],
   },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(t|j)s$',
-  moduleFileExtensions: ['ts', 'js', 'json', 'node'],
-  "setupFiles": [
-    "fake-indexeddb/auto"
-]
+  setupFiles: ['fake-indexeddb/auto'],
+  testMatch: ['<rootDir>/packages/**/?(*.)+(spec|test).ts', '<rootDir>/tests/**/?(*.)+(spec|test).ts'],
+  moduleNameMapper: {
+    '^@camadb/core$': '<rootDir>/packages/core/src/index.ts',
+    '^@camadb/memory$': '<rootDir>/packages/memory/src/index.ts',
+    '^@camadb/test-utils$': '<rootDir>/packages/test-utils/src/index.ts',
+    '^camadb$': '<rootDir>/packages/camadb/src/index.ts',
+  },
+  moduleFileExtensions: ['ts', 'js', 'json'],
 };

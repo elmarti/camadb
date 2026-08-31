@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "sourceMap": false,
+    "isolatedModules": true,
+    "types": ["jest", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@camadb/core": ["packages/core/src/index.ts"],
+      "@camadb/memory": ["packages/memory/src/index.ts"],
+      "@camadb/test-utils": ["packages/test-utils/src/index.ts"],
+      "camadb": ["packages/camadb/src/index.ts"]
+    }
+  }
+}
