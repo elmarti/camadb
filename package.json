@@ -19,9 +19,14 @@
     "check:packages": "node scripts/check-packages.js",
     "validate": "yarn typecheck && yarn lint && yarn test --runInBand && yarn check:boundaries && yarn check:packages && yarn build",
     "release:check": "yarn validate && node scripts/publish-workspaces.js --dry-run",
-    "release": "node scripts/publish-workspaces.js"
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish",
+    "version:alpha": "changeset version --snapshot alpha",
+    "release:alpha": "changeset publish --tag alpha --no-git-tag"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.7",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.0",
     "@typescript-eslint/eslint-plugin": "^8.41.0",

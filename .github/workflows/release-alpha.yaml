@@ -1,26 +1,27 @@
-name: Release
+name: Alpha release
 
 on:
   push:
     branches:
-      - main
+      - develop
+  workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
   id-token: write
 
 concurrency:
-  group: release-main
+  group: release-alpha
   cancel-in-progress: false
 
 jobs:
-  release:
-    name: Version or publish workspace packages
+  release-alpha:
+    name: Publish develop snapshots
+    if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Checkout repository
+      - name: Checkout develop
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
@@ -41,14 +42,14 @@ jobs:
       - name: Validate workspace
         run: yarn validate
 
-      - name: Create release pull request or publish
-        uses: changesets/action@v1
-        with:
-          version: yarn version-packages
-          publish: yarn release
-          title: "chore: release workspace packages"
-          commit: "chore: release workspace packages"
+      - name: Create unique alpha snapshot versions
+        run: yarn version:alpha
+
+      - name: Rebuild versioned packages
+        run: yarn build
+
+      - name: Publish to the alpha channel
+        run: yarn release:alpha
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
