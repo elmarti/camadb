@@ -1,6 +1,6 @@
 # Local development
 
-Install Node.js 22 and Yarn 1.22, then run `yarn install --frozen-lockfile` and `yarn validate`. Root commands cover the entire workspace:
+Install Node.js 22 or newer and Yarn 1.22, then run `yarn install --frozen-lockfile` and `yarn validate`. CI tests every supported Node.js release line (22, 24, and 26). Root commands cover the entire workspace:
 
 - `yarn typecheck` — TypeScript project-reference validation
 - `yarn lint` — shared lint policy

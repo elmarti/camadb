@@ -4,7 +4,15 @@
   "private": true,
   "description": "CamaDB monorepo",
   "license": "MIT",
-  "workspaces": ["packages/*", "apps/*", "examples/*"],
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "yarn@1.22.22",
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "examples/*"
+  ],
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
@@ -17,8 +25,9 @@
     "test:integration": "jest --config jest.config.js tests/integration --runInBand",
     "check:boundaries": "node scripts/check-boundaries.js",
     "check:packages": "node scripts/check-packages.js",
+    "test:packages": "node scripts/test-package-consumers.js",
     "validate": "yarn typecheck && yarn lint && yarn test --runInBand && yarn check:boundaries && yarn check:packages && yarn build",
-    "release:check": "yarn validate && node scripts/publish-workspaces.js --dry-run",
+    "release:check": "yarn validate && yarn test:packages && node scripts/publish-workspaces.js --dry-run",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "changeset publish",
@@ -31,6 +40,7 @@
     "@types/node": "^22.15.0",
     "@typescript-eslint/eslint-plugin": "^8.41.0",
     "@typescript-eslint/parser": "^8.41.0",
+    "esbuild": "0.28.2",
     "eslint": "^8.57.1",
     "eslint-plugin-jest": "^28.14.0",
     "fake-indexeddb": "^6.2.2",
