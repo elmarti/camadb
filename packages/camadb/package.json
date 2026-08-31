@@ -8,17 +8,27 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc --build",
     "typecheck": "tsc --build --pretty false",
     "test": "jest --config ../../jest.config.js packages/camadb/src --runInBand"
   },
-  "dependencies": { "@camadb/core": "0.2.0" },
-  "engines": { "node": ">=18" },
-  "publishConfig": { "access": "public" }
+  "dependencies": {
+    "@camadb/core": "0.2.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
