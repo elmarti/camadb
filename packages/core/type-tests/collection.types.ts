@@ -13,7 +13,6 @@ export async function assertCollectionContracts(
   collection: ICollection<Message>,
 ): Promise<void> {
   await collection.insertOne({
-    _id: 'message-1',
     title: 'Hello',
     read: false,
     attempts: 0,
@@ -51,6 +50,8 @@ export async function assertCollectionContracts(
   await collection.updateMany({}, { $set: { read: 'yes' } });
   // @ts-expect-error increment only accepts numeric fields
   await collection.updateMany({}, { $inc: { title: 1 } });
+  // @ts-expect-error document identity is immutable
+  await collection.updateMany({}, { $set: { _id: 'replacement' } });
 
   const matched = await collection.aggregate([
     { $match: { read: true } },
@@ -75,4 +76,21 @@ export async function assertCollectionContracts(
   const initializedResult = await initialized.findMany({ _id: 'message-1' });
   const initializedMessage: Message = initializedResult.rows[0];
   void initializedMessage;
+
+  const count: number = await collection.count({ read: false });
+  const deleted = await collection.deleteOne({ _id: 'message-1' });
+  const deletedCount: number = deleted.deletedCount;
+  const upserted = await collection.upsert(
+    { title: 'new' },
+    { title: 'new', read: false, attempts: 0 },
+  );
+  const upsertedId: string | undefined = upserted.upsertedId;
+  void count;
+  void deletedCount;
+  void upsertedId;
+
+  // @ts-expect-error delete filters preserve document field types
+  await collection.deleteMany({ attempts: 'never' });
+  // @ts-expect-error upsert documents must contain the declared fields
+  await collection.upsert({ title: 'bad' }, { title: 'bad' });
 }

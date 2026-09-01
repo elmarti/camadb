@@ -1,5 +1,15 @@
 export type Document = Record<string, unknown>;
 
+export type DocumentId = string;
+
+export type StoredDocument<TDocument extends object> = Omit<TDocument, '_id'> & {
+  _id: DocumentId;
+};
+
+export type InsertDocument<TDocument extends object> = Omit<TDocument, '_id'> & {
+  _id?: DocumentId;
+};
+
 type FieldOperator<T> = {
   $eq?: T;
   $ne?: T;

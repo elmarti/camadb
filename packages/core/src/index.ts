@@ -43,7 +43,8 @@ export type { ICollectionConfig } from './interfaces/collection-config.interface
 export type { IColumnConfig } from './interfaces/column-config.interface';
 export type { IFilterResult } from './interfaces/filter-result.interface';
 export type { IQueryOptions } from './interfaces/query-options.interface';
-export type { AggregationPipeline, AggregationStage, Document, FieldFilter, Filter, Update } from './interfaces/document-types';
+export type { AggregationPipeline, AggregationStage, Document, DocumentId, FieldFilter, Filter, InsertDocument, StoredDocument, Update } from './interfaces/document-types';
+export type { DeleteResult, InsertManyResult, InsertOneResult, UpdateResult } from './interfaces/mutation-result.interface';
 export type { IPersistenceAdapter } from './interfaces/persistence-adapter.interface';
 export {
   CURRENT_STORAGE_VERSION,

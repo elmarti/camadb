@@ -33,6 +33,7 @@ export const containerFactory = (
 ): ServiceRegistry => {
   const registry = new ServiceRegistry();
   const queue = new QueueService();
+  const metadataQueue = new QueueService();
   const mutationQueue = new QueueService();
 
   if (camaConfig.test) {
@@ -55,7 +56,7 @@ export const containerFactory = (
   switch (camaConfig.persistenceAdapter) {
     case 'fs': {
       const fs = new Fs(serializer, logger);
-      collectionMeta = new FsCollectionMeta(fs, camaConfig, collectionConfig, collectionName, logger, system, queue);
+      collectionMeta = new FsCollectionMeta(fs, camaConfig, collectionConfig, collectionName, logger, system, metadataQueue);
       persistence = new FSPersistence(camaConfig, collectionMeta, fs, logger, collectionName, system, mutationQueue);
       registry.set(TYPES.FS, fs);
       break;

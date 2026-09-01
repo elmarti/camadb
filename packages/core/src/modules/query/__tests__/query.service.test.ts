@@ -66,7 +66,7 @@ describe('QueryService', () => {
     const query = { value: 'A' };
     const delta = { $set:{value: 'Updated' }};
 
-    await queryService.update(query, delta);
+    const result = await queryService.update(query, delta);
 
     expect(persistenceAdapter.getData).toHaveBeenCalled();
     expect(persistenceAdapter.update).toHaveBeenCalledWith([
@@ -74,6 +74,12 @@ describe('QueryService', () => {
       { id: 2, value: 'B' },
       { id: 3, value: 'Updated' },
     ]);
+    expect(result).toEqual({
+      acknowledged: true,
+      matchedCount: 2,
+      modifiedCount: 2,
+      upsertedCount: 0,
+    });
   });
   it('should sort data based on options.sort', async () => {
     const sampleData = [
@@ -221,6 +227,34 @@ describe('QueryService', () => {
   
     expect(persistenceAdapter.getData).toHaveBeenCalled();
     expect(persistenceAdapter.update).toHaveBeenCalledWith(updatedData);
+  });
+
+  it('counts matching rows', async () => {
+    (persistenceAdapter.getData as jest.Mock).mockResolvedValue([
+      { value: 'A' },
+      { value: 'B' },
+      { value: 'A' },
+    ]);
+
+    await expect(queryService.count({ value: 'A' })).resolves.toBe(2);
+    await expect(queryService.count()).resolves.toBe(3);
+  });
+
+  it('deletes one or all matching rows and reports the count', async () => {
+    const data = [{ id: 1, value: 'A' }, { id: 2, value: 'A' }, { id: 3, value: 'B' }];
+    (persistenceAdapter.getData as jest.Mock).mockResolvedValue(data);
+
+    await expect(queryService.delete({ value: 'A' }, 1)).resolves.toEqual({
+      acknowledged: true,
+      deletedCount: 1,
+    });
+    expect(persistenceAdapter.update).toHaveBeenLastCalledWith([data[1], data[2]]);
+
+    await expect(queryService.delete({ value: 'A' })).resolves.toEqual({
+      acknowledged: true,
+      deletedCount: 2,
+    });
+    expect(persistenceAdapter.update).toHaveBeenLastCalledWith([data[2]]);
   });
   
 });
