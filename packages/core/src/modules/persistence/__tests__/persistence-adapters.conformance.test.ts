@@ -101,6 +101,7 @@ persistenceAdapterConformance('localStorage', {
 
 persistenceAdapterConformance('IndexedDB', {
   persistsAcrossInstances: true,
+  serializesMutations: true,
   async createContext() {
     const databaseName = `conformance-${Date.now()}-${Math.random()}`;
     const adapters: IndexedDbPersistence[] = [];
@@ -124,6 +125,7 @@ persistenceAdapterConformance('IndexedDB', {
 
 persistenceAdapterConformance('filesystem', {
   persistsAcrossInstances: true,
+  serializesMutations: true,
   async createContext(): Promise<PersistenceAdapterConformanceContext> {
     const databasePath = await mkdtemp(path.join(tmpdir(), 'camadb-conformance-'));
     const camaConfig = config(databasePath, PersistenceAdapterEnum.FS);

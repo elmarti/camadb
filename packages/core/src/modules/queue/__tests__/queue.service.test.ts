@@ -32,6 +32,7 @@ describe('QueueService', () => {
     expect(task1).toHaveBeenNthCalledWith(1);
     expect(task2).toHaveBeenNthCalledWith(1);
     expect(task3).toHaveBeenNthCalledWith(1);
+    expect(queueService.tasks).toEqual([]);
   });
 
   it('should handle rejected tasks', async () => {
@@ -51,5 +52,6 @@ describe('QueueService', () => {
     expect(task1).toHaveBeenNthCalledWith(1);
     expect(task2).toHaveBeenNthCalledWith(1);
     expect(task3).toHaveBeenNthCalledWith(1);
+    expect(queueService.tasks).toEqual([]);
   });
 });
