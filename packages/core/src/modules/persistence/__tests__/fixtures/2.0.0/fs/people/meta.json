@@ -1,0 +1,7 @@
+{
+  "columns": [
+    { "title": "_id", "type": "string" },
+    { "title": "name", "type": "string" }
+  ],
+  "collectionName": "people"
+}
