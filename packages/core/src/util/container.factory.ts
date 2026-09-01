@@ -33,6 +33,7 @@ export const containerFactory = (
 ): ServiceRegistry => {
   const registry = new ServiceRegistry();
   const queue = new QueueService();
+  const mutationQueue = new QueueService();
 
   if (camaConfig.test) {
     const persistence = new PersistenceAdapterMock();
@@ -55,7 +56,7 @@ export const containerFactory = (
     case 'fs': {
       const fs = new Fs(serializer, logger);
       collectionMeta = new FsCollectionMeta(fs, camaConfig, collectionConfig, collectionName, logger, system, queue);
-      persistence = new FSPersistence(camaConfig, collectionMeta, fs, logger, collectionName, system, queue);
+      persistence = new FSPersistence(camaConfig, collectionMeta, fs, logger, collectionName, system, mutationQueue);
       registry.set(TYPES.FS, fs);
       break;
     }

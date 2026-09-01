@@ -1,5 +1,5 @@
 
 export interface IQueueService{
   promise: Promise<any>;
-  add(task: any): any;
+  add<T>(task: () => T | Promise<T>): Promise<T>;
 }

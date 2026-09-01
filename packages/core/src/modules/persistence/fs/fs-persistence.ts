@@ -31,9 +31,11 @@ export default class FSPersistence implements IPersistenceAdapter {
    * @param rows - The rows to be inserted
    */
   async insert<T>(rows: Array<any>): Promise<any> {
-    const data = [...(await this.getData()), ...rows];
-    await this.fs.writeData(this.outputPath, this.collectionName, data);
-    this.cache = data;
+    return this.queue.add(async () => {
+      const data = [...(await this.getData()), ...rows];
+      await this.fs.writeData(this.outputPath, this.collectionName, data);
+      this.cache = data;
+    });
   }
 
   /**
@@ -73,16 +75,20 @@ export default class FSPersistence implements IPersistenceAdapter {
     return this.cache;
   }
   async update(updated: any): Promise<void> {
-    this.logger.log(LogLevel.Debug, `Writing file`);
-    await this.fs.writeData(this.outputPath, this.collectionName, updated);
-    this.cache = updated;
+    return this.queue.add(async () => {
+      this.logger.log(LogLevel.Debug, `Writing file`);
+      await this.fs.writeData(this.outputPath, this.collectionName, updated);
+      this.cache = updated;
+    });
   }
 
   /**
    * Destroy the collection within the persistence adapter
    */
   async destroy(): Promise<void> {
-    await this.fs.rmDir(this.outputPath, this.collectionName);
-    this.cache = null;
+    return this.queue.add(async () => {
+      await this.fs.rmDir(this.outputPath, this.collectionName);
+      this.cache = null;
+    });
   }
 }
