@@ -7,8 +7,16 @@ export class QueryServiceMock implements IQueryService<any>{
     return Promise.resolve({  } as any);
   }
 
-  update(query: any, delta: any): Promise<void> {
-    return Promise.resolve(undefined);
+  update(query: any, delta: any): Promise<any> {
+    return Promise.resolve({ acknowledged: true, matchedCount: 0, modifiedCount: 0, upsertedCount: 0 });
+  }
+
+  delete(): Promise<any> {
+    return Promise.resolve({ acknowledged: true, deletedCount: 0 });
+  }
+
+  count(): Promise<number> {
+    return Promise.resolve(0);
   }
 
 }

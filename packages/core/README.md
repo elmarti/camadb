@@ -11,3 +11,10 @@ CamaDB supports maintained Node.js releases from Node.js 22 onward. The package 
 ## IndexedDB schema changes
 
 IndexedDB collection creation and deletion require a browser-wide version change. CamaDB closes its managed connection when another tab requests an upgrade. If an unrelated connection remains open and blocks CamaDB's own schema change, the operation rejects with a contextual `BlockedError` instead of waiting indefinitely. Close the other tab or connection and retry the operation.
+
+## Document identity
+
+New documents receive an immutable string `_id` when one is not supplied.
+Duplicate identities are rejected, including across overlapping mutations.
+Insert, update, upsert, and delete methods return acknowledged mutation results
+with the affected IDs or counts.

@@ -112,6 +112,30 @@ const result = await messages.findMany({ _id: message._id });
 
 ```
 
+Every newly inserted document has an immutable string `_id`. Supply one when
+importing an existing identity, or omit it and use the `insertedId` /
+`insertedIds` returned by the mutation. Duplicate IDs reject without partially
+writing an insert batch.
+
+### CRUD results and upsert
+
+```ts
+const count = await collection.count({ name: 'Dummy field' });
+const updated = await collection.updateMany(
+  { name: 'Dummy field' },
+  { $set: { description: 'Updated' } },
+);
+const removed = await collection.deleteOne({ _id: 'test' });
+const upserted = await collection.upsert(
+  { name: 'New message' },
+  { name: 'New message', description: 'Created when absent', createdAt: new Date() },
+);
+```
+
+Mutation results report inserted IDs and matched, modified, upserted, or
+deleted counts. `deleteMany` removes every match; `deleteOne` removes only the
+first match in collection order.
+
 ### Find many 
 CamaDB uses a MongoDB style query language, powered by [SiftJS](https://github.com/crcn/sift.js/). Have a look at that project to see the full capabilities of that library.
 ```
