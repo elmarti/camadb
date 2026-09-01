@@ -23,7 +23,7 @@
     "test": "jest --config ../../jest.config.js packages/memory/src --runInBand"
   },
   "dependencies": {
-    "@camadb/core": "0.2.0"
+    "@camadb/core": "2.0.1"
   },
   "engines": {
     "node": ">=22"
