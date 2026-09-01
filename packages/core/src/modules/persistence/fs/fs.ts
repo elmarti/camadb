@@ -156,6 +156,6 @@ export class Fs implements IFS {
    */
   rmDir(outputPath: string, collectionName: string): Promise<void> {
     const dirPath = path.join(outputPath, collectionName);
-    return nodeFs.rmdir(dirPath, { recursive: true });
+    return nodeFs.rm(dirPath, { recursive: true, force: true });
   }
 }

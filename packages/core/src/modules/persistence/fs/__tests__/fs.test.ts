@@ -85,4 +85,13 @@ describe('filesystem writes', () => {
     await expect(fs.readData(dataPath)).resolves.toEqual([{ id: 'recovered' }]);
     await expect(nodeFs.readdir(collectionDirectory)).resolves.toEqual(['data']);
   });
+
+  it('recursively removes a collection directory', async () => {
+    await nodeFs.mkdir(path.join(collectionDirectory, 'nested'));
+    await nodeFs.writeFile(path.join(collectionDirectory, 'nested', 'data'), 'persisted');
+
+    await fs.rmDir(directory, 'records');
+
+    await expect(nodeFs.stat(collectionDirectory)).rejects.toMatchObject({ code: 'ENOENT' });
+  });
 });
