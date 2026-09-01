@@ -64,6 +64,18 @@ describe('filesystem writes', () => {
     await expect(nodeFs.readdir(collectionDirectory)).resolves.toEqual(['data']);
   });
 
+  it('syncs containing-directory metadata after replacing the file', async () => {
+    const dataPath = path.join(collectionDirectory, 'data');
+    const open = jest.spyOn(nodeFs, 'open');
+    const rename = jest.spyOn(nodeFs, 'rename');
+
+    await fs.writeData(directory, 'records', [{ id: 'durable' }]);
+
+    expect(open).toHaveBeenNthCalledWith(1, `${dataPath}.tmp`, 'w');
+    expect(open).toHaveBeenNthCalledWith(2, collectionDirectory, 'r');
+    expect(rename.mock.invocationCallOrder[0]).toBeLessThan(open.mock.invocationCallOrder[1]);
+  });
+
   it('recovers by replacing a temporary file left by an interrupted process', async () => {
     const dataPath = path.join(collectionDirectory, 'data');
     await nodeFs.writeFile(`${dataPath}.tmp`, 'partial serialization');

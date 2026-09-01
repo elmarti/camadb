@@ -11,6 +11,26 @@ export class Fs implements IFS {
     private logger: ILogger,
   ) {}
 
+  private async syncContainingDirectory(filePath: string): Promise<void> {
+    let directoryHandle;
+
+    try {
+      directoryHandle = await nodeFs.open(path.dirname(filePath), 'r');
+      await directoryHandle.sync();
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+
+      // Some platforms cannot open or fsync directories. These codes are
+      // limited to unsupported-operation responses; other I/O errors remain
+      // durability failures and are surfaced to the caller.
+      if (!code || !['EINVAL', 'ENOTSUP', 'ENOSYS', 'EISDIR'].includes(code)) {
+        throw error;
+      }
+    } finally {
+      await directoryHandle?.close();
+    }
+  }
+
   /**
    * Replace a file without exposing a partially serialized payload.
    *
@@ -31,6 +51,7 @@ export class Fs implements IFS {
       }
 
       await nodeFs.rename(temporaryPath, filePath);
+      await this.syncContainingDirectory(filePath);
     } catch (error) {
       await nodeFs.rm(temporaryPath, { force: true }).catch(() => undefined);
       throw error;
