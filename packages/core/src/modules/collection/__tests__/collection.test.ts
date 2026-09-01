@@ -32,8 +32,13 @@ it('should call the persistence adapter with the appropriate rows on insert', as
   }];
   const persistenceAdapter = collection.container.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
   const spy = jest.spyOn(persistenceAdapter, 'insert');
-  await collection.insertMany(rows);
-  expect(spy).toHaveBeenCalledWith(rows);
+  const result = await collection.insertMany(rows);
+  expect(spy).toHaveBeenCalledWith(rows.map(row => expect.objectContaining(row)));
+  expect(result).toEqual({
+    acknowledged: true,
+    insertedCount: 3,
+    insertedIds: expect.arrayContaining([expect.any(String), expect.any(String), expect.any(String)]),
+  });
 });
 
 it('should call the persistence adapter with the appropriate row on insert', async () => {
@@ -42,8 +47,9 @@ it('should call the persistence adapter with the appropriate row on insert', asy
   };
   const persistenceAdapter = collection.container.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
   const spy = jest.spyOn(persistenceAdapter, 'insert');
-  await collection.insertOne(row);
-  expect(spy).toHaveBeenCalledWith([row]);
+  const result = await collection.insertOne(row);
+  expect(spy).toHaveBeenCalledWith([expect.objectContaining(row)]);
+  expect(result).toEqual({ acknowledged: true, insertedId: expect.any(String) });
 });
 
 it('should correctly invoke the query service without options', async () => {
