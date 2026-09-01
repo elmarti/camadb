@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "build": "tsc --build",
+    "benchmark:storage": "yarn workspace @camadb/benchmarks benchmark",
     "clean": "tsc --build --clean",
     "typecheck": "tsc --build --pretty false && tsc --project packages/core/tsconfig.type-tests.json --pretty false",
     "lint": "eslint packages tests scripts --ext .js,.ts",

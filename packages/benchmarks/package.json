@@ -2,6 +2,13 @@
   "name": "@camadb/benchmarks",
   "version": "0.0.0",
   "private": true,
-  "scripts": { "build": "tsc --build", "typecheck": "tsc --build --pretty false" },
-  "dependencies": { "@camadb/core": "2.0.1", "@camadb/test-utils": "0.1.0" }
+  "scripts": {
+    "benchmark": "yarn build && node --expose-gc dist/run.js",
+    "build": "tsc --build",
+    "typecheck": "tsc --build --pretty false"
+  },
+  "dependencies": {
+    "@camadb/core": "2.0.1",
+    "@camadb/test-utils": "0.1.0"
+  }
 }
