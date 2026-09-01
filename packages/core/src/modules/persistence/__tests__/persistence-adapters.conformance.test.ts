@@ -123,7 +123,7 @@ persistenceAdapterConformance('IndexedDB', {
 });
 
 persistenceAdapterConformance('filesystem', {
-  persistenceFollowUp: 'enable after #78 makes update durable',
+  persistsAcrossInstances: true,
   async createContext(): Promise<PersistenceAdapterConformanceContext> {
     const databasePath = await mkdtemp(path.join(tmpdir(), 'camadb-conformance-'));
     const camaConfig = config(databasePath, PersistenceAdapterEnum.FS);

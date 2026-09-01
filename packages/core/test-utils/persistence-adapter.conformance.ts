@@ -9,7 +9,6 @@ export interface PersistenceAdapterConformanceContext {
 export interface PersistenceAdapterConformanceOptions {
   createContext(): Promise<PersistenceAdapterConformanceContext>;
   persistsAcrossInstances?: boolean;
-  persistenceFollowUp?: string;
 }
 
 const rows = [
@@ -84,8 +83,6 @@ export const persistenceAdapterConformance = (
 
         await expect(reopened.getData()).resolves.toEqual(rows);
       });
-    } else if (options.persistenceFollowUp) {
-      it.todo(`makes completed writes visible to a new adapter instance (${options.persistenceFollowUp})`);
     }
   });
 };
