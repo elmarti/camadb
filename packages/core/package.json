@@ -1,6 +1,6 @@
 {
   "name": "@camadb/core",
-  "version": "0.2.0",
+  "version": "2.0.1",
   "description": "CamaDB database, collections, queries, and shared public types",
   "license": "MIT",
   "main": "dist/index.js",
