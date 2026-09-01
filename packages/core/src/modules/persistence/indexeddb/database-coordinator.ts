@@ -1,4 +1,5 @@
 import { IDBPDatabase, openDB as openDatabase } from 'idb';
+import { createStorageEnvelope } from '../storage-version';
 
 interface DatabaseState {
   db?: IDBPDatabase;
@@ -72,7 +73,7 @@ export class IndexedDbDatabaseCoordinator {
       if (!state.db) {
         state.db = await this.open(databaseName, state, undefined, db => {
           if (!db.objectStoreNames.contains(storeName)) {
-            db.createObjectStore(storeName).put([], 'data');
+            db.createObjectStore(storeName).put(createStorageEnvelope([]), 'data');
           }
         });
       }
@@ -84,7 +85,7 @@ export class IndexedDbDatabaseCoordinator {
       state.db = undefined;
       state.db = await this.open(databaseName, state, nextVersion, db => {
         if (!db.objectStoreNames.contains(storeName)) {
-          db.createObjectStore(storeName).put([], 'data');
+          db.createObjectStore(storeName).put(createStorageEnvelope([]), 'data');
         }
       });
     });

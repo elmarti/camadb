@@ -60,7 +60,9 @@ describe('filesystem writes', () => {
 
     await fs.writeData(directory, 'records', [{ id: 'visible' }]);
 
-    await expect(nodeFs.readFile(dataPath, 'utf8')).resolves.toBe('[{"id":"visible"}]');
+    await expect(nodeFs.readFile(dataPath, 'utf8')).resolves.toBe(
+      '{"camaDB":{"format":"collection","version":3},"data":[{"id":"visible"}]}',
+    );
     await expect(nodeFs.readdir(collectionDirectory)).resolves.toEqual(['data']);
   });
 
