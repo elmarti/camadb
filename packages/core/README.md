@@ -7,3 +7,7 @@ The package currently retains the legacy adapter selector so existing `camadb` c
 ## Runtime and module support
 
 CamaDB supports maintained Node.js releases from Node.js 22 onward. The package publishes CommonJS for compatibility and exposes that entry point explicitly to both `require()` and ESM `import`. Browser bundling is supported for non-filesystem adapters; Electron main processes use the Node.js path and renderer processes use the browser path.
+
+## IndexedDB schema changes
+
+IndexedDB collection creation and deletion require a browser-wide version change. CamaDB closes its managed connection when another tab requests an upgrade. If an unrelated connection remains open and blocks CamaDB's own schema change, the operation rejects with a contextual `BlockedError` instead of waiting indefinitely. Close the other tab or connection and retry the operation.

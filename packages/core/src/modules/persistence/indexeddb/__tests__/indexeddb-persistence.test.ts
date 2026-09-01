@@ -1,6 +1,7 @@
 import { ICamaConfig } from "../../../../interfaces/cama-config.interface";
 import { ILogger } from "../../../../interfaces/logger.interface";
 import { PersistenceAdapterEnum } from "../../../../interfaces/perisistence-adapter.enum";
+import { openDB } from "idb";
 import IndexedDbPersistence from "../indexeddb-persistence";
 
 describe("IndexedDbPersistence", () => {
@@ -46,6 +47,48 @@ describe("IndexedDbPersistence", () => {
       `database "${mockConfig.path}", collection "${mockCollectionName}"`
     );
     await expect(indexedDbPersistence.update(uncloneable)).rejects.not.toThrow(secret);
+  });
+
+  it("deletes only the requested collection during a version upgrade", async () => {
+    const sibling = new IndexedDbPersistence(mockConfig, mockLogger, "sibling-collection");
+    await indexedDbPersistence.update(["removed"]);
+    await sibling.update(["preserved"]);
+
+    await indexedDbPersistence.destroy();
+
+    await expect(sibling.getData()).resolves.toEqual(["preserved"]);
+  });
+
+  it("prevents further use of a destroyed collection", async () => {
+    await indexedDbPersistence.destroy();
+
+    await expect(indexedDbPersistence.getData()).rejects.toThrow("Collection has been destroyed");
+    await expect(indexedDbPersistence.update([])).rejects.toThrow("Collection has been destroyed");
+    await expect(indexedDbPersistence.insert([])).rejects.toThrow("Collection has been destroyed");
+  });
+
+  it("recreates a deleted collection without affecting sibling collections", async () => {
+    const sibling = new IndexedDbPersistence(mockConfig, mockLogger, "sibling-collection");
+    await indexedDbPersistence.update(["removed"]);
+    await sibling.update(["preserved"]);
+
+    await indexedDbPersistence.destroy();
+    const recreated = new IndexedDbPersistence(mockConfig, mockLogger, mockCollectionName);
+
+    await expect(recreated.getData()).resolves.toEqual([]);
+    await expect(sibling.getData()).resolves.toEqual(["preserved"]);
+  });
+
+  it("fails contextually when another connection blocks deletion and can retry", async () => {
+    await indexedDbPersistence.getData();
+    const externalConnection = await openDB(mockConfig.path as string);
+
+    await expect(indexedDbPersistence.destroy()).rejects.toThrow(
+      `database "${mockConfig.path}", collection "${mockCollectionName}": BlockedError`
+    );
+
+    externalConnection.close();
+    await expect(indexedDbPersistence.destroy()).resolves.toBeUndefined();
   });
 
   afterEach(async () => {
