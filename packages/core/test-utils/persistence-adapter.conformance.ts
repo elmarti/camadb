@@ -3,6 +3,7 @@ import { IPersistenceAdapter } from '../src/interfaces/persistence-adapter.inter
 
 export interface PersistenceAdapterConformanceContext {
   createAdapter(collectionName?: string): Promise<IPersistenceAdapter>;
+  createFailingMutation?(adapter: IPersistenceAdapter): Promise<unknown>;
   cleanup(): Promise<void>;
 }
 
@@ -10,6 +11,7 @@ export interface PersistenceAdapterConformanceOptions {
   createContext(): Promise<PersistenceAdapterConformanceContext>;
   persistsAcrossInstances?: boolean;
   serializesMutations?: boolean;
+  testsRejectedMutationRecovery?: boolean;
 }
 
 const rows = [
@@ -84,6 +86,18 @@ export const persistenceAdapterConformance = (
 
         await expect(reopened.getData()).resolves.toEqual(rows);
       });
+
+      it('deletes and recreates one collection without affecting another', async () => {
+        const secondary = await context.createAdapter('secondary');
+        await adapter.insert(rows);
+        await secondary.insert([{ id: 3, name: 'Katherine' }]);
+
+        await adapter.destroy();
+        const recreated = await context.createAdapter('primary');
+
+        await expect(recreated.getData()).resolves.toEqual([]);
+        await expect(secondary.getData()).resolves.toEqual([{ id: 3, name: 'Katherine' }]);
+      });
     }
 
     if (options.serializesMutations) {
@@ -103,6 +117,18 @@ export const persistenceAdapterConformance = (
 
         await expect(adapter.getData()).resolves.toEqual([...replacement, appended]);
       });
+
+      if (options.testsRejectedMutationRecovery) {
+        it('continues queued mutations after a rejected mutation', async () => {
+          const failedMutation = context.createFailingMutation!(adapter);
+          const succeedingRow = { id: 12, name: 'Dorothy' };
+          const succeedingMutation = adapter.insert([succeedingRow]);
+
+          await expect(failedMutation).rejects.toThrow();
+          await expect(succeedingMutation).resolves.toBeUndefined();
+          await expect(adapter.getData()).resolves.toEqual([succeedingRow]);
+        });
+      }
     }
   });
 };

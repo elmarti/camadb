@@ -1,4 +1,4 @@
-import { mkdtemp, rm } from 'fs/promises';
+import { promises as nodeFs } from 'fs';
 import { tmpdir } from 'os';
 import * as path from 'path';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
@@ -102,6 +102,7 @@ persistenceAdapterConformance('localStorage', {
 persistenceAdapterConformance('IndexedDB', {
   persistsAcrossInstances: true,
   serializesMutations: true,
+  testsRejectedMutationRecovery: true,
   async createContext() {
     const databaseName = `conformance-${Date.now()}-${Math.random()}`;
     const adapters: IndexedDbPersistence[] = [];
@@ -116,6 +117,9 @@ persistenceAdapterConformance('IndexedDB', {
         adapters.push(adapter);
         return adapter;
       },
+      createFailingMutation(adapter) {
+        return adapter.update({ value: () => undefined });
+      },
       async cleanup() {
         await Promise.allSettled(adapters.map((adapter) => adapter.destroy()));
       },
@@ -126,22 +130,21 @@ persistenceAdapterConformance('IndexedDB', {
 persistenceAdapterConformance('filesystem', {
   persistsAcrossInstances: true,
   serializesMutations: true,
+  testsRejectedMutationRecovery: true,
   async createContext(): Promise<PersistenceAdapterConformanceContext> {
-    const databasePath = await mkdtemp(path.join(tmpdir(), 'camadb-conformance-'));
+    const databasePath = await nodeFs.mkdtemp(path.join(tmpdir(), 'camadb-conformance-'));
     const camaConfig = config(databasePath, PersistenceAdapterEnum.FS);
     const system = new NodeSystem(camaConfig);
     const filesystem = new Fs(new FlattedSerializer(logger), logger);
     const queue = new QueueService();
-    const initializedCollections = new Set<string>();
 
     return {
       async createAdapter(collectionName = 'primary') {
-        if (!initializedCollections.has(collectionName)) {
-          const collectionPath = path.join(databasePath, collectionName);
+        const collectionPath = path.join(databasePath, collectionName);
+        if (!(await filesystem.exists(collectionPath))) {
           await filesystem.mkdir(collectionPath);
           await filesystem.writeData(databasePath, collectionName, []);
           await filesystem.commit(databasePath, collectionName);
-          initializedCollections.add(collectionName);
         }
 
         const collectionMeta: ICollectionMeta = {
@@ -153,8 +156,13 @@ persistenceAdapterConformance('filesystem', {
 
         return new FSPersistence(camaConfig, collectionMeta, filesystem, logger, collectionName, system, queue);
       },
+      createFailingMutation(adapter) {
+        jest.spyOn(nodeFs, 'rename').mockRejectedValueOnce(new Error('simulated interruption'));
+        return adapter.insert([{ id: 'interrupted' }]);
+      },
       async cleanup() {
-        await rm(databasePath, { recursive: true, force: true });
+        jest.restoreAllMocks();
+        await nodeFs.rm(databasePath, { recursive: true, force: true });
       },
     };
   },
