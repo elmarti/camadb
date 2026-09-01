@@ -9,6 +9,7 @@ export interface PersistenceAdapterConformanceContext {
 export interface PersistenceAdapterConformanceOptions {
   createContext(): Promise<PersistenceAdapterConformanceContext>;
   persistsAcrossInstances?: boolean;
+  serializesMutations?: boolean;
 }
 
 const rows = [
@@ -82,6 +83,25 @@ export const persistenceAdapterConformance = (
         const reopened = await context.createAdapter('primary');
 
         await expect(reopened.getData()).resolves.toEqual(rows);
+      });
+    }
+
+    if (options.serializesMutations) {
+      it('preserves every row from overlapping inserts', async () => {
+        const concurrentRows = Array.from({ length: 20 }, (_, id) => ({ id }));
+
+        await Promise.all(concurrentRows.map((row) => adapter.insert([row])));
+
+        await expect(adapter.getData()).resolves.toEqual(concurrentRows);
+      });
+
+      it('orders overlapping updates and inserts deterministically', async () => {
+        const replacement = [{ id: 10, name: 'Margaret' }];
+        const appended = { id: 11, name: 'Evelyn' };
+
+        await Promise.all([adapter.update(replacement), adapter.insert([appended])]);
+
+        await expect(adapter.getData()).resolves.toEqual([...replacement, appended]);
       });
     }
   });
