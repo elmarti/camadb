@@ -4,6 +4,7 @@ import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 
 import { ILogger } from '../../../interfaces/logger.interface';
 import { IndexedDbDatabaseCoordinator } from './database-coordinator';
+import { createStorageEnvelope, readStoragePayload } from '../storage-version';
 
 export default class IndexedDbPersistence implements IPersistenceAdapter{
   private dbName = "";
@@ -37,7 +38,7 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
       await this.initPromise;
       await IndexedDbDatabaseCoordinator.run(this.dbName, async db => {
         const tx = db.transaction(this.storeName, 'readwrite');
-        await tx.objectStore(this.storeName).put(updated, 'data');
+        await tx.objectStore(this.storeName).put(createStorageEnvelope(updated), 'data');
         await tx.done;
       });
       this.cache = updated;
@@ -50,9 +51,10 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
     try {
       await this.initPromise;
       if(this.cache !== null) return this.cache;
-      this.cache = await IndexedDbDatabaseCoordinator.run(this.dbName, async db =>
+      const stored = await IndexedDbDatabaseCoordinator.run(this.dbName, async db =>
         db.transaction(this.storeName).objectStore(this.storeName).get('data')
       );
+      this.cache = readStoragePayload(stored);
       return this.cache;
     } catch (error) {
       throw this.contextualError('read', error);
@@ -65,9 +67,9 @@ export default class IndexedDbPersistence implements IPersistenceAdapter{
       this.cache = await IndexedDbDatabaseCoordinator.run(this.dbName, async db => {
         const tx = db.transaction(this.storeName, 'readwrite');
         const store = tx.objectStore(this.storeName);
-        const data = (await store.get('data')) || [];
+        const data = readStoragePayload(await store.get('data'));
         data.push(...rows);
-        await store.put(data, 'data');
+        await store.put(createStorageEnvelope(data), 'data');
         await tx.done;
         return data;
       });

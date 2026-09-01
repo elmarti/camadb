@@ -3,6 +3,7 @@ import { TYPES } from '../../../types';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 
 import { ILogger } from '../../../interfaces/logger.interface';
+import { createStorageEnvelope, readStoragePayload } from '../storage-version';
 
 export default class LocalstoragePersistence implements IPersistenceAdapter {
   private readonly dbName;
@@ -48,13 +49,16 @@ export default class LocalstoragePersistence implements IPersistenceAdapter {
     if (!result) {
       return [];
     }
-    return JSON.parse(result);
+    return readStoragePayload(JSON.parse(result));
   }
 
   private async setData(data: any) {
     //@ts-ignore
 
-    await window.localStorage.setItem(`${this.dbName}-${this.collectionName}-data`, JSON.stringify(data));
+    await window.localStorage.setItem(
+      `${this.dbName}-${this.collectionName}-data`,
+      JSON.stringify(createStorageEnvelope(data)),
+    );
   }
 
   private checkDestroyed() {

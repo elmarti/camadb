@@ -45,3 +45,13 @@ export type { IFilterResult } from './interfaces/filter-result.interface';
 export type { IQueryOptions } from './interfaces/query-options.interface';
 export type { AggregationPipeline, AggregationStage, Document, FieldFilter, Filter, Update } from './interfaces/document-types';
 export type { IPersistenceAdapter } from './interfaces/persistence-adapter.interface';
+export {
+  CURRENT_STORAGE_VERSION,
+  LEGACY_STORAGE_VERSION,
+  createStorageEnvelope,
+  detectStorage,
+  exportLegacyStorage,
+  isStorageEnvelope,
+  migrateLegacyStorage,
+} from './modules/persistence/storage-version';
+export type { StorageDetection, StorageEnvelope } from './modules/persistence/storage-version';

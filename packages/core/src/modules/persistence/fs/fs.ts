@@ -4,6 +4,7 @@ import * as path from 'path';
 import { ISerializer } from '../../../interfaces/serializer.interface';
 import { ILogger } from '../../../interfaces/logger.interface';
 import { LogLevel } from '../../../interfaces/logger-level.enum';
+import { createStorageEnvelope, readStoragePayload } from '../storage-version';
 
 export class Fs implements IFS {
   constructor(
@@ -138,13 +139,13 @@ export class Fs implements IFS {
 
   async writeData(camaFolder: string, camaCollection: string, data: any): Promise<void> {
     const output = path.join(camaFolder, camaCollection, 'data');
-    const serialized = this.serializer.serialize(data);
+    const serialized = this.serializer.serialize(createStorageEnvelope(data));
     await this.replaceFile(output, serialized);
   }
 
   async readData<T>(path: string): Promise<T> {
     const buffer = await nodeFs.readFile(path);
-    return this.serializer.deserialize(buffer);
+    return readStoragePayload(this.serializer.deserialize(buffer)) as T;
   }
 
   /**

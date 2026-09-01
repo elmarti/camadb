@@ -14,3 +14,15 @@ export const selectPersistenceAdapterClass = (adapter: PersistenceAdapterEnum) =
       throw new Error(`Unknown adapter type: ${adapter}`);
   }
 }
+
+export {
+  CURRENT_STORAGE_VERSION,
+  LEGACY_STORAGE_VERSION,
+  createStorageEnvelope,
+  detectStorage,
+  exportLegacyStorage,
+  isStorageEnvelope,
+  migrateLegacyStorage,
+  readStoragePayload,
+} from './storage-version';
+export type { StorageDetection, StorageEnvelope } from './storage-version';
