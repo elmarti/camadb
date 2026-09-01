@@ -13,17 +13,18 @@ import { IAggregator } from '../../interfaces/aggregator.interface';
 import { containerFactory } from '../../util/container.factory';
 import { IQueueService } from '../../interfaces/queue-service.interface';
 import { ServiceRegistry } from '../../util/service-registry';
+import { AggregationPipeline, Document, Filter, Update } from '../../interfaces/document-types';
 
-export class Collection  implements ICollection   {
+export class Collection<TDocument extends object = Document> implements ICollection<TDocument> {
   public container: ServiceRegistry;
   private config?: ICollectionConfig;
   private name?: string;
   private logger: ILogger;
   private persistenceAdapter: IPersistenceAdapter;
-  private queryService: IQueryService<any>;
+  private queryService: IQueryService<TDocument>;
   public queue: IQueueService;
   private destroyed = false;
-  private aggregator: IAggregator;
+  private aggregator: IAggregator<TDocument>;
 
 
   constructor(
@@ -34,10 +35,10 @@ export class Collection  implements ICollection   {
     this.container = containerFactory(collectionName, camaConfig, collectionConfig)
     this.logger = this.container.get<ILogger>(TYPES.Logger);
     this.persistenceAdapter = this.container.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
-    this.queryService = this.container.get<IQueryService<any>>(TYPES.QueryService);
+    this.queryService = this.container.get<IQueryService<TDocument>>(TYPES.QueryService);
     this.queue = this.container.get<IQueueService>(TYPES.QueueService);
 
-    this.aggregator = this.container.get<IAggregator>(TYPES.Aggregator);
+    this.aggregator = this.container.get<IAggregator<TDocument>>(TYPES.Aggregator);
     this.logger.log(LogLevel.Debug, 'Initializing collection');
     this.name = collectionName;
     this.config = collectionConfig;
@@ -50,7 +51,7 @@ export class Collection  implements ICollection   {
    * Insert many values into collection
    * @param rows - The values to be inserted
    */
-  async insertMany(rows:Array<any>):Promise<void> {
+  async insertMany(rows:TDocument[]):Promise<void> {
     this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Inserting many');
       const pointer = this.logger.startTimer();
@@ -67,7 +68,7 @@ export class Collection  implements ICollection   {
    * Essentially syntactic sugar - internally calls the same function as `insertMany`
    * @param row
    */
-  async insertOne(row: any):Promise<void> {
+  async insertOne(row: TDocument):Promise<void> {
     this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Inserting one');
     const pointer = this.logger.startTimer();
@@ -84,7 +85,7 @@ export class Collection  implements ICollection   {
    * @param query - Query Object
    * @param options - Query options
    */
-  async findMany<T>(query: any, options?: IQueryOptions): Promise<IFilterResult<T>> {
+  async findMany(query: Filter<TDocument> = {}, options?: IQueryOptions<TDocument>): Promise<IFilterResult<TDocument>> {
     this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Finding many');
     const pointer = this.logger.startTimer();
@@ -98,7 +99,7 @@ export class Collection  implements ICollection   {
    * @param query
    * @param delta
    */
-  async updateMany<T>(query: any, delta: any): Promise<void> {
+  async updateMany(query: Filter<TDocument>, delta: Update<TDocument>): Promise<void> {
     this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Updating many');
     const pointer = this.logger.startTimer();
@@ -126,8 +127,8 @@ export class Collection  implements ICollection   {
    * Perform MongoDB style aggregations
    * @param pipeline
    */
-  async aggregate(pipeline:Array<any>):Promise<any> {
-    return this.aggregator.aggregate(pipeline);
+  async aggregate<TResult extends object = TDocument>(pipeline: AggregationPipeline<TDocument>):Promise<TResult[]> {
+    return this.aggregator.aggregate<TResult>(pipeline);
   }
 
 }

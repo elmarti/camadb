@@ -1,14 +1,15 @@
 import { IQueryOptions } from './query-options.interface';
 import { IFilterResult } from './filter-result.interface';
 import { ServiceRegistry } from '../util/service-registry';
+import { AggregationPipeline, Document, Filter, Update } from './document-types';
 
-export interface ICollection  {
+export interface ICollection<TDocument extends object = Document> {
   container?: ServiceRegistry;
-  insertMany<T>(rows: Array<T>): Promise<void>;
-  insertOne<T>(row: T): Promise<void>;
-  findMany<T>(query: any, options?:IQueryOptions):Promise<IFilterResult<T>>;
-  updateMany<T>(query:any, delta:any): Promise<void>;
+  insertMany(rows: TDocument[]): Promise<void>;
+  insertOne(row: TDocument): Promise<void>;
+  findMany(query?: Filter<TDocument>, options?:IQueryOptions<TDocument>):Promise<IFilterResult<TDocument>>;
+  updateMany(query: Filter<TDocument>, delta: Update<TDocument>): Promise<void>;
   destroy():Promise<void>;
-  aggregate(pipeline:Array<any>): Promise<any>;
+  aggregate<TResult extends object = TDocument>(pipeline: AggregationPipeline<TDocument>): Promise<TResult[]>;
 
 }

@@ -61,13 +61,37 @@ All of these config options are optional:
 - Use the columns field to add specific data types for rows. This does _need_ to be done for each column, but is essential for date objects
 - Indexes aren't currently implemented, but the lookup is still very fast across 10 million rows
 ```
- const collection = await database.initCollection('test', {
+ interface Message {
+   _id: string;
+   name: string;
+   description: string;
+   createdAt: Date;
+ }
+
+ const collection = await database.initCollection<Message>('test', {
     columns: [{
       type:'date',
-      title:'date'
+      title:'createdAt'
     }],
     indexes: [],
   });
+```
+
+In 2.x, the type parameter could be supplied independently to methods such as
+`findMany<T>()`. In 3.x, move it to `initCollection<T>()` once so inserts,
+filters, updates, aggregations, and returned rows all share the same document
+contract:
+
+```ts
+// 2.x
+const messages = await database.initCollection('messages', config);
+await messages.insertOne<Message>(message);
+const result = await messages.findMany<Message>({ _id: message._id });
+
+// 3.x
+const messages = await database.initCollection<Message>('messages', config);
+await messages.insertOne(message);
+const result = await messages.findMany({ _id: message._id });
 ```
 
 ### Insert one
