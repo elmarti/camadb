@@ -1,17 +1,62 @@
 import { IFS } from '../../../interfaces/fs.interface';
 import { promises as nodeFs } from 'fs';
 import * as path from 'path';
-import { TYPES } from '../../../types';
 import { ISerializer } from '../../../interfaces/serializer.interface';
 import { ILogger } from '../../../interfaces/logger.interface';
 import { LogLevel } from '../../../interfaces/logger-level.enum';
 
 export class Fs implements IFS {
+  constructor(
+    private serializer: ISerializer,
+    private logger: ILogger,
+  ) {}
 
+  private async syncContainingDirectory(filePath: string): Promise<void> {
+    let directoryHandle;
 
+    try {
+      directoryHandle = await nodeFs.open(path.dirname(filePath), 'r');
+      await directoryHandle.sync();
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
 
-  constructor(private serializer: ISerializer,
-              private logger:ILogger) {}
+      // Some platforms cannot open or fsync directories. These codes are
+      // limited to unsupported-operation responses; other I/O errors remain
+      // durability failures and are surfaced to the caller.
+      if (!code || !['EINVAL', 'ENOTSUP', 'ENOSYS', 'EISDIR'].includes(code)) {
+        throw error;
+      }
+    } finally {
+      await directoryHandle?.close();
+    }
+  }
+
+  /**
+   * Replace a file without exposing a partially serialized payload.
+   *
+   * A fixed, adjacent temporary file makes recovery deterministic: a process
+   * interrupted before rename leaves only `<file>.tmp`, and the next mutation
+   * safely overwrites it. Handled failures remove the temporary file eagerly.
+   */
+  private async replaceFile(filePath: string, contents: string | Buffer): Promise<void> {
+    const temporaryPath = `${filePath}.tmp`;
+
+    try {
+      const handle = await nodeFs.open(temporaryPath, 'w');
+      try {
+        await handle.writeFile(contents);
+        await handle.sync();
+      } finally {
+        await handle.close();
+      }
+
+      await nodeFs.rename(temporaryPath, filePath);
+      await this.syncContainingDirectory(filePath);
+    } catch (error) {
+      await nodeFs.rm(temporaryPath, { force: true }).catch(() => undefined);
+      throw error;
+    }
+  }
 
   /**
    * Write a JSON object to a file
@@ -32,10 +77,8 @@ export class Fs implements IFS {
       await this.mkdir(camaFolder);
     }
     const filePath = path.join(camaFolder, fileName);
-    this.logger.log(LogLevel.Debug, 'Writing to temp file');
-    await nodeFs.writeFile(`${filePath}~`, output);
-    this.logger.log(LogLevel.Debug, 'Renaming temp file');
-    await nodeFs.rename(`${filePath}~`, `${filePath}`);
+    this.logger.log(LogLevel.Debug, 'Atomically replacing JSON file');
+    await this.replaceFile(filePath, output);
   }
 
   /**
@@ -62,17 +105,19 @@ export class Fs implements IFS {
     return JSON.parse(data);
   }
 
-
   /**
    * Overwrite the data with the updated dataset
    * @param filePaths
    */
-  async commit(folderPath: string, collection:string): Promise<void> {
+  async commit(folderPath: string, collection: string): Promise<void> {
     this.logger.log(LogLevel.Debug, `committing`);
     this.logger.log(LogLevel.Debug, collection);
     const outputPath = path.join(folderPath, `${collection}/data~`);
-   
-    await nodeFs.rename(outputPath, outputPath.replace('~', ''))
+    const committedPath = path.join(folderPath, collection, 'data');
+
+    if (await this.exists(outputPath)) {
+      await nodeFs.rename(outputPath, committedPath);
+    }
   }
 
   /**
@@ -80,7 +125,7 @@ export class Fs implements IFS {
    * @param path - The location of the new directory
    */
   async mkdir(path: string): Promise<void> {
-    await nodeFs.mkdir(path, {recursive:true});
+    await nodeFs.mkdir(path, { recursive: true });
   }
 
   /**
@@ -91,14 +136,11 @@ export class Fs implements IFS {
     return nodeFs.readdir(path);
   }
 
-
-
   async writeData(camaFolder: string, camaCollection: string, data: any): Promise<void> {
-    const output = path.join(camaFolder, camaCollection, 'data~');
+    const output = path.join(camaFolder, camaCollection, 'data');
     const serialized = this.serializer.serialize(data);
-    await nodeFs.writeFile(output, serialized);
+    await this.replaceFile(output, serialized);
   }
-
 
   async readData<T>(path: string): Promise<T> {
     const buffer = await nodeFs.readFile(path);
@@ -114,8 +156,6 @@ export class Fs implements IFS {
    */
   rmDir(outputPath: string, collectionName: string): Promise<void> {
     const dirPath = path.join(outputPath, collectionName);
-    return nodeFs.rmdir(dirPath, {recursive:true});
+    return nodeFs.rmdir(dirPath, { recursive: true });
   }
-
-
 }
