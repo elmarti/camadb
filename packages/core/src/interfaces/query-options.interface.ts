@@ -4,8 +4,8 @@ export interface ISortOptions {
   field: string;
   direction: "ASC"| "DESC";
 }
-export interface IQueryOptions {
-  sort?: ISortByObjectSorter<any> | ISortByObjectSorter<any>[];
+export interface IQueryOptions<TDocument = unknown> {
+  sort?: ISortByObjectSorter<TDocument> | ISortByObjectSorter<TDocument>[];
   limit?: number;
   offset?: number;
 }

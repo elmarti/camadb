@@ -9,9 +9,10 @@ import { ILogger } from '../../interfaces/logger.interface';
 import { IFilterResult } from '../../interfaces/filter-result.interface';
 import { ICollectionMeta } from '../../interfaces/collection-meta.interface';
 import { LogLevel } from '../../interfaces/logger-level.enum';
+import { Filter, Update } from '../../interfaces/document-types';
 const obop = require('obop')();
 
-export class QueryService<T> implements IQueryService<T>{
+export class QueryService<T extends object> implements IQueryService<T>{
 
   private dateColumns = [];
   constructor(
@@ -26,14 +27,14 @@ export class QueryService<T> implements IQueryService<T>{
    * @param query - The query to be applied to the dataset
    * @param options - Options for further data manipulation
    */
-  async filter(query: any = {}, options: IQueryOptions = {}): Promise<IFilterResult<T>> {
+  async filter(query: Filter<T> = {}, options: IQueryOptions<T> = {}): Promise<IFilterResult<T>> {
 
     const filterResult:any = {
 
     };
-    let data = await this.persistenceAdapter.getData();
+    let data = await this.persistenceAdapter.getData() as T[];
     if(Object.keys(query).length > 0){
-      data = data.filter(sift(query));
+      data = data.filter(sift(query as any));
     }
     filterResult['totalCount'] = data.length;
     if(options.sort){
@@ -50,11 +51,11 @@ export class QueryService<T> implements IQueryService<T>{
     return  filterResult;
   }
 
-  async update(query: any, delta: any): Promise<void> {
+  async update(query: Filter<T>, delta: Update<T>): Promise<void> {
     const data = await this.persistenceAdapter.getData();
     this.logger.log(LogLevel.Debug, "Iterating pages");
     const siftPointer = this.logger.startTimer();
-    const updated = data.filter(sift(query));
+    const updated = data.filter(sift(query as any));
     this.logger.endTimer(LogLevel.Debug, siftPointer, 'Sifting data');
     if(updated.length > 0) {
       this.logger.log(LogLevel.Debug, `Updating sifted`);

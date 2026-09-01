@@ -16,7 +16,7 @@
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "typecheck": "tsc --build --pretty false",
+    "typecheck": "tsc --build --pretty false && tsc --project packages/core/tsconfig.type-tests.json --pretty false",
     "lint": "eslint packages tests scripts --ext .js,.ts",
     "lint:fix": "yarn lint --fix",
     "format": "prettier --write \"{packages,apps,examples,tests,docs}/**/*.{js,ts,json,md}\"",

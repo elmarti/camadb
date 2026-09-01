@@ -3,6 +3,7 @@ import { ICollectionConfig } from './interfaces/collection-config.interface';
 import { ICamaConfig } from './interfaces/cama-config.interface';
 import { ICollection } from './interfaces/collection.interface';
 import { Collection } from './modules/collection';
+import { Document } from './interfaces/document-types';
 
 export class Cama implements ICama {
   private camaConfig: ICamaConfig;
@@ -24,8 +25,8 @@ export class Cama implements ICama {
    * @param config - The collection configuration
    * @returns an initialised collection
    */
-  async initCollection<T>(collectionName: string, config: ICollectionConfig): Promise<ICollection> {
-    return new Collection(collectionName, config, this.camaConfig);
+  async initCollection<TDocument extends object = Document>(collectionName: string, config: ICollectionConfig): Promise<ICollection<TDocument>> {
+    return new Collection<TDocument>(collectionName, config, this.camaConfig);
   }
 }
 
@@ -42,6 +43,7 @@ export type { ICollectionConfig } from './interfaces/collection-config.interface
 export type { IColumnConfig } from './interfaces/column-config.interface';
 export type { IFilterResult } from './interfaces/filter-result.interface';
 export type { IQueryOptions } from './interfaces/query-options.interface';
+export type { AggregationPipeline, AggregationStage, Document, FieldFilter, Filter, Update } from './interfaces/document-types';
 export type { IPersistenceAdapter } from './interfaces/persistence-adapter.interface';
 export {
   CURRENT_STORAGE_VERSION,
