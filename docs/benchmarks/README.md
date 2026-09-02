@@ -1,5 +1,7 @@
 # Storage benchmark baseline
 
+The baseline is preserved below. See the [Wave 4 comparison and workload guidance](./wave4-comparison.md) for the post-#83/#53 measurements, cache workloads, regressions, and remaining exit-gate limitations.
+
 This is the pre-#83/#53 baseline for the whole-collection storage architecture. The raw samples and machine metadata are in [`baseline-node24-apple-m5.json`](./baseline-node24-apple-m5.json).
 
 ## Environment and method
