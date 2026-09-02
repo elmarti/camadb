@@ -1,6 +1,6 @@
 # Record-oriented storage format
 
-- Status: Proposed for #83
+- Status: Accepted for #83
 - Scope: CamaDB 3 storage adapters
 - Baseline: measured by #11 before implementation
 
@@ -14,7 +14,7 @@ CamaDB 3 will use immutable, bounded pages of records plus a small atomically re
 
 ### Identity and layout
 
-The document `_id` is the stable logical record identity. A manifest maps each `_id` to a physical locator made from a page generation and slot. Pages have configurable byte and record limits rather than relying on a fixed record count. Oversized records occupy a dedicated page and fail with a documented limit when the runtime cannot store them safely.
+The document `_id` is the stable logical record identity. A small root manifest selects copy-on-write locator shards; a stable hash chooses the shard containing the `_id` to physical page, generation, and slot mapping. Pages are limited to 512 records and 1 MiB. A record larger than one page fails before publication.
 
 ### Atomic commit boundary
 
@@ -30,7 +30,7 @@ Deletes append tombstones to the active generation; they do not rewrite unaffect
 
 ### Streaming and bulk bounds
 
-Adapters expose async record/page iteration. Bulk reads and mutations accept explicit maximum records and bytes per batch, apply backpressure, and never require the complete collection in memory. Defaults and hard runtime limits will be documented and benchmarked. Operations whose requested atomic batch exceeds a runtime limit fail before publication rather than silently weakening atomicity.
+Adapters expose async record/page iteration. Pages are bounded to 512 records and 1 MiB, and atomic mutation batches are bounded to 10,000 records. Larger imports must submit explicit batches and can apply backpressure between them. Operations over the limit fail before publication rather than silently weakening atomicity.
 
 ### Browser transaction limits
 

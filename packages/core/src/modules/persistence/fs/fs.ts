@@ -137,6 +137,10 @@ export class Fs implements IFS {
     return nodeFs.readdir(path);
   }
 
+  rmFile(path: string): Promise<void> {
+    return nodeFs.rm(path, { force: true });
+  }
+
   async writeData(camaFolder: string, camaCollection: string, data: any): Promise<void> {
     const output = path.join(camaFolder, camaCollection, 'data');
     const serialized = this.serializer.serialize(createStorageEnvelope(data));
