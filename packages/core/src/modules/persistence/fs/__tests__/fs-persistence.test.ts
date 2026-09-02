@@ -83,4 +83,58 @@ describe('filesystem record persistence', () => {
     const database = new Cama({ path: databasePath, persistenceAdapter: PersistenceAdapterEnum.FS });
     return database.initCollection<TestDocument>('records', { columns: [], indexes: [] });
   }
+
+  it('keeps old pages until an active iterator releases its snapshot', async () => {
+    const collection = await createCollection();
+    await collection.insertMany(Array.from({ length: 513 }, (_, index) => ({ _id: String(index), value: 'old' })));
+    const adapter = collection.container!.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
+    const iterator = adapter.iterateRecords!()[Symbol.asyncIterator]();
+    await iterator.next();
+    await collection.updateMany({ _id: '512' }, { $set: { value: 'new' } });
+    await collection.compact();
+    let last;
+    for (let index = 1; index < 513; index += 1) last = (await iterator.next()).value;
+    expect(last).toEqual({ _id: '512', value: 'old' });
+    await iterator.return?.();
+    await collection.compact();
+    expect((await collection.storageStats()).reclaimableBytes).toBe(0);
+  });
+
+  it('does not report a committed mutation as failed when automatic cleanup fails', async () => {
+    const database = new Cama({
+      path: databasePath,
+      persistenceAdapter: PersistenceAdapterEnum.FS,
+      compaction: { minReclaimableBytes: 0, minReclaimableRatio: 0 },
+    });
+    const collection = await database.initCollection<TestDocument>('records', { columns: [], indexes: [] });
+    await collection.insertOne({ _id: 'record', value: 'before' });
+    jest.spyOn(nodeFs, 'rm').mockRejectedValueOnce(new Error('automatic cleanup interrupted'));
+    await expect(collection.updateMany({ _id: 'record' }, { $set: { value: 'after' } })).resolves.toMatchObject({
+      modifiedCount: 1,
+    });
+    expect((await collection.storageStats()).lastCompactionError).toBe('automatic cleanup interrupted');
+    await collection.compact();
+    expect((await collection.storageStats()).lastCompactionError).toBeUndefined();
+    expect((await collection.findMany({ _id: 'record' })).rows[0].value).toBe('after');
+  });
+
+  it('does not scan whole-store statistics for ordinary point writes below the byte threshold', async () => {
+    const collection = await createCollection();
+    await collection.insertOne({ _id: 'record', value: 'before' });
+    const adapter = collection.container!.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
+    const statistics = jest.spyOn(adapter, 'storageStats');
+    await collection.updateMany({ _id: 'record' }, { $set: { value: 'after' } });
+    expect(statistics).not.toHaveBeenCalled();
+  });
+
+  it('compacts more records than fit in one mutation batch', async () => {
+    const collection = await createCollection();
+    await collection.insertMany(
+      Array.from({ length: 10_000 }, (_, index) => ({ _id: String(index), value: 'record' })),
+    );
+    await collection.insertOne({ _id: 'last', value: 'record' });
+    await collection.compact();
+    expect(await collection.count()).toBe(10_001);
+    expect((await collection.storageStats()).reclaimableBytes).toBe(0);
+  }, 30_000);
 });

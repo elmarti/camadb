@@ -1,7 +1,7 @@
 import { ICollection } from '../../interfaces/collection.interface';
 import { ICollectionConfig } from '../../interfaces/collection-config.interface';
 import { TYPES } from '../../types';
-import { IPersistenceAdapter } from '../../interfaces/persistence-adapter.interface';
+import { IPersistenceAdapter, StorageStats } from '../../interfaces/persistence-adapter.interface';
 import { IQueryService } from '../../interfaces/query-service.interface';
 import { IQueryOptions } from '../../interfaces/query-options.interface';
 import { ILogger } from '../../interfaces/logger.interface';
@@ -191,6 +191,19 @@ export class Collection<TDocument extends object = Document> implements ICollect
   async destroy(): Promise<void> {
     await this.persistenceAdapter.destroy();
     this.destroyed = true;
+  }
+
+  async compact(): Promise<void> {
+    this.checkDestroyed();
+    await this.persistenceAdapter.compact?.();
+  }
+
+  async storageStats(): Promise<StorageStats> {
+    this.checkDestroyed();
+    if (!this.persistenceAdapter.storageStats) {
+      throw new Error('Storage statistics are not supported by this persistence adapter');
+    }
+    return this.persistenceAdapter.storageStats();
   }
 
   private checkDestroyed() {

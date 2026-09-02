@@ -1,5 +1,6 @@
 import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.interface';
 import { assertMutationBound } from '../record-pages';
+import { serializedBytes } from '../compaction';
 
 export default class InmemoryPersistence implements IPersistenceAdapter {
   private dbName? = '';
@@ -29,6 +30,16 @@ export default class InmemoryPersistence implements IPersistenceAdapter {
   async getRecord(id: string): Promise<any | undefined> {
     this.checkDestroyed();
     return this.cache.find((row: { _id?: string }) => row._id === id);
+  }
+
+  async compact(): Promise<void> {
+    this.checkDestroyed();
+  }
+
+  async storageStats() {
+    this.checkDestroyed();
+    const liveBytes = serializedBytes(this.cache);
+    return { generation: 0, liveBytes, totalBytes: liveBytes, reclaimableBytes: 0, tombstones: 0 };
   }
 
   async getRecords(ids: string[]): Promise<Map<string, any>> {

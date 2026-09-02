@@ -7,6 +7,7 @@ export interface IFS {
   mkdir(path: string): Promise<void>;
   readDir(path: string): Promise<any>;
   rmFile(path: string): Promise<void>;
+  fileSize(path: string): Promise<number>;
 
   writeData(camaFolder: string, camaCollection: string, data: any): Promise<void>;
   readData<T>(path: string): Promise<T>;

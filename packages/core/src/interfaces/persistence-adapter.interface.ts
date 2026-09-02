@@ -3,6 +3,15 @@ export interface RecordMutation<T = any> {
   puts?: T[];
 }
 
+export interface StorageStats {
+  lastCompactionError?: string;
+  generation: number;
+  liveBytes: number;
+  reclaimableBytes: number;
+  tombstones: number;
+  totalBytes: number;
+}
+
 export interface IPersistenceAdapter {
   insert(ts: Array<any>): Promise<any>;
   getData(): Promise<any>;
@@ -13,6 +22,7 @@ export interface IPersistenceAdapter {
   iterateRecords?(): AsyncIterable<any>;
   mutateRecords?(mutation: RecordMutation): Promise<void>;
   compact?(): Promise<void>;
+  storageStats?(): Promise<StorageStats>;
 
   update(updated: any): Promise<void>;
 

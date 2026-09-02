@@ -109,6 +109,16 @@ describe('IndexedDbPersistence', () => {
     await indexedDbPersistence.destroy();
   });
 
+  it('reclaims tombstones across multiple bounded cleanup transactions', async () => {
+    const rows = Array.from({ length: 600 }, (_, index) => ({ _id: String(index), value: 'record' }));
+    await indexedDbPersistence.insert(rows);
+    await indexedDbPersistence.mutateRecords({ deletes: rows.map(row => row._id) });
+    expect((await indexedDbPersistence.storageStats()).tombstones).toBe(600);
+    await indexedDbPersistence.compact();
+    expect((await indexedDbPersistence.storageStats()).tombstones).toBe(0);
+    expect(await indexedDbPersistence.getData()).toEqual([]);
+  });
+
   describe('getData', () => {
     it('should get data from IndexedDB', async () => {
       const data = ['test-data-1', 'test-data-2', 'test-data-3'];

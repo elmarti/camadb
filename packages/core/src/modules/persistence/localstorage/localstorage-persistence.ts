@@ -1,8 +1,9 @@
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
-import { IPersistenceAdapter, RecordMutation } from '../../../interfaces/persistence-adapter.interface';
+import { IPersistenceAdapter, RecordMutation, StorageStats } from '../../../interfaces/persistence-adapter.interface';
 import { ILogger } from '../../../interfaces/logger.interface';
 import { readStoragePayload } from '../storage-version';
 import { assertMutationBound } from '../record-pages';
+import { serializedBytes, shouldCompact } from '../compaction';
 
 interface LocalRecordManifest {
   camaDB: { format: 'records'; version: 3 };
@@ -22,8 +23,11 @@ const emptyManifest = (): LocalRecordManifest => ({
 
 /** localStorage record store with generation-keyed records and manifest publication. */
 export default class LocalstoragePersistence implements IPersistenceAdapter {
+  private static readers = new Map<string, number>();
   private readonly dbName: string;
   private destroyed = false;
+  private lastCompactionError?: string;
+  private compactionDebt = Infinity;
   private queue: Promise<void> = Promise.resolve();
   private readonly prefix: string;
   private readonly initialized: Promise<void>;
@@ -70,6 +74,18 @@ export default class LocalstoragePersistence implements IPersistenceAdapter {
   }
 
   async *iterateRecords(): AsyncIterable<any> {
+    const count = LocalstoragePersistence.readers.get(this.prefix) ?? 0;
+    LocalstoragePersistence.readers.set(this.prefix, count + 1);
+    try {
+      yield* this.iterateSnapshot();
+    } finally {
+      const remaining = (LocalstoragePersistence.readers.get(this.prefix) ?? 1) - 1;
+      if (remaining) LocalstoragePersistence.readers.set(this.prefix, remaining);
+      else LocalstoragePersistence.readers.delete(this.prefix);
+    }
+  }
+
+  private async *iterateSnapshot(): AsyncIterable<any> {
     this.checkDestroyed();
     await this.initialized;
     const manifest = this.readManifest();
@@ -97,12 +113,52 @@ export default class LocalstoragePersistence implements IPersistenceAdapter {
   }
 
   async compact(): Promise<void> {
+    this.checkDestroyed();
     await this.initialized;
-    const live = new Set(Object.values(this.readManifest().records));
+    return this.enqueue(async () => this.compactNow());
+  }
+
+  private compactNow(): void {
+    const manifest = this.readManifest();
+    this.writeManifest({ ...manifest, tombstones: {} });
+    if ((LocalstoragePersistence.readers.get(this.prefix) ?? 0) > 0) return;
+    const live = new Set([...Object.values(manifest.records), this.manifestKey()]);
     for (let index = window.localStorage.length - 1; index >= 0; index -= 1) {
       const key = window.localStorage.key(index);
       if (key?.startsWith(`${this.prefix}-record-`) && !live.has(key)) window.localStorage.removeItem(key);
     }
+    this.lastCompactionError = undefined;
+    this.compactionDebt = 0;
+  }
+
+  async storageStats(): Promise<StorageStats> {
+    this.checkDestroyed();
+    await this.initialized;
+    return this.statsNow();
+  }
+
+  private statsNow(): StorageStats {
+    const manifest = this.readManifest();
+    const live = new Set([...Object.values(manifest.records), this.manifestKey()]);
+    let totalBytes = 0;
+    let liveBytes = 0;
+    for (let index = 0; index < window.localStorage.length; index += 1) {
+      const key = window.localStorage.key(index);
+      if (!key?.startsWith(`${this.prefix}-record-`)) continue;
+      const bytes = serializedBytes(key) + serializedBytes(window.localStorage.getItem(key));
+      totalBytes += bytes;
+      if (live.has(key)) liveBytes += bytes;
+    }
+    const tombstoneBytes = serializedBytes(manifest.tombstones) - 2;
+    liveBytes -= tombstoneBytes;
+    return {
+      generation: manifest.generation,
+      liveBytes,
+      totalBytes,
+      reclaimableBytes: totalBytes - liveBytes,
+      tombstones: Object.keys(manifest.tombstones).length,
+      lastCompactionError: this.lastCompactionError,
+    };
   }
 
   async destroy(): Promise<void> {
@@ -127,6 +183,11 @@ export default class LocalstoragePersistence implements IPersistenceAdapter {
 
   private applyMutation(manifest: LocalRecordManifest, mutation: RecordMutation): void {
     assertMutationBound(Math.max(mutation.deletes?.length ?? 0, mutation.puts?.length ?? 0));
+    const retiredIds = new Set([...(mutation.deletes ?? []), ...(mutation.puts ?? []).map((row) => row?._id)]);
+    for (const id of retiredIds) {
+      const key = manifest.records[id];
+      if (key) this.compactionDebt += serializedBytes(key) + serializedBytes(window.localStorage.getItem(key));
+    }
     const next: LocalRecordManifest = {
       ...manifest,
       generation: manifest.generation + 1,
@@ -149,6 +210,16 @@ export default class LocalstoragePersistence implements IPersistenceAdapter {
       delete next.tombstones[id];
     });
     this.writeManifest(next);
+    try {
+      const policy = { ...this.config, compaction: { minReclaimableBytes: 64 * 1024, ...this.config.compaction } };
+      if (this.compactionDebt < (policy.compaction.minReclaimableBytes ?? 64 * 1024)) return;
+      const stats = this.statsNow();
+      this.compactionDebt = stats.reclaimableBytes;
+      if (shouldCompact(stats, policy)) this.compactNow();
+    } catch (error) {
+      this.lastCompactionError = error instanceof Error ? error.message : 'Compaction failed';
+      this.compactionDebt = Infinity;
+    }
   }
 
   private readManifest(): LocalRecordManifest {
