@@ -6,6 +6,7 @@ import { ICollection } from '../../../interfaces/collection.interface';
 import { PersistenceAdapterEnum } from '../../../interfaces/perisistence-adapter.enum';
 import { IPersistenceAdapter } from '../../../interfaces/persistence-adapter.interface';
 import { TYPES } from '../../../types';
+import { CacheMode } from '../../../interfaces/cache.interface';
 
 interface RecordDocument {
   name: string;
@@ -105,59 +106,63 @@ const collectionCrudConformance = (adapterName: string, createContext: () => Pro
   });
 };
 
-collectionCrudConformance('in-memory', async () => {
-  const database = new Cama({ persistenceAdapter: PersistenceAdapterEnum.InMemory });
-  const collection = await database.initCollection<RecordDocument>('records', config);
-  return {
-    collection,
-    async cleanup() {
-      await collection.destroy();
-    },
-  };
-});
-
-collectionCrudConformance('localStorage', async () => {
-  const storage = new MemoryStorage();
-  const previousWindow = (globalThis as { window?: unknown }).window;
-  Object.defineProperty(globalThis, 'window', { configurable: true, value: { localStorage: storage } });
-  const database = new Cama({
-    path: `crud-${Date.now()}-${Math.random()}`,
-    persistenceAdapter: PersistenceAdapterEnum.LocalStorage,
+for (const mode of ['disabled', 'eager', 'lazy', 'lru'] as CacheMode[]) {
+  collectionCrudConformance(`in-memory/${mode}`, async () => {
+    const database = new Cama({ persistenceAdapter: PersistenceAdapterEnum.InMemory, cache: { mode } });
+    const collection = await database.initCollection<RecordDocument>('records', config);
+    return {
+      collection,
+      async cleanup() {
+        await collection.destroy();
+      },
+    };
   });
-  const collection = await database.initCollection<RecordDocument>('records', config);
-  return {
-    collection,
-    async cleanup() {
-      await collection.destroy();
-      if (previousWindow === undefined) delete (globalThis as { window?: unknown }).window;
-      else Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow });
-    },
-  };
-});
 
-collectionCrudConformance('IndexedDB', async () => {
-  const database = new Cama({
-    path: `crud-${Date.now()}-${Math.random()}`,
-    persistenceAdapter: PersistenceAdapterEnum.IndexedDb,
+  collectionCrudConformance(`localStorage/${mode}`, async () => {
+    const storage = new MemoryStorage();
+    const previousWindow = (globalThis as { window?: unknown }).window;
+    Object.defineProperty(globalThis, 'window', { configurable: true, value: { localStorage: storage } });
+    const database = new Cama({
+      path: `crud-${Date.now()}-${Math.random()}`,
+      persistenceAdapter: PersistenceAdapterEnum.LocalStorage,
+      cache: { mode },
+    });
+    const collection = await database.initCollection<RecordDocument>('records', config);
+    return {
+      collection,
+      async cleanup() {
+        await collection.destroy();
+        if (previousWindow === undefined) delete (globalThis as { window?: unknown }).window;
+        else Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow });
+      },
+    };
   });
-  const collection = await database.initCollection<RecordDocument>('records', config);
-  return {
-    collection,
-    async cleanup() {
-      await collection.destroy();
-    },
-  };
-});
 
-collectionCrudConformance('filesystem', async () => {
-  const databasePath = await nodeFs.mkdtemp(path.join(tmpdir(), 'camadb-crud-'));
-  const database = new Cama({ path: databasePath, persistenceAdapter: PersistenceAdapterEnum.FS });
-  const collection = await database.initCollection<RecordDocument>('records', config);
-  return {
-    collection,
-    async cleanup() {
-      await collection.destroy().catch(() => undefined);
-      await nodeFs.rm(databasePath, { recursive: true, force: true });
-    },
-  };
-});
+  collectionCrudConformance(`IndexedDB/${mode}`, async () => {
+    const database = new Cama({
+      path: `crud-${Date.now()}-${Math.random()}`,
+      persistenceAdapter: PersistenceAdapterEnum.IndexedDb,
+      cache: { mode },
+    });
+    const collection = await database.initCollection<RecordDocument>('records', config);
+    return {
+      collection,
+      async cleanup() {
+        await collection.destroy();
+      },
+    };
+  });
+
+  collectionCrudConformance(`filesystem/${mode}`, async () => {
+    const databasePath = await nodeFs.mkdtemp(path.join(tmpdir(), 'camadb-crud-'));
+    const database = new Cama({ path: databasePath, persistenceAdapter: PersistenceAdapterEnum.FS, cache: { mode } });
+    const collection = await database.initCollection<RecordDocument>('records', config);
+    return {
+      collection,
+      async cleanup() {
+        await collection.destroy().catch(() => undefined);
+        await nodeFs.rm(databasePath, { recursive: true, force: true });
+      },
+    };
+  });
+}

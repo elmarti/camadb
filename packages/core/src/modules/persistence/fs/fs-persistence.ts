@@ -19,6 +19,7 @@ interface RecordShard {
   tombstones: Record<string, number>;
 }
 interface RecordManifest {
+  incarnation?: string;
   camaDB: { format: 'records'; version: 3 };
   generation: number;
   nextSequence: number;
@@ -30,6 +31,7 @@ interface PreparedRecord {
 }
 
 const emptyManifest = (): RecordManifest => ({
+  incarnation: `${Date.now()}-${Math.random()}`,
   camaDB: { format: 'records', version: 3 },
   generation: 0,
   nextSequence: 0,
@@ -81,6 +83,13 @@ export default class FSPersistence implements IPersistenceAdapter {
 
   async getRecord(id: string): Promise<any | undefined> {
     return (await this.getRecords([id])).get(id);
+  }
+
+  async cacheRevision(): Promise<string> {
+    this.checkDestroyed();
+    await this.initialized;
+    const manifest = await this.readManifest();
+    return manifest.incarnation ? `${manifest.incarnation}:${manifest.generation}` : JSON.stringify(manifest);
   }
 
   async getRecords(ids: string[]): Promise<Map<string, any>> {

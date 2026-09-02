@@ -12,6 +12,7 @@ import {
 } from './document-types';
 import { DeleteResult, InsertManyResult, InsertOneResult, UpdateResult } from './mutation-result.interface';
 import { StorageStats } from './persistence-adapter.interface';
+import { CacheStats } from './cache.interface';
 
 export interface ICollection<TDocument extends object = Document> {
   container?: ServiceRegistry;
@@ -35,6 +36,8 @@ export interface ICollection<TDocument extends object = Document> {
   destroy(): Promise<void>;
   compact(): Promise<void>;
   storageStats(): Promise<StorageStats>;
+  cacheStats(): CacheStats;
+  clearCache(): void;
   aggregate<TResult extends object = StoredDocument<TDocument>>(
     pipeline: AggregationPipeline<StoredDocument<TDocument>>,
   ): Promise<TResult[]>;

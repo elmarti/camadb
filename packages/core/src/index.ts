@@ -26,7 +26,9 @@ export class Cama implements ICama {
    * @returns an initialised collection
    */
   async initCollection<TDocument extends object = Document>(collectionName: string, config: ICollectionConfig): Promise<ICollection<TDocument>> {
-    return new Collection<TDocument>(collectionName, config, this.camaConfig);
+    const collection = new Collection<TDocument>(collectionName, config, this.camaConfig);
+    await collection.initializeCache();
+    return collection;
   }
 }
 
@@ -38,6 +40,7 @@ export { PersistenceAdapterEnum } from './interfaces/perisistence-adapter.enum';
 export { LogLevel } from './interfaces/logger-level.enum';
 export type { ICama } from './interfaces/cama.interface';
 export type { ICamaConfig } from './interfaces/cama-config.interface';
+export type { CacheConfig, CacheMode, CacheStats } from './interfaces/cache.interface';
 export type { ICollection } from './interfaces/collection.interface';
 export type { ICollectionConfig } from './interfaces/collection-config.interface';
 export type { IColumnConfig } from './interfaces/column-config.interface';

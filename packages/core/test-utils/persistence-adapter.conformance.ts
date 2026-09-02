@@ -79,7 +79,37 @@ export const persistenceAdapterConformance = (
       await expect(adapter.getData()).rejects.toThrow();
     });
 
+    it('invalidates cached records after update, delete, replacement, and compaction', async () => {
+      await adapter.insert([{ _id: 'a', value: 1 }]);
+      await expect(adapter.getRecord!('a')).resolves.toEqual({ _id: 'a', value: 1 });
+      await expect(adapter.getRecord!('a')).resolves.toEqual({ _id: 'a', value: 1 });
+      const stats = adapter.cacheStats?.();
+      const cachingEnabled = stats !== undefined && stats.mode !== 'disabled';
+      expect(cachingEnabled ? stats.hits : 1).toBeGreaterThan(0);
+      await adapter.mutateRecords!({ puts: [{ _id: 'a', value: 2 }] });
+      await expect(adapter.getRecord!('a')).resolves.toEqual({ _id: 'a', value: 2 });
+      await adapter.compact!();
+      await expect(adapter.getRecord!('a')).resolves.toEqual({ _id: 'a', value: 2 });
+      await adapter.mutateRecords!({ deletes: ['a'] });
+      await expect(adapter.getRecord!('a')).resolves.toBeUndefined();
+      await adapter.insert([{ _id: 'a', value: 3 }]);
+      await expect(adapter.getRecord!('a')).resolves.toEqual({ _id: 'a', value: 3 });
+      await adapter.update([]);
+      await expect(adapter.getRecord!('a')).resolves.toBeUndefined();
+    });
+
     if (options.persistsAcrossInstances) {
+      it('invalidates cached records when another handle writes or recreates storage', async () => {
+        await adapter.insert([{ _id: 'a', value: 1 }]);
+        await expect(adapter.getRecord!('a')).resolves.toEqual({ _id: 'a', value: 1 });
+        const other = await context.createAdapter('primary');
+        await other.mutateRecords!({ puts: [{ _id: 'a', value: 2 }] });
+        await expect(adapter.getRecord!('a')).resolves.toEqual({ _id: 'a', value: 2 });
+        await other.destroy();
+        const recreated = await context.createAdapter('primary');
+        await recreated.insert([{ _id: 'a', value: 9 }]);
+        await expect(adapter.getRecord!('a')).resolves.toEqual({ _id: 'a', value: 9 });
+      });
       it('makes completed writes visible to a new adapter instance', async () => {
         await adapter.insert(rows);
         const reopened = await context.createAdapter('primary');

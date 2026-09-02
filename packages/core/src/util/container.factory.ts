@@ -25,6 +25,7 @@ import { NodeSystem } from '../modules/system/node.system';
 import { NoopSystem } from '../modules/system/noop.system';
 import { TYPES } from '../types';
 import { ServiceRegistry } from './service-registry';
+import { CachedPersistence } from '../modules/persistence/cached-persistence';
 
 export const containerFactory = (
   collectionName: string,
@@ -76,6 +77,8 @@ export const containerFactory = (
     default:
       throw new Error(`Unknown adapter type: ${camaConfig.persistenceAdapter}`);
   }
+
+  persistence = new CachedPersistence(persistence, camaConfig.cache);
 
   return registry
     .set(TYPES.Logger, logger)
