@@ -4,6 +4,10 @@ import { LogLevel } from './logger-level.enum';
 export interface ICamaConfig {
   persistenceAdapter: PersistenceAdapterEnum;
   path?: string;
-  logLevel?: LogLevel
-  test?: boolean
+  logLevel?: LogLevel;
+  test?: boolean;
+  compaction?: {
+    minReclaimableBytes?: number;
+    minReclaimableRatio?: number;
+  };
 }

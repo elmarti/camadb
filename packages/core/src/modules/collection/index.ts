@@ -1,7 +1,7 @@
 import { ICollection } from '../../interfaces/collection.interface';
 import { ICollectionConfig } from '../../interfaces/collection-config.interface';
 import { TYPES } from '../../types';
-import { IPersistenceAdapter } from '../../interfaces/persistence-adapter.interface';
+import { IPersistenceAdapter, StorageStats } from '../../interfaces/persistence-adapter.interface';
 import { IQueryService } from '../../interfaces/query-service.interface';
 import { IQueryOptions } from '../../interfaces/query-options.interface';
 import { ILogger } from '../../interfaces/logger.interface';
@@ -13,8 +13,21 @@ import { IAggregator } from '../../interfaces/aggregator.interface';
 import { containerFactory } from '../../util/container.factory';
 import { IQueueService } from '../../interfaces/queue-service.interface';
 import { ServiceRegistry } from '../../util/service-registry';
-import { AggregationPipeline, Document, DocumentId, Filter, InsertDocument, StoredDocument, Update } from '../../interfaces/document-types';
-import { DeleteResult, InsertManyResult, InsertOneResult, UpdateResult } from '../../interfaces/mutation-result.interface';
+import {
+  AggregationPipeline,
+  Document,
+  DocumentId,
+  Filter,
+  InsertDocument,
+  StoredDocument,
+  Update,
+} from '../../interfaces/document-types';
+import {
+  DeleteResult,
+  InsertManyResult,
+  InsertOneResult,
+  UpdateResult,
+} from '../../interfaces/mutation-result.interface';
 
 export class Collection<TDocument extends object = Document> implements ICollection<TDocument> {
   public container: ServiceRegistry;
@@ -27,13 +40,8 @@ export class Collection<TDocument extends object = Document> implements ICollect
   private destroyed = false;
   private aggregator: IAggregator<StoredDocument<TDocument>>;
 
-
-  constructor(
-    collectionName: string,
-    collectionConfig: ICollectionConfig,
-    camaConfig: ICamaConfig
-    ) {
-    this.container = containerFactory(collectionName, camaConfig, collectionConfig)
+  constructor(collectionName: string, collectionConfig: ICollectionConfig, camaConfig: ICamaConfig) {
+    this.container = containerFactory(collectionName, camaConfig, collectionConfig);
     this.logger = this.container.get<ILogger>(TYPES.Logger);
     this.persistenceAdapter = this.container.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
     this.queryService = this.container.get<IQueryService<StoredDocument<TDocument>>>(TYPES.QueryService);
@@ -44,9 +52,7 @@ export class Collection<TDocument extends object = Document> implements ICollect
     this.name = collectionName;
     this.config = collectionConfig;
     this.logger.log(LogLevel.Debug, 'Initializing persistence adapter');
-
   }
-
 
   /**
    * Insert many values into collection
@@ -60,11 +66,11 @@ export class Collection<TDocument extends object = Document> implements ICollect
       const pointer = this.logger.startTimer();
       const prepared = await this.prepareInsert(rows);
       await this.persistenceAdapter.insert(prepared);
-      this.logger.endTimer(LogLevel.Debug, pointer, "insert  rows");
+      this.logger.endTimer(LogLevel.Debug, pointer, 'insert  rows');
       return {
         acknowledged: true,
         insertedCount: prepared.length,
-        insertedIds: prepared.map(row => row._id),
+        insertedIds: prepared.map((row) => row._id),
       };
     });
   }
@@ -84,7 +90,7 @@ export class Collection<TDocument extends object = Document> implements ICollect
       const pointer = this.logger.startTimer();
       const [prepared] = await this.prepareInsert([row]);
       await this.persistenceAdapter.insert([prepared]);
-      this.logger.endTimer(LogLevel.Debug, pointer, "insert row");
+      this.logger.endTimer(LogLevel.Debug, pointer, 'insert row');
       return { acknowledged: true, insertedId: prepared._id };
     });
   }
@@ -98,12 +104,15 @@ export class Collection<TDocument extends object = Document> implements ICollect
    * @param query - Query Object
    * @param options - Query options
    */
-  async findMany(query: Filter<StoredDocument<TDocument>> = {}, options?: IQueryOptions<StoredDocument<TDocument>>): Promise<IFilterResult<StoredDocument<TDocument>>> {
+  async findMany(
+    query: Filter<StoredDocument<TDocument>> = {},
+    options?: IQueryOptions<StoredDocument<TDocument>>,
+  ): Promise<IFilterResult<StoredDocument<TDocument>>> {
     this.checkDestroyed();
     this.logger.log(LogLevel.Debug, 'Finding many');
     const pointer = this.logger.startTimer();
     const result = await this.queryService.filter(query, options);
-    this.logger.endTimer(LogLevel.Debug, pointer, "Finding many");
+    this.logger.endTimer(LogLevel.Debug, pointer, 'Finding many');
     return result;
   }
 
@@ -112,7 +121,10 @@ export class Collection<TDocument extends object = Document> implements ICollect
    * @param query
    * @param delta
    */
-  async updateMany(query: Filter<StoredDocument<TDocument>>, delta: Update<Omit<TDocument, '_id'>>): Promise<UpdateResult<DocumentId>> {
+  async updateMany(
+    query: Filter<StoredDocument<TDocument>>,
+    delta: Update<Omit<TDocument, '_id'>>,
+  ): Promise<UpdateResult<DocumentId>> {
     this.checkDestroyed();
     this.assertIdentityUnchanged(delta);
     return this.queue.add(async () => {
@@ -120,10 +132,9 @@ export class Collection<TDocument extends object = Document> implements ICollect
       this.logger.log(LogLevel.Debug, 'Updating many');
       const pointer = this.logger.startTimer();
       const result = await this.queryService.update(query, delta as Update<StoredDocument<TDocument>>);
-      this.logger.endTimer(LogLevel.Debug, pointer, "Updating many");
+      this.logger.endTimer(LogLevel.Debug, pointer, 'Updating many');
       return result;
     });
-
   }
 
   async deleteOne(query: Filter<StoredDocument<TDocument>>): Promise<DeleteResult> {
@@ -156,10 +167,7 @@ export class Collection<TDocument extends object = Document> implements ICollect
       this.checkDestroyed();
       const changes = { ...document };
       delete changes._id;
-      const update = await this.queryService.update(
-        query,
-        { $set: changes } as Update<StoredDocument<TDocument>>,
-      );
+      const update = await this.queryService.update(query, { $set: changes } as Update<StoredDocument<TDocument>>);
       if (update.matchedCount > 0) {
         return update;
       }
@@ -174,7 +182,6 @@ export class Collection<TDocument extends object = Document> implements ICollect
         upsertedId: prepared._id,
       };
     });
-
   }
 
   /**
@@ -186,9 +193,22 @@ export class Collection<TDocument extends object = Document> implements ICollect
     this.destroyed = true;
   }
 
-  private checkDestroyed(){
-    if(this.destroyed){
-      throw new Error('Collection has been destroyed. Call Cama.initCollection to recreate')
+  async compact(): Promise<void> {
+    this.checkDestroyed();
+    await this.persistenceAdapter.compact?.();
+  }
+
+  async storageStats(): Promise<StorageStats> {
+    this.checkDestroyed();
+    if (!this.persistenceAdapter.storageStats) {
+      throw new Error('Storage statistics are not supported by this persistence adapter');
+    }
+    return this.persistenceAdapter.storageStats();
+  }
+
+  private checkDestroyed() {
+    if (this.destroyed) {
+      throw new Error('Collection has been destroyed. Call Cama.initCollection to recreate');
     }
   }
 
@@ -196,25 +216,45 @@ export class Collection<TDocument extends object = Document> implements ICollect
    * Perform MongoDB style aggregations
    * @param pipeline
    */
-  async aggregate<TResult extends object = StoredDocument<TDocument>>(pipeline: AggregationPipeline<StoredDocument<TDocument>>):Promise<TResult[]> {
+  async aggregate<TResult extends object = StoredDocument<TDocument>>(
+    pipeline: AggregationPipeline<StoredDocument<TDocument>>,
+  ): Promise<TResult[]> {
     return this.aggregator.aggregate<TResult>(pipeline);
   }
 
   private async prepareInsert(rows: InsertDocument<TDocument>[]): Promise<StoredDocument<TDocument>[]> {
-    const existing = await this.persistenceAdapter.getData() as Array<{ _id?: unknown }>;
-    const ids = new Set<unknown>(existing.map(row => row._id).filter(id => id !== undefined));
+    const ids = new Set<unknown>();
+    const providedIds = rows.map((row) => row._id).filter((id): id is string => typeof id === 'string');
+    const existingRecords = this.persistenceAdapter.getRecords
+      ? await this.persistenceAdapter.getRecords(providedIds)
+      : undefined;
+    if (!this.persistenceAdapter.getRecord) {
+      const existing = (await this.persistenceAdapter.getData()) as Array<{ _id?: unknown }>;
+      existing
+        .map((row) => row._id)
+        .filter((id) => id !== undefined)
+        .forEach((id) => ids.add(id));
+    }
 
-    return rows.map(row => {
+    const prepared: StoredDocument<TDocument>[] = [];
+    for (const row of rows) {
       let id = row._id;
+      const generated = id === undefined;
       if (id === undefined) {
         do {
           id = this.generateId();
-        } while (ids.has(id));
+        } while (ids.has(id) || (this.persistenceAdapter.getRecord && (await this.persistenceAdapter.getRecord(id))));
       }
-      if (ids.has(id)) throw new Error(`Duplicate _id "${String(id)}"`);
+      const exists =
+        existingRecords?.has(id) ||
+        (generated && this.persistenceAdapter.getRecord ? Boolean(await this.persistenceAdapter.getRecord(id)) : false);
+      if (ids.has(id) || exists) {
+        throw new Error(`Duplicate _id "${String(id)}"`);
+      }
       ids.add(id);
-      return { ...row, _id: id } as StoredDocument<TDocument>;
-    });
+      prepared.push({ ...row, _id: id } as StoredDocument<TDocument>);
+    }
+    return prepared;
   }
 
   private generateId(): string {
@@ -227,11 +267,10 @@ export class Collection<TDocument extends object = Document> implements ICollect
   private assertIdentityUnchanged(delta: Update<Omit<TDocument, '_id'>>): void {
     const candidate = delta as Record<string, unknown>;
     const operatorValues = ['$set', '$unset', '$inc']
-      .map(operator => candidate[operator])
+      .map((operator) => candidate[operator])
       .filter((value): value is Record<string, unknown> => typeof value === 'object' && value !== null);
-    if ('_id' in candidate || operatorValues.some(value => '_id' in value)) {
+    if ('_id' in candidate || operatorValues.some((value) => '_id' in value)) {
       throw new Error('Document _id cannot be updated');
     }
   }
-
 }
