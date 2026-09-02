@@ -56,6 +56,15 @@ const compatibility = require('camadb');
 require('@camadb/memory');
 assert.strictEqual(typeof core.Cama, 'function');
 assert.strictEqual(compatibility.Cama, core.Cama);
+(async () => {
+  const db = new core.Cama({ persistenceAdapter: core.PersistenceAdapterEnum.InMemory, cache: { mode: 'lru' } });
+  const collection = await db.initCollection('cached', { columns: [], indexes: [] });
+  await collection.insertOne({ _id: 'a', value: 1 });
+  await collection.findMany({ _id: 'a' });
+  await collection.findMany({ _id: 'a' });
+  assert.strictEqual(collection.cacheStats().hits, 1);
+  await collection.destroy();
+})().catch((error) => { console.error(error); process.exitCode = 1; });
 `,
   );
   run(process.execPath, ['require.cjs'], { cwd: consumerDirectory });
@@ -63,22 +72,36 @@ assert.strictEqual(compatibility.Cama, core.Cama);
   write(
     'import.mjs',
     `import assert from 'node:assert';
-import { Cama as CoreCama } from '@camadb/core';
+import { Cama as CoreCama, PersistenceAdapterEnum } from '@camadb/core';
 import { Cama as CompatibilityCama } from 'camadb';
 import * as memory from '@camadb/memory';
 assert.strictEqual(typeof CoreCama, 'function');
 assert.strictEqual(CompatibilityCama, CoreCama);
 assert.ok(memory);
+const db = new CoreCama({ persistenceAdapter: PersistenceAdapterEnum.InMemory, cache: { mode: 'lazy' } });
+const collection = await db.initCollection('cached', { columns: [], indexes: [] });
+await collection.insertOne({ _id: 'a', value: 1 });
+await collection.findMany({ _id: 'a' });
+await collection.findMany({ _id: 'a' });
+assert.strictEqual(collection.cacheStats().hits, 1);
+collection.clearCache();
+assert.strictEqual(collection.cacheStats().records, 0);
+await collection.destroy();
 `,
   );
   run(process.execPath, ['import.mjs'], { cwd: consumerDirectory });
 
   write(
     'types.ts',
-    `import { Cama, PersistenceAdapterEnum, type ICamaConfig } from '@camadb/core';
+    `import { Cama, PersistenceAdapterEnum, type ICamaConfig, type CacheConfig, type CacheStats } from '@camadb/core';
 import { Cama as CompatibilityCama } from 'camadb';
 import type { MemoryRecord } from '@camadb/memory';
-const config: ICamaConfig = { persistenceAdapter: PersistenceAdapterEnum.InMemory };
+const cache: CacheConfig = { mode: 'lru', maxBytes: 1024, maxRecords: 10 };
+const config: ICamaConfig = { persistenceAdapter: PersistenceAdapterEnum.InMemory, cache };
+async function stats(): Promise<CacheStats> {
+  const collection = await database.initCollection('typed', { columns: [], indexes: [] });
+  return collection.cacheStats();
+}
 const database: Cama = new CompatibilityCama(config);
 const memory: MemoryRecord = { id: 'one', content: 'hello' };
 void database;

@@ -16,8 +16,34 @@ import InmemoryPersistence from '../inmemory/inmemory-persistence';
 import LocalstoragePersistence from '../localstorage/localstorage-persistence';
 import {
   PersistenceAdapterConformanceContext,
-  persistenceAdapterConformance,
+  persistenceAdapterConformance as runConformance,
+  PersistenceAdapterConformanceOptions,
 } from '../../../../test-utils/persistence-adapter.conformance';
+import { CachedPersistence } from '../cached-persistence';
+import { CacheMode } from '../../../interfaces/cache.interface';
+
+const persistenceAdapterConformance = (name: string, options: PersistenceAdapterConformanceOptions) => {
+  for (const mode of ['disabled', 'eager', 'lazy', 'lru'] as CacheMode[]) {
+    runConformance(`${name}/${mode}`, {
+      ...options,
+      async createContext() {
+        const context = await options.createContext();
+        return {
+          ...context,
+          async createAdapter(collectionName) {
+            const adapter = new CachedPersistence(await context.createAdapter(collectionName), {
+              mode,
+              maxRecords: 2,
+              maxBytes: 1024,
+            });
+            await adapter.initializeCache();
+            return adapter;
+          },
+        };
+      },
+    });
+  }
+};
 
 const logger: ILogger = new LoggerMock();
 

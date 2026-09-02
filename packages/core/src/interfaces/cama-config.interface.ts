@@ -1,11 +1,13 @@
 import { PersistenceAdapterEnum } from './perisistence-adapter.enum';
 import { LogLevel } from './logger-level.enum';
+import { CacheConfig } from './cache.interface';
 
 export interface ICamaConfig {
   persistenceAdapter: PersistenceAdapterEnum;
   path?: string;
   logLevel?: LogLevel;
   test?: boolean;
+  cache?: CacheConfig;
   compaction?: {
     minReclaimableBytes?: number;
     minReclaimableRatio?: number;

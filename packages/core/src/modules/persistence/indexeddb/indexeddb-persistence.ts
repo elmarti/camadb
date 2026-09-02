@@ -7,6 +7,7 @@ import { serializedBytes, shouldCompact } from '../compaction';
 import { IndexedDbDatabaseCoordinator } from './database-coordinator';
 
 interface StoreMetadata {
+  incarnation?: string;
   camaDB: { format: 'records'; version: 3 };
   generation: number;
   nextSequence: number;
@@ -21,6 +22,7 @@ interface StoredRecord {
 const METADATA_KEY = 'record-metadata';
 const RECORD_PREFIX = 'record:';
 const emptyMetadata = (): StoreMetadata => ({
+  incarnation: `${Date.now()}-${Math.random()}`,
   camaDB: { format: 'records', version: 3 },
   generation: 0,
   nextSequence: 0,
@@ -68,6 +70,16 @@ export default class IndexedDbPersistence implements IPersistenceAdapter {
       db.transaction(this.storeName).objectStore(this.storeName).get(this.recordKey(id)),
     )) as StoredRecord | undefined;
     return record?.deleted ? undefined : record?.value;
+  }
+
+  async cacheRevision(): Promise<string> {
+    this.checkDestroyed();
+    await this.initPromise;
+    return IndexedDbDatabaseCoordinator.run(this.dbName, async (db) => {
+      const metadata = await db.transaction(this.storeName).objectStore(this.storeName).get(METADATA_KEY);
+      if (!metadata) throw new Error('Collection metadata is missing');
+      return JSON.stringify(metadata);
+    });
   }
 
   async getRecords(ids: string[]): Promise<Map<string, any>> {

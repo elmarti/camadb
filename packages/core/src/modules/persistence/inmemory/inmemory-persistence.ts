@@ -7,6 +7,12 @@ export default class InmemoryPersistence implements IPersistenceAdapter {
   private destroyed = false;
   private collectionName = '';
   private cache: any = [];
+  private generation = 0;
+
+  async cacheRevision(): Promise<string> {
+    this.checkDestroyed();
+    return String(this.generation);
+  }
 
   async destroy(): Promise<void> {
     this.cache = null;
@@ -15,6 +21,7 @@ export default class InmemoryPersistence implements IPersistenceAdapter {
   async update(updated: any): Promise<void> {
     this.checkDestroyed();
     this.cache = updated;
+    this.generation++;
   }
   async getData(): Promise<any> {
     this.checkDestroyed();
@@ -25,6 +32,7 @@ export default class InmemoryPersistence implements IPersistenceAdapter {
     const data = await this.getData();
     data.push(...rows);
     this.cache = data;
+    this.generation++;
   }
 
   async getRecord(id: string): Promise<any | undefined> {
@@ -64,6 +72,7 @@ export default class InmemoryPersistence implements IPersistenceAdapter {
     for (const row of replacements.values()) {
       if (!this.cache.some((current: { _id?: string }) => current._id === row._id)) this.cache.push(row);
     }
+    this.generation++;
   }
 
   private checkDestroyed() {

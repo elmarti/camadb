@@ -1,3 +1,5 @@
+import { CacheStats } from './cache.interface';
+
 export interface RecordMutation<T = any> {
   deletes?: string[];
   puts?: T[];
@@ -23,6 +25,11 @@ export interface IPersistenceAdapter {
   mutateRecords?(mutation: RecordMutation): Promise<void>;
   compact?(): Promise<void>;
   storageStats?(): Promise<StorageStats>;
+  /** Opaque committed-state token; must change on writes and recreation. */
+  cacheRevision?(): Promise<string>;
+  initializeCache?(): Promise<void>;
+  cacheStats?(): CacheStats;
+  clearCache?(): void;
 
   update(updated: any): Promise<void>;
 

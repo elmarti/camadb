@@ -20,6 +20,8 @@ Queries that contain only a string `_id` use direct record lookup. Queries over 
 
 ## Format compatibility
 
+Optional [record caching](./caching.md) provides eager, lazy, and bounded/LRU modes with explicit budgets and invalidation. It is disabled by default and does not bound full-query result or adapter working-set memory.
+
 Record storage uses format version 3. When an adapter finds a non-empty collection payload without a record manifest, it reports that explicit migration is required. It never rewrites or reinterprets the payload while opening it. Use the detection/export facilities described in [2.x migration](./migration-2.x.md) before creating the version-3 record store, and retain the source until the migrated collection has been validated.
 
 The detailed format and recovery rationale is recorded in [the storage decision](./decisions/0001-record-oriented-storage.md).

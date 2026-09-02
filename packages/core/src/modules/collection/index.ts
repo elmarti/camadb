@@ -13,6 +13,7 @@ import { IAggregator } from '../../interfaces/aggregator.interface';
 import { containerFactory } from '../../util/container.factory';
 import { IQueueService } from '../../interfaces/queue-service.interface';
 import { ServiceRegistry } from '../../util/service-registry';
+import { CacheStats } from '../../interfaces/cache.interface';
 import {
   AggregationPipeline,
   Document,
@@ -54,10 +55,22 @@ export class Collection<TDocument extends object = Document> implements ICollect
     this.logger.log(LogLevel.Debug, 'Initializing persistence adapter');
   }
 
-  /**
-   * Insert many values into collection
-   * @param rows - The values to be inserted
-   */
+  /** Called by Cama.initCollection to warm an eager cache before returning. */
+  async initializeCache(): Promise<void> {
+    await this.persistenceAdapter.initializeCache?.();
+  }
+
+  cacheStats(): CacheStats {
+    this.checkDestroyed();
+    if (!this.persistenceAdapter.cacheStats) throw new Error('Cache statistics are unavailable');
+    return this.persistenceAdapter.cacheStats();
+  }
+
+  clearCache(): void {
+    this.checkDestroyed();
+    this.persistenceAdapter.clearCache?.();
+  }
+
   async insertMany(rows: InsertDocument<TDocument>[]): Promise<InsertManyResult<DocumentId>> {
     this.checkDestroyed();
     return this.queue.add(async () => {
@@ -99,7 +112,7 @@ export class Collection<TDocument extends object = Document> implements ICollect
    * Find many rows from the collection
    *
    * @remarks
-   * Lazily loads collection into cache, subsequent calls are significantly faster
+   * Identity-only queries can use the configured record cache; other queries scan storage.
    *
    * @param query - Query Object
    * @param options - Query options

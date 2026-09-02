@@ -6,6 +6,7 @@ import { assertMutationBound } from '../record-pages';
 import { serializedBytes, shouldCompact } from '../compaction';
 
 interface LocalRecordManifest {
+  incarnation?: string;
   camaDB: { format: 'records'; version: 3 };
   generation: number;
   order: string[];
@@ -14,6 +15,7 @@ interface LocalRecordManifest {
 }
 
 const emptyManifest = (): LocalRecordManifest => ({
+  incarnation: `${Date.now()}-${Math.random()}`,
   camaDB: { format: 'records', version: 3 },
   generation: 0,
   order: [],
@@ -59,6 +61,13 @@ export default class LocalstoragePersistence implements IPersistenceAdapter {
     await this.initialized;
     const key = this.readManifest().records[id];
     return key ? this.readRecord(key) : undefined;
+  }
+
+  async cacheRevision(): Promise<string> {
+    this.checkDestroyed();
+    await this.initialized;
+    const manifest = this.readManifest();
+    return manifest.incarnation ? `${manifest.incarnation}:${manifest.generation}` : JSON.stringify(manifest);
   }
 
   async getRecords(ids: string[]): Promise<Map<string, any>> {
