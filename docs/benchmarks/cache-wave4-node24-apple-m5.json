@@ -1,0 +1,6655 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-02T21:33:54.208Z",
+  "runtime": {
+    "architecture": "arm64",
+    "cpu": "Apple M5",
+    "node": "v24.20.0",
+    "platform": "darwin",
+    "totalMemoryBytes": 25769803776
+  },
+  "config": {
+    "adapters": [
+      "fs",
+      "inmemory"
+    ],
+    "iterations": 5,
+    "sizes": [
+      100,
+      1000,
+      10000
+    ],
+    "output": "docs/benchmarks/cache-wave4-node24-apple-m5.json"
+  },
+  "budget": {
+    "maxBytes": 65536,
+    "maxRecords": 64
+  },
+  "readsPerSample": 256,
+  "results": [
+    {
+      "adapter": "fs",
+      "collectionSize": 100,
+      "workload": "hot",
+      "mode": "disabled",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0037089999999864176,
+          "warmHeapDeltaBytes": 4696,
+          "milliseconds": 44.88470899999999,
+          "perReadMilliseconds": 0.17533089453124995,
+          "heapDeltaBytes": 3983488,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.009290999999848282,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 54.4508330000001,
+          "perReadMilliseconds": 0.2126985664062504,
+          "heapDeltaBytes": 3797616,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0041659999997136765,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 48.22624999999971,
+          "perReadMilliseconds": 0.18838378906249886,
+          "heapDeltaBytes": 3679288,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.003750000000309228,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 44.06150000000025,
+          "perReadMilliseconds": 0.17211523437500098,
+          "heapDeltaBytes": 3596664,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.003333999999995285,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 46.51770800000031,
+          "perReadMilliseconds": 0.18170979687500122,
+          "heapDeltaBytes": 3542184,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 100,
+      "workload": "hot",
+      "mode": "eager",
+      "samples": [
+        {
+          "warmMilliseconds": 5.350291000000027,
+          "warmHeapDeltaBytes": 985160,
+          "milliseconds": 30.345708000000002,
+          "perReadMilliseconds": 0.11853792187500001,
+          "heapDeltaBytes": 4643880,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 100,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 4.159874999999829,
+          "warmHeapDeltaBytes": 966416,
+          "milliseconds": 30.31404100000009,
+          "perReadMilliseconds": 0.11841422265625035,
+          "heapDeltaBytes": 4575368,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 100,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 4.391791999999896,
+          "warmHeapDeltaBytes": 925736,
+          "milliseconds": 30.279875000000175,
+          "perReadMilliseconds": 0.11828076171875068,
+          "heapDeltaBytes": 4532992,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 100,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 3.8686250000000655,
+          "warmHeapDeltaBytes": 925720,
+          "milliseconds": 29.465749999999844,
+          "perReadMilliseconds": 0.11510058593749939,
+          "heapDeltaBytes": 4493656,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 100,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 4.439291999999568,
+          "warmHeapDeltaBytes": 922000,
+          "milliseconds": 29.45029199999999,
+          "perReadMilliseconds": 0.11504020312499996,
+          "heapDeltaBytes": 4452208,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 100,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 100,
+      "workload": "hot",
+      "mode": "lazy",
+      "samples": [
+        {
+          "warmMilliseconds": 0.005417000000079497,
+          "warmHeapDeltaBytes": 4784,
+          "milliseconds": 25.341083000000026,
+          "perReadMilliseconds": 0.0989886054687501,
+          "heapDeltaBytes": 2835800,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.015124999999898137,
+          "warmHeapDeltaBytes": 1416,
+          "milliseconds": 20.04366600000003,
+          "perReadMilliseconds": 0.07829557031250012,
+          "heapDeltaBytes": 2788144,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0039999999999054126,
+          "warmHeapDeltaBytes": 3256,
+          "milliseconds": 26.02141699999993,
+          "perReadMilliseconds": 0.10164616015624972,
+          "heapDeltaBytes": 2748904,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0033749999997780833,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 25.800874999999905,
+          "perReadMilliseconds": 0.10078466796874963,
+          "heapDeltaBytes": 2734504,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.003208000000086031,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 25.80454200000031,
+          "perReadMilliseconds": 0.10079899218750121,
+          "heapDeltaBytes": 2657448,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 100,
+      "workload": "hot",
+      "mode": "lru",
+      "samples": [
+        {
+          "warmMilliseconds": 0.008332999999993262,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 27.002666999999974,
+          "perReadMilliseconds": 0.1054791679687499,
+          "heapDeltaBytes": 2827968,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.004292000000077678,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 27.696041999999807,
+          "perReadMilliseconds": 0.10818766406249924,
+          "heapDeltaBytes": 2896296,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.005834000000049855,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 27.20600000000013,
+          "perReadMilliseconds": 0.10627343750000051,
+          "heapDeltaBytes": 2768840,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0045419999996738625,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 27.13766600000008,
+          "perReadMilliseconds": 0.10600650781250032,
+          "heapDeltaBytes": 2731680,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.003958000000238826,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 26.59795800000029,
+          "perReadMilliseconds": 0.10389827343750113,
+          "heapDeltaBytes": 2695800,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 100,
+      "workload": "scan",
+      "mode": "disabled",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0052910000003976165,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 48.5341669999998,
+          "perReadMilliseconds": 0.1895865898437492,
+          "heapDeltaBytes": 3525072,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.00220900000022084,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 39.84516600000006,
+          "perReadMilliseconds": 0.15564517968750025,
+          "heapDeltaBytes": 3180568,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.004874999999628926,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 43.23937500000011,
+          "perReadMilliseconds": 0.16890380859375043,
+          "heapDeltaBytes": 3070872,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.002540999999837368,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 43.076083000000835,
+          "perReadMilliseconds": 0.16826594921875326,
+          "heapDeltaBytes": 3071272,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0027089999994132086,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 42.201500000000124,
+          "perReadMilliseconds": 0.16484960937500048,
+          "heapDeltaBytes": 3070312,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 100,
+      "workload": "scan",
+      "mode": "eager",
+      "samples": [
+        {
+          "warmMilliseconds": 3.757459000000381,
+          "warmHeapDeltaBytes": 910376,
+          "milliseconds": 41.84058300000015,
+          "perReadMilliseconds": 0.1634397773437506,
+          "heapDeltaBytes": 3048472,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 184,
+            "misses": 172,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 184,
+            "misses": 72,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 3.652834000000439,
+          "warmHeapDeltaBytes": 902680,
+          "milliseconds": 43.54204200000004,
+          "perReadMilliseconds": 0.17008610156250015,
+          "heapDeltaBytes": 9398240,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 184,
+            "misses": 172,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 184,
+            "misses": 72,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 3.8209999999999127,
+          "warmHeapDeltaBytes": 900368,
+          "milliseconds": 41.67804200000046,
+          "perReadMilliseconds": 0.1628048515625018,
+          "heapDeltaBytes": 2779408,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 184,
+            "misses": 172,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 184,
+            "misses": 72,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 4.013167000000067,
+          "warmHeapDeltaBytes": 900344,
+          "milliseconds": 43.32616699999926,
+          "perReadMilliseconds": 0.1692428398437471,
+          "heapDeltaBytes": 2805152,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 184,
+            "misses": 172,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 184,
+            "misses": 72,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 4.105875000001106,
+          "warmHeapDeltaBytes": 900416,
+          "milliseconds": 42.065458000000945,
+          "perReadMilliseconds": 0.1643181953125037,
+          "heapDeltaBytes": 2808224,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 184,
+            "misses": 172,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 184,
+            "misses": 72,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 100,
+      "workload": "scan",
+      "mode": "lazy",
+      "samples": [
+        {
+          "warmMilliseconds": 0.003208000000086031,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 43.31595800000014,
+          "perReadMilliseconds": 0.16920296093750054,
+          "heapDeltaBytes": 3698352,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 120,
+            "misses": 236,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 120,
+            "misses": 136,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0029999999997016857,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 44.737207999999555,
+          "perReadMilliseconds": 0.17475471874999826,
+          "heapDeltaBytes": 3513896,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 120,
+            "misses": 236,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 120,
+            "misses": 136,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.00204200000007404,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 41.49162500000057,
+          "perReadMilliseconds": 0.16207666015625222,
+          "heapDeltaBytes": 3566800,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 120,
+            "misses": 236,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 120,
+            "misses": 136,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.00258399999984249,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 44.59291699999994,
+          "perReadMilliseconds": 0.17419108203124978,
+          "heapDeltaBytes": 3407776,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 120,
+            "misses": 236,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 120,
+            "misses": 136,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0031250000010913936,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 44.11333299999933,
+          "perReadMilliseconds": 0.17231770703124738,
+          "heapDeltaBytes": 3430888,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 120,
+            "misses": 236,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 120,
+            "misses": 136,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 100,
+      "workload": "scan",
+      "mode": "lru",
+      "samples": [
+        {
+          "warmMilliseconds": 0.004667000000154076,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 66.76166599999942,
+          "perReadMilliseconds": 0.26078775781249774,
+          "heapDeltaBytes": 5883448,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 0,
+            "misses": 356,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.003333000000566244,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 69.50416599999971,
+          "perReadMilliseconds": 0.2715006484374989,
+          "heapDeltaBytes": 12278752,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 0,
+            "misses": 356,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.004582999999911408,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 67.57954100000006,
+          "perReadMilliseconds": 0.26398258203125025,
+          "heapDeltaBytes": 12263240,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 0,
+            "misses": 356,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0028750000001309672,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 68.2007080000003,
+          "perReadMilliseconds": 0.2664090156250012,
+          "heapDeltaBytes": 12241736,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 0,
+            "misses": 356,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0029169999997975538,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 67.77266699999927,
+          "perReadMilliseconds": 0.26473698046874716,
+          "heapDeltaBytes": 12261448,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 0,
+            "misses": 356,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "workload": "hot",
+      "mode": "disabled",
+      "samples": [
+        {
+          "warmMilliseconds": 0.00333400000090478,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 61.28741600000103,
+          "perReadMilliseconds": 0.23940396875000403,
+          "heapDeltaBytes": 13379136,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.005417000000306871,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 68.14149999999972,
+          "perReadMilliseconds": 0.2661777343749989,
+          "heapDeltaBytes": 13115728,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.002958000000944594,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 59.954374999999345,
+          "perReadMilliseconds": 0.23419677734374744,
+          "heapDeltaBytes": 13089312,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.003541999998560641,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 62.4516659999972,
+          "perReadMilliseconds": 0.24395182031248908,
+          "heapDeltaBytes": 12464192,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.00429200000144192,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 60.692957999999635,
+          "perReadMilliseconds": 0.23708186718749857,
+          "heapDeltaBytes": 40339936,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "workload": "hot",
+      "mode": "eager",
+      "samples": [
+        {
+          "warmMilliseconds": 14.087290999999823,
+          "warmHeapDeltaBytes": 3405200,
+          "milliseconds": 33.58954100000119,
+          "perReadMilliseconds": 0.13120914453125465,
+          "heapDeltaBytes": 7850464,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 1000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 12.52704199999971,
+          "warmHeapDeltaBytes": 3404064,
+          "milliseconds": 31.8615830000017,
+          "perReadMilliseconds": 0.12445930859375665,
+          "heapDeltaBytes": 21225056,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 1000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 13.487334000001283,
+          "warmHeapDeltaBytes": 3406304,
+          "milliseconds": 32.345000000001164,
+          "perReadMilliseconds": 0.12634765625000455,
+          "heapDeltaBytes": 21229864,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 1000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 15.289667000000918,
+          "warmHeapDeltaBytes": 3404064,
+          "milliseconds": 33.702790999999706,
+          "perReadMilliseconds": 0.13165152734374885,
+          "heapDeltaBytes": 21224016,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 1000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 16.33562499999971,
+          "warmHeapDeltaBytes": 3427688,
+          "milliseconds": 34.992417000001296,
+          "perReadMilliseconds": 0.13668912890625506,
+          "heapDeltaBytes": 21230464,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 1000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "workload": "hot",
+      "mode": "lazy",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0041250000012951205,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 27.970541000000594,
+          "perReadMilliseconds": 0.10925992578125232,
+          "heapDeltaBytes": 4607824,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0031250000010913936,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 30.097584000001007,
+          "perReadMilliseconds": 0.11756868750000393,
+          "heapDeltaBytes": 18764696,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.004000000000814907,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 30.68395799999962,
+          "perReadMilliseconds": 0.11985921093749852,
+          "heapDeltaBytes": 18751152,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0035000000025320332,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 31.67712500000198,
+          "perReadMilliseconds": 0.12373876953125773,
+          "heapDeltaBytes": 18760536,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.003290999997261679,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 26.06816699999763,
+          "perReadMilliseconds": 0.10182877734374074,
+          "heapDeltaBytes": 18762488,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "workload": "hot",
+      "mode": "lru",
+      "samples": [
+        {
+          "warmMilliseconds": 0.00316700000075798,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 29.078083000000333,
+          "perReadMilliseconds": 0.1135862617187513,
+          "heapDeltaBytes": 4630312,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.004333999999289517,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 29.026583000000755,
+          "perReadMilliseconds": 0.11338508984375295,
+          "heapDeltaBytes": 18783032,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.006041000000550412,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 29.96520799999962,
+          "perReadMilliseconds": 0.11705159374999852,
+          "heapDeltaBytes": 18769152,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.005084000000351807,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 30.40154099999927,
+          "perReadMilliseconds": 0.11875601953124715,
+          "heapDeltaBytes": 18761984,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.002166999998735264,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 26.38224999999875,
+          "perReadMilliseconds": 0.10305566406249511,
+          "heapDeltaBytes": 18761944,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "workload": "scan",
+      "mode": "disabled",
+      "samples": [
+        {
+          "warmMilliseconds": 0.002666999997018138,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 56.98008299999856,
+          "perReadMilliseconds": 0.22257844921874437,
+          "heapDeltaBytes": 40334432,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0017079999997804407,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 55.51862500000061,
+          "perReadMilliseconds": 0.2168696289062524,
+          "heapDeltaBytes": 40334368,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.003374999996594852,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 59.7867499999993,
+          "perReadMilliseconds": 0.23354199218749727,
+          "heapDeltaBytes": 40336176,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0037919999995210674,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 60.77379199999996,
+          "perReadMilliseconds": 0.23739762499999983,
+          "heapDeltaBytes": 40337768,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.006875000002764864,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 58.16208299999926,
+          "perReadMilliseconds": 0.2271956367187471,
+          "heapDeltaBytes": 40335984,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "workload": "scan",
+      "mode": "eager",
+      "samples": [
+        {
+          "warmMilliseconds": 14.836457999997947,
+          "warmHeapDeltaBytes": 3404064,
+          "milliseconds": 70.22162499999831,
+          "perReadMilliseconds": 0.2743032226562434,
+          "heapDeltaBytes": 45074264,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 1128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 15.903459000001021,
+          "warmHeapDeltaBytes": 3405160,
+          "milliseconds": 67.53141699999833,
+          "perReadMilliseconds": 0.26379459765624347,
+          "heapDeltaBytes": 45103856,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 1128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 14.798040999998193,
+          "warmHeapDeltaBytes": 3404064,
+          "milliseconds": 68.18708300000071,
+          "perReadMilliseconds": 0.2663557929687528,
+          "heapDeltaBytes": 45077528,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 1128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 15.245042000002286,
+          "warmHeapDeltaBytes": 3407272,
+          "milliseconds": 68.07274999999936,
+          "perReadMilliseconds": 0.2659091796874975,
+          "heapDeltaBytes": 45073064,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 1128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 14.182874999998603,
+          "warmHeapDeltaBytes": 3404064,
+          "milliseconds": 68.2834159999984,
+          "perReadMilliseconds": 0.26673209374999374,
+          "heapDeltaBytes": 45076736,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 1128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "workload": "scan",
+      "mode": "lazy",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0026250000009895302,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 70.30225000000064,
+          "perReadMilliseconds": 0.2746181640625025,
+          "heapDeltaBytes": 53163616,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 1192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0030000000006111804,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 73.78108399999837,
+          "perReadMilliseconds": 0.28820735937499364,
+          "heapDeltaBytes": 53169016,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 1192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0026670000006561168,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 69.50849999999991,
+          "perReadMilliseconds": 0.27151757812499966,
+          "heapDeltaBytes": 53161472,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 1192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.003958000001148321,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 69.64574999999968,
+          "perReadMilliseconds": 0.27205371093749875,
+          "heapDeltaBytes": 53161464,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 1192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0026250000009895302,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 71.80358400000114,
+          "perReadMilliseconds": 0.28048275000000444,
+          "heapDeltaBytes": 53172528,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 1192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "workload": "scan",
+      "mode": "lru",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0034589999995660037,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 94.94062499999927,
+          "perReadMilliseconds": 0.37086181640624716,
+          "heapDeltaBytes": 6270424,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 1256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0021249999990686774,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 87.79366700000173,
+          "perReadMilliseconds": 0.34294401171875677,
+          "heapDeltaBytes": 6272624,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 1256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.002582999997684965,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 91.52762500000244,
+          "perReadMilliseconds": 0.35752978515625955,
+          "heapDeltaBytes": 6280920,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 1256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0036249999975552782,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 89.2978750000002,
+          "perReadMilliseconds": 0.3488198242187508,
+          "heapDeltaBytes": 6278000,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 1256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.004957999997714069,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 92.33675000000221,
+          "perReadMilliseconds": 0.36069042968750864,
+          "heapDeltaBytes": 6288048,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 1256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "workload": "hot",
+      "mode": "disabled",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0019160000010742806,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 58.865124999996624,
+          "perReadMilliseconds": 0.2299418945312368,
+          "heapDeltaBytes": 44819352,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.002499999995052349,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 58.93437499999709,
+          "perReadMilliseconds": 0.23021240234373863,
+          "heapDeltaBytes": 44825040,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.002957999997306615,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 58.853625000003376,
+          "perReadMilliseconds": 0.2298969726562632,
+          "heapDeltaBytes": 44815216,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0026249999937135726,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 58.67825000000448,
+          "perReadMilliseconds": 0.2292119140625175,
+          "heapDeltaBytes": 44817520,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.002874999998311978,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 59.75512499999604,
+          "perReadMilliseconds": 0.23341845703123454,
+          "heapDeltaBytes": 12343416,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "workload": "hot",
+      "mode": "eager",
+      "samples": [
+        {
+          "warmMilliseconds": 16.788291999997455,
+          "warmHeapDeltaBytes": 7224728,
+          "milliseconds": 32.81037500000093,
+          "perReadMilliseconds": 0.12816552734375364,
+          "heapDeltaBytes": 22389112,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 10000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 16.705958999998984,
+          "warmHeapDeltaBytes": 7224768,
+          "milliseconds": 33.3959579999937,
+          "perReadMilliseconds": 0.13045296093747538,
+          "heapDeltaBytes": 22388520,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 10000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 17.062458000000333,
+          "warmHeapDeltaBytes": 7223720,
+          "milliseconds": 33.14770799999678,
+          "perReadMilliseconds": 0.12948323437498743,
+          "heapDeltaBytes": 22387712,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 10000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 14.705999999998312,
+          "warmHeapDeltaBytes": 7224584,
+          "milliseconds": 32.260667000002286,
+          "perReadMilliseconds": 0.12601823046875893,
+          "heapDeltaBytes": 22393400,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 10000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 16.960666999999376,
+          "warmHeapDeltaBytes": 7224048,
+          "milliseconds": 33.165916999998444,
+          "perReadMilliseconds": 0.12955436328124392,
+          "heapDeltaBytes": 22387648,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 10000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "workload": "hot",
+      "mode": "lazy",
+      "samples": [
+        {
+          "warmMilliseconds": 0.002417000003333669,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 27.332791000000725,
+          "perReadMilliseconds": 0.10676871484375283,
+          "heapDeltaBytes": 19182232,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0028329999986453913,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 27.981457999994745,
+          "perReadMilliseconds": 0.10930257031247947,
+          "heapDeltaBytes": 19185896,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0036660000041592866,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 28.050250000000233,
+          "perReadMilliseconds": 0.10957128906250091,
+          "heapDeltaBytes": 19190512,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0026250000009895302,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 26.688374999997905,
+          "perReadMilliseconds": 0.10425146484374181,
+          "heapDeltaBytes": 19182632,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.002833000005921349,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 28.393958000000566,
+          "perReadMilliseconds": 0.11091389843750221,
+          "heapDeltaBytes": 19188792,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "workload": "hot",
+      "mode": "lru",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0022089999984018505,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 27.08791700000438,
+          "perReadMilliseconds": 0.10581217578126711,
+          "heapDeltaBytes": 19195432,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0032089999949675985,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 27.656167000001005,
+          "perReadMilliseconds": 0.10803190234375393,
+          "heapDeltaBytes": 19195432,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0032079999946290627,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 27.005457999999635,
+          "perReadMilliseconds": 0.10549007031249857,
+          "heapDeltaBytes": 19196072,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.002542000001994893,
+          "warmHeapDeltaBytes": 10496,
+          "milliseconds": 27.69854199999827,
+          "perReadMilliseconds": 0.10819742968749324,
+          "heapDeltaBytes": 19203760,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0030409999963012524,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 26.973207999995793,
+          "perReadMilliseconds": 0.10536409374998357,
+          "heapDeltaBytes": 19195464,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "workload": "scan",
+      "mode": "disabled",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0062499999985448085,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 59.28691599999729,
+          "perReadMilliseconds": 0.23158951562498942,
+          "heapDeltaBytes": 44805496,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0022910000043339096,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 57.27891599999566,
+          "perReadMilliseconds": 0.22374576562498305,
+          "heapDeltaBytes": 44805800,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.004625000001396984,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 81.46983300000284,
+          "perReadMilliseconds": 0.3182415351562611,
+          "heapDeltaBytes": 44804656,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0023339999970630743,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 59.692041999995126,
+          "perReadMilliseconds": 0.23317203906248096,
+          "heapDeltaBytes": 12415280,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.001959000001079403,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 58.866125000000466,
+          "perReadMilliseconds": 0.22994580078125182,
+          "heapDeltaBytes": 44812872,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "workload": "scan",
+      "mode": "eager",
+      "samples": [
+        {
+          "warmMilliseconds": 16.595584000002418,
+          "warmHeapDeltaBytes": 7225088,
+          "milliseconds": 67.38466700000572,
+          "perReadMilliseconds": 0.26322135546877234,
+          "heapDeltaBytes": 47777456,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 10128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 17.55079200000182,
+          "warmHeapDeltaBytes": 7225032,
+          "milliseconds": 72.23829200000182,
+          "perReadMilliseconds": 0.2821808281250071,
+          "heapDeltaBytes": 47763320,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 10128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 16.24383400000079,
+          "warmHeapDeltaBytes": 7226568,
+          "milliseconds": 70.62837500000023,
+          "perReadMilliseconds": 0.2758920898437509,
+          "heapDeltaBytes": 47775448,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 10128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 16.035084000002826,
+          "warmHeapDeltaBytes": 7226712,
+          "milliseconds": 68.16887499999575,
+          "perReadMilliseconds": 0.2662846679687334,
+          "heapDeltaBytes": 47766304,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 10128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 15.430124999998952,
+          "warmHeapDeltaBytes": 7225688,
+          "milliseconds": 67.78645900000265,
+          "perReadMilliseconds": 0.26479085546876036,
+          "heapDeltaBytes": 47764336,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 10128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "workload": "scan",
+      "mode": "lazy",
+      "samples": [
+        {
+          "warmMilliseconds": 0.004541000002063811,
+          "warmHeapDeltaBytes": 1192,
+          "milliseconds": 74.1387090000062,
+          "perReadMilliseconds": 0.2896043320312742,
+          "heapDeltaBytes": 14760040,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 10192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0035829999978886917,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 79.05675000000338,
+          "perReadMilliseconds": 0.3088154296875132,
+          "heapDeltaBytes": 22682072,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 10192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.002542000001994893,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 72.2141249999986,
+          "perReadMilliseconds": 0.28208642578124454,
+          "heapDeltaBytes": 53163672,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 10192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.00204200000007404,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 69.27429200000188,
+          "perReadMilliseconds": 0.27060270312500734,
+          "heapDeltaBytes": 53165160,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 10192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0020000000004074536,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 70.04891700000007,
+          "perReadMilliseconds": 0.2736285820312503,
+          "heapDeltaBytes": 53168728,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 10192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "workload": "scan",
+      "mode": "lru",
+      "samples": [
+        {
+          "warmMilliseconds": 0.003709000004164409,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 89.0515000000014,
+          "perReadMilliseconds": 0.34785742187500546,
+          "heapDeltaBytes": 10210472,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 10256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0026250000009895302,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 91.34541700000409,
+          "perReadMilliseconds": 0.356818035156266,
+          "heapDeltaBytes": 10213544,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 10256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.002749999999650754,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 92.47395800000231,
+          "perReadMilliseconds": 0.36122639843750903,
+          "heapDeltaBytes": 10203784,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 10256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0019170000014128163,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 95.92704199999571,
+          "perReadMilliseconds": 0.37471500781248324,
+          "heapDeltaBytes": 10203864,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 10256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0022920000046724454,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 88.79829099999915,
+          "perReadMilliseconds": 0.3468683242187467,
+          "heapDeltaBytes": 10210584,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 10256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 100,
+      "workload": "hot",
+      "mode": "disabled",
+      "samples": [
+        {
+          "warmMilliseconds": 0.013166000004275702,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 1.5699170000007143,
+          "perReadMilliseconds": 0.00613248828125279,
+          "heapDeltaBytes": 2586688,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0012089999945601448,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 1.4570000000021537,
+          "perReadMilliseconds": 0.005691406250008413,
+          "heapDeltaBytes": 2569640,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0019579999934649095,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.3900829999984126,
+          "perReadMilliseconds": 0.005430011718743799,
+          "heapDeltaBytes": 2571760,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0014169999994919635,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.41545899999619,
+          "perReadMilliseconds": 0.005529136718735117,
+          "heapDeltaBytes": 2569640,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0014169999994919635,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.4135000000023865,
+          "perReadMilliseconds": 0.005521484375009322,
+          "heapDeltaBytes": 2569512,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 100,
+      "workload": "hot",
+      "mode": "eager",
+      "samples": [
+        {
+          "warmMilliseconds": 0.10920900000201073,
+          "warmHeapDeltaBytes": 176136,
+          "milliseconds": 1.4283749999958673,
+          "perReadMilliseconds": 0.0055795898437338565,
+          "heapDeltaBytes": 3134720,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 100,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.10816600000543986,
+          "warmHeapDeltaBytes": 175792,
+          "milliseconds": 1.3395829999935813,
+          "perReadMilliseconds": 0.005232746093724927,
+          "heapDeltaBytes": 3160560,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 100,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.1044160000019474,
+          "warmHeapDeltaBytes": 175712,
+          "milliseconds": 1.2400829999969574,
+          "perReadMilliseconds": 0.004844074218738115,
+          "heapDeltaBytes": 3092360,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 100,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.10041700000147102,
+          "warmHeapDeltaBytes": 175584,
+          "milliseconds": 1.249707999995735,
+          "perReadMilliseconds": 0.00488167187498334,
+          "heapDeltaBytes": 3092576,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 100,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.09470799999689916,
+          "warmHeapDeltaBytes": 175632,
+          "milliseconds": 1.2105830000000424,
+          "perReadMilliseconds": 0.0047288398437501655,
+          "heapDeltaBytes": 3092360,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 100,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 100,
+      "workload": "hot",
+      "mode": "lazy",
+      "samples": [
+        {
+          "warmMilliseconds": 0.001834000002418179,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 1.4526669999977457,
+          "perReadMilliseconds": 0.005674480468741194,
+          "heapDeltaBytes": 3055840,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0014159999991534278,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 1.461165999993682,
+          "perReadMilliseconds": 0.00570767968747532,
+          "heapDeltaBytes": 3026488,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0018750000017462298,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 1.3466669999979786,
+          "perReadMilliseconds": 0.005260417968742104,
+          "heapDeltaBytes": 3034368,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0013330000001587905,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.4742499999993015,
+          "perReadMilliseconds": 0.0057587890624972715,
+          "heapDeltaBytes": 3065456,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.001707999996142462,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.457416999997804,
+          "perReadMilliseconds": 0.005693035156241422,
+          "heapDeltaBytes": 3065456,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 100,
+      "workload": "hot",
+      "mode": "lru",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0014169999994919635,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 1.5276250000024447,
+          "perReadMilliseconds": 0.00596728515625955,
+          "heapDeltaBytes": 3079984,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.001374999999825377,
+          "warmHeapDeltaBytes": 1336,
+          "milliseconds": 1.533625000003667,
+          "perReadMilliseconds": 0.0059907226562643245,
+          "heapDeltaBytes": 3078280,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.005917000002227724,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.4425840000039898,
+          "perReadMilliseconds": 0.005635093750015585,
+          "heapDeltaBytes": 3078280,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0031249999956344254,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.50370799999655,
+          "perReadMilliseconds": 0.005873859374986523,
+          "heapDeltaBytes": 3078280,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0009579999968991615,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.4277919999949518,
+          "perReadMilliseconds": 0.00557731249998028,
+          "heapDeltaBytes": 3079968,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 132,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 100,
+      "workload": "scan",
+      "mode": "disabled",
+      "samples": [
+        {
+          "warmMilliseconds": 0.001582999997481238,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.376125000002503,
+          "perReadMilliseconds": 0.005375488281259777,
+          "heapDeltaBytes": 2537360,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0009579999968991615,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.3919170000008307,
+          "perReadMilliseconds": 0.005437175781253245,
+          "heapDeltaBytes": 2574584,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.001374999999825377,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.4176250000018626,
+          "perReadMilliseconds": 0.005537597656257276,
+          "heapDeltaBytes": 2574712,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0015830000047571957,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.4064579999976559,
+          "perReadMilliseconds": 0.005493976562490843,
+          "heapDeltaBytes": 2574584,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0014999999984866008,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.4170420000009472,
+          "perReadMilliseconds": 0.0055353203125037,
+          "heapDeltaBytes": 2574712,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 100,
+      "workload": "scan",
+      "mode": "eager",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0975830000024871,
+          "warmHeapDeltaBytes": 175584,
+          "milliseconds": 1.8052499999976135,
+          "perReadMilliseconds": 0.007051757812490678,
+          "heapDeltaBytes": 3429904,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 184,
+            "misses": 172,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 184,
+            "misses": 72,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.1058340000017779,
+          "warmHeapDeltaBytes": 175584,
+          "milliseconds": 1.5782500000059372,
+          "perReadMilliseconds": 0.006165039062523192,
+          "heapDeltaBytes": 3429904,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 184,
+            "misses": 172,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 184,
+            "misses": 72,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.10100000000238651,
+          "warmHeapDeltaBytes": 172048,
+          "milliseconds": 1.6520419999942533,
+          "perReadMilliseconds": 0.006453289062477552,
+          "heapDeltaBytes": 3422952,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 184,
+            "misses": 172,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 184,
+            "misses": 72,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.09750000000349246,
+          "warmHeapDeltaBytes": 172048,
+          "milliseconds": 1.5569170000017039,
+          "perReadMilliseconds": 0.006081707031256656,
+          "heapDeltaBytes": 3422344,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 184,
+            "misses": 172,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 184,
+            "misses": 72,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.09949999999662396,
+          "warmHeapDeltaBytes": 172000,
+          "milliseconds": 1.6104580000028363,
+          "perReadMilliseconds": 0.0062908515625110795,
+          "heapDeltaBytes": 3421960,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 184,
+            "misses": 172,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 184,
+            "misses": 72,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 100,
+      "workload": "scan",
+      "mode": "lazy",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0022499999977299012,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.7761249999966822,
+          "perReadMilliseconds": 0.00693798828123704,
+          "heapDeltaBytes": 3497168,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 120,
+            "misses": 236,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 120,
+            "misses": 136,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0010410000031697564,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.713792000002286,
+          "perReadMilliseconds": 0.006694500000008929,
+          "heapDeltaBytes": 3489392,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 120,
+            "misses": 236,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 120,
+            "misses": 136,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0014169999994919635,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.7248749999998836,
+          "perReadMilliseconds": 0.006737792968749545,
+          "heapDeltaBytes": 3489288,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 120,
+            "misses": 236,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 120,
+            "misses": 136,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.000999999996565748,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.7035839999953168,
+          "perReadMilliseconds": 0.006654624999981706,
+          "heapDeltaBytes": 3454696,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 120,
+            "misses": 236,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 120,
+            "misses": 136,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0014579999988200143,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.602374999994936,
+          "perReadMilliseconds": 0.0062592773437302185,
+          "heapDeltaBytes": 3455488,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 120,
+            "misses": 236,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 120,
+            "misses": 136,
+            "evictions": 0,
+            "skipped": 72,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 100,
+      "workload": "scan",
+      "mode": "lru",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0012920000008307397,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.9990420000031008,
+          "perReadMilliseconds": 0.007808757812512113,
+          "heapDeltaBytes": 3989448,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 0,
+            "misses": 356,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.002082999999402091,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.9739169999957085,
+          "perReadMilliseconds": 0.007710613281233236,
+          "heapDeltaBytes": 3960568,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 0,
+            "misses": 356,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0014999999984866008,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 2.0489999999990687,
+          "perReadMilliseconds": 0.008003906249996362,
+          "heapDeltaBytes": 3960208,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 0,
+            "misses": 356,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.002166999998735264,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.9079580000034184,
+          "perReadMilliseconds": 0.007452960937513353,
+          "heapDeltaBytes": 3960208,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 0,
+            "misses": 356,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0012500000011641532,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 2.05449999999837,
+          "perReadMilliseconds": 0.008025390624993634,
+          "heapDeltaBytes": 3999840,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 0,
+            "misses": 356,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "workload": "hot",
+      "mode": "disabled",
+      "samples": [
+        {
+          "warmMilliseconds": 0.001167000002169516,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.4452499999970314,
+          "perReadMilliseconds": 0.013458007812488404,
+          "heapDeltaBytes": 2576184,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0010829999955603853,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.619582999999693,
+          "perReadMilliseconds": 0.014138996093748801,
+          "heapDeltaBytes": 2585888,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0014169999994919635,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.7697079999998095,
+          "perReadMilliseconds": 0.014725421874999256,
+          "heapDeltaBytes": 2535240,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0013330000001587905,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.285249999993539,
+          "perReadMilliseconds": 0.012833007812474762,
+          "heapDeltaBytes": 2534608,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0014579999988200143,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.6985829999975977,
+          "perReadMilliseconds": 0.014447589843740616,
+          "heapDeltaBytes": 2534736,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "workload": "hot",
+      "mode": "eager",
+      "samples": [
+        {
+          "warmMilliseconds": 0.11033300000417512,
+          "warmHeapDeltaBytes": 172888,
+          "milliseconds": 1.3485419999997248,
+          "perReadMilliseconds": 0.005267742187498925,
+          "heapDeltaBytes": 3130632,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 1000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.09466700000484707,
+          "warmHeapDeltaBytes": 171728,
+          "milliseconds": 1.514708000002429,
+          "perReadMilliseconds": 0.005916828125009488,
+          "heapDeltaBytes": 3057152,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 1000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.10195799999928568,
+          "warmHeapDeltaBytes": 171776,
+          "milliseconds": 1.3563339999964228,
+          "perReadMilliseconds": 0.0052981796874860265,
+          "heapDeltaBytes": 3064144,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 1000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0983330000017304,
+          "warmHeapDeltaBytes": 171776,
+          "milliseconds": 1.360541000001831,
+          "perReadMilliseconds": 0.005314613281257152,
+          "heapDeltaBytes": 3060672,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 1000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.24591700000019046,
+          "warmHeapDeltaBytes": 171728,
+          "milliseconds": 1.3055830000012065,
+          "perReadMilliseconds": 0.005099933593754713,
+          "heapDeltaBytes": 3060672,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 1000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "workload": "hot",
+      "mode": "lazy",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0014169999994919635,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.8797909999993863,
+          "perReadMilliseconds": 0.007342933593747603,
+          "heapDeltaBytes": 3021208,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.001374999999825377,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.660833999994793,
+          "perReadMilliseconds": 0.00648763281247966,
+          "heapDeltaBytes": 2987808,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0013340000004973263,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.8172080000003916,
+          "perReadMilliseconds": 0.00709846875000153,
+          "heapDeltaBytes": 3030408,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.001167000002169516,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.81474999999773,
+          "perReadMilliseconds": 0.007088867187491132,
+          "heapDeltaBytes": 3022416,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0012920000008307397,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.8248329999987618,
+          "perReadMilliseconds": 0.007128253906245163,
+          "heapDeltaBytes": 3020904,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "workload": "hot",
+      "mode": "lru",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0010000000038417056,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.778041999998095,
+          "perReadMilliseconds": 0.0069454765624925585,
+          "heapDeltaBytes": 3036664,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.00145899999915855,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.8227909999986878,
+          "perReadMilliseconds": 0.007120277343744874,
+          "heapDeltaBytes": 3036664,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.001167000002169516,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.838833000001614,
+          "perReadMilliseconds": 0.007182941406256305,
+          "heapDeltaBytes": 3011672,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0018750000017462298,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.8532500000001164,
+          "perReadMilliseconds": 0.007239257812500455,
+          "heapDeltaBytes": 3033728,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.002082999999402091,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 1.7339589999974123,
+          "perReadMilliseconds": 0.006773277343739892,
+          "heapDeltaBytes": 2999520,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 1032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "workload": "scan",
+      "mode": "disabled",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0017909999951370992,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.6665829999983544,
+          "perReadMilliseconds": 0.014322589843743572,
+          "heapDeltaBytes": 2575944,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0014579999988200143,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.341832999998587,
+          "perReadMilliseconds": 0.013054035156244481,
+          "heapDeltaBytes": 2538888,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0009169999975711107,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.9069999999992433,
+          "perReadMilliseconds": 0.015261718749997044,
+          "heapDeltaBytes": 2576488,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0010410000031697564,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.5133329999953276,
+          "perReadMilliseconds": 0.013723957031231748,
+          "heapDeltaBytes": 2579680,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0032920000012381934,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.4927499999976135,
+          "perReadMilliseconds": 0.013643554687490678,
+          "heapDeltaBytes": 2542208,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "workload": "scan",
+      "mode": "eager",
+      "samples": [
+        {
+          "warmMilliseconds": 0.09862499999871943,
+          "warmHeapDeltaBytes": 171776,
+          "milliseconds": 2.8215409999975236,
+          "perReadMilliseconds": 0.011021644531240327,
+          "heapDeltaBytes": 3529008,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 1128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.09333399999741232,
+          "warmHeapDeltaBytes": 171728,
+          "milliseconds": 2.9856670000008307,
+          "perReadMilliseconds": 0.011662761718753245,
+          "heapDeltaBytes": 3567496,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 1128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.09754199999588309,
+          "warmHeapDeltaBytes": 171776,
+          "milliseconds": 2.945208000004641,
+          "perReadMilliseconds": 0.011504718750018128,
+          "heapDeltaBytes": 3528168,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 1128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.10829199999716366,
+          "warmHeapDeltaBytes": 172616,
+          "milliseconds": 2.972709000001487,
+          "perReadMilliseconds": 0.011612144531255808,
+          "heapDeltaBytes": 3529800,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 1128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.09920799999963492,
+          "warmHeapDeltaBytes": 171776,
+          "milliseconds": 3.220000000001164,
+          "perReadMilliseconds": 0.012578125000004547,
+          "heapDeltaBytes": 3571200,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 1128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "workload": "scan",
+      "mode": "lazy",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0014579999988200143,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.7442920000030426,
+          "perReadMilliseconds": 0.014626140625011885,
+          "heapDeltaBytes": 3653864,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 1192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0012920000008307397,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.6295420000024023,
+          "perReadMilliseconds": 0.014177898437509384,
+          "heapDeltaBytes": 3616528,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 1192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0014169999994919635,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.7716659999932745,
+          "perReadMilliseconds": 0.014733070312473728,
+          "heapDeltaBytes": 3653864,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 1192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0012500000011641532,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.049332999995386,
+          "perReadMilliseconds": 0.015817707031231976,
+          "heapDeltaBytes": 3653864,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 1192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.002082999999402091,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 3.747666000002937,
+          "perReadMilliseconds": 0.014639320312511472,
+          "heapDeltaBytes": 3616528,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 1192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "workload": "scan",
+      "mode": "lru",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0016659999964758754,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.445625000000291,
+          "perReadMilliseconds": 0.017365722656251137,
+          "heapDeltaBytes": 3882160,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 1256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0018750000017462298,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.538667000000714,
+          "perReadMilliseconds": 0.01772916796875279,
+          "heapDeltaBytes": 3920192,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 1256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0010829999955603853,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.387834000001021,
+          "perReadMilliseconds": 0.01713997656250399,
+          "heapDeltaBytes": 3882160,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 1256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0013330000001587905,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.817374999998719,
+          "perReadMilliseconds": 0.018817871093744998,
+          "heapDeltaBytes": 3920192,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 1256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0020000000004074536,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.747584000004281,
+          "perReadMilliseconds": 0.018545250000016722,
+          "heapDeltaBytes": 3924088,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 1256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "workload": "hot",
+      "mode": "disabled",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0020839999997406267,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 23.050084000002244,
+          "perReadMilliseconds": 0.09003939062500876,
+          "heapDeltaBytes": 2566896,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.002209000005677808,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 22.44133399999555,
+          "perReadMilliseconds": 0.08766146093748262,
+          "heapDeltaBytes": 2534392,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.002082999999402091,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 26.28541600000608,
+          "perReadMilliseconds": 0.10267740625002375,
+          "heapDeltaBytes": 2534736,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0017910000024130568,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 17.870374999998603,
+          "perReadMilliseconds": 0.06980615234374454,
+          "heapDeltaBytes": 2493304,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0016249999971478246,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 27.18191599999409,
+          "perReadMilliseconds": 0.10617935937497691,
+          "heapDeltaBytes": 2534736,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "workload": "hot",
+      "mode": "eager",
+      "samples": [
+        {
+          "warmMilliseconds": 0.11337500000081491,
+          "warmHeapDeltaBytes": 171776,
+          "milliseconds": 1.3403340000004391,
+          "perReadMilliseconds": 0.005235679687501715,
+          "heapDeltaBytes": 3070584,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 10000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.11129200000141282,
+          "warmHeapDeltaBytes": 171728,
+          "milliseconds": 1.3150839999943855,
+          "perReadMilliseconds": 0.0051370468749780684,
+          "heapDeltaBytes": 3065936,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 10000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.11433300000499003,
+          "warmHeapDeltaBytes": 171776,
+          "milliseconds": 1.295124999996915,
+          "perReadMilliseconds": 0.005059082031237949,
+          "heapDeltaBytes": 3065936,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 10000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.10674999999901047,
+          "warmHeapDeltaBytes": 171776,
+          "milliseconds": 1.3194170000060694,
+          "perReadMilliseconds": 0.005153972656273709,
+          "heapDeltaBytes": 3065936,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 10000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.12070800000219606,
+          "warmHeapDeltaBytes": 171728,
+          "milliseconds": 1.5167079999955604,
+          "perReadMilliseconds": 0.005924640624982658,
+          "heapDeltaBytes": 3065936,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 256,
+            "misses": 10000,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 256,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "workload": "hot",
+      "mode": "lazy",
+      "samples": [
+        {
+          "warmMilliseconds": 0.016708000002836343,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.900000000001455,
+          "perReadMilliseconds": 0.019140625000005684,
+          "heapDeltaBytes": 3028416,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.001958000000740867,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.708041999998386,
+          "perReadMilliseconds": 0.018390789062493695,
+          "heapDeltaBytes": 3027704,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0016249999971478246,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.796374999998079,
+          "perReadMilliseconds": 0.018735839843742497,
+          "heapDeltaBytes": 3028416,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0015000000057625584,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 5.057999999997264,
+          "perReadMilliseconds": 0.019757812499989313,
+          "heapDeltaBytes": 3027976,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0030830000032437965,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 5.112541999995301,
+          "perReadMilliseconds": 0.019970867187481645,
+          "heapDeltaBytes": 3027704,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "workload": "hot",
+      "mode": "lru",
+      "samples": [
+        {
+          "warmMilliseconds": 0.0029590000049211085,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.79258299999492,
+          "perReadMilliseconds": 0.018721027343730157,
+          "heapDeltaBytes": 3040528,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0016669999968144111,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.831708999998227,
+          "perReadMilliseconds": 0.018873863281243075,
+          "heapDeltaBytes": 3040528,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0014999999984866008,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.873250000004191,
+          "perReadMilliseconds": 0.01903613281251637,
+          "heapDeltaBytes": 3040528,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0018749999944702722,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 4.812624999998661,
+          "perReadMilliseconds": 0.01879931640624477,
+          "heapDeltaBytes": 3040528,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0017920000027515925,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 5.022125000003143,
+          "perReadMilliseconds": 0.019617675781262278,
+          "heapDeltaBytes": 3040528,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 1666,
+            "records": 32,
+            "hits": 224,
+            "misses": 10032,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 224,
+            "misses": 32,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "workload": "scan",
+      "mode": "disabled",
+      "samples": [
+        {
+          "warmMilliseconds": 0.002499999995052349,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 22.650957999998354,
+          "perReadMilliseconds": 0.08848030468749357,
+          "heapDeltaBytes": 2544704,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.002165999998396728,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 23.130417000000307,
+          "perReadMilliseconds": 0.0903531914062512,
+          "heapDeltaBytes": 2570424,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.004958000004990026,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 24.44145899999421,
+          "perReadMilliseconds": 0.09547444921872739,
+          "heapDeltaBytes": 2570552,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.0017920000100275502,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 26.480500000005122,
+          "perReadMilliseconds": 0.10343945312502001,
+          "heapDeltaBytes": 2568320,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.001416999992216006,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 23.018499999991036,
+          "perReadMilliseconds": 0.08991601562496498,
+          "heapDeltaBytes": 2574064,
+          "cache": {
+            "mode": "disabled",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 0,
+            "records": 0,
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 3
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 0,
+            "evictions": 0,
+            "skipped": 0,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "workload": "scan",
+      "mode": "eager",
+      "samples": [
+        {
+          "warmMilliseconds": 0.12004200000228593,
+          "warmHeapDeltaBytes": 171776,
+          "milliseconds": 14.873583000000508,
+          "perReadMilliseconds": 0.058099933593751985,
+          "heapDeltaBytes": 3565352,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 10128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.11054100000183098,
+          "warmHeapDeltaBytes": 171816,
+          "milliseconds": 15.081790999996883,
+          "perReadMilliseconds": 0.058913246093737826,
+          "heapDeltaBytes": 3565288,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 10128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.13141700000414858,
+          "warmHeapDeltaBytes": 171776,
+          "milliseconds": 14.616374999997788,
+          "perReadMilliseconds": 0.05709521484374136,
+          "heapDeltaBytes": 3565288,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 10128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.12270800000987947,
+          "warmHeapDeltaBytes": 172256,
+          "milliseconds": 14.970167000006768,
+          "perReadMilliseconds": 0.05847721484377644,
+          "heapDeltaBytes": 3573888,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 10128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        },
+        {
+          "warmMilliseconds": 0.12974999999278225,
+          "warmHeapDeltaBytes": 172616,
+          "milliseconds": 14.811249999998836,
+          "perReadMilliseconds": 0.05785644531249545,
+          "heapDeltaBytes": 3565288,
+          "cache": {
+            "mode": "eager",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 128,
+            "misses": 10128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 128,
+            "misses": 128,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 0
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "workload": "scan",
+      "mode": "lazy",
+      "samples": [
+        {
+          "warmMilliseconds": 0.002874999998311978,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 21.37712499999907,
+          "perReadMilliseconds": 0.08350439453124636,
+          "heapDeltaBytes": 3646432,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 10192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0034159999995608814,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 21.781875000000582,
+          "perReadMilliseconds": 0.08508544921875227,
+          "heapDeltaBytes": 3646432,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 10192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.002874999998311978,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 21.85466599999927,
+          "perReadMilliseconds": 0.08536978906249715,
+          "heapDeltaBytes": 3646496,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 10192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.003500000006170012,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 21.547458000000915,
+          "perReadMilliseconds": 0.08416975781250358,
+          "heapDeltaBytes": 3646432,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 10192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0018750000017462298,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 21.824291000011726,
+          "perReadMilliseconds": 0.0852511367187958,
+          "heapDeltaBytes": 3649824,
+          "cache": {
+            "mode": "lazy",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3362,
+            "records": 64,
+            "hits": 64,
+            "misses": 10192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 64,
+            "misses": 192,
+            "evictions": 0,
+            "skipped": 128,
+            "invalidations": 1
+          }
+        }
+      ]
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "workload": "scan",
+      "mode": "lru",
+      "samples": [
+        {
+          "warmMilliseconds": 0.003082999995967839,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 28.30204199999571,
+          "perReadMilliseconds": 0.11055485156248324,
+          "heapDeltaBytes": 3915784,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 10256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0024579999953857623,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 27.970374999997148,
+          "perReadMilliseconds": 0.10925927734373886,
+          "heapDeltaBytes": 3912376,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 10256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0030000000042491592,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 28.93858299999556,
+          "perReadMilliseconds": 0.11304133984373266,
+          "heapDeltaBytes": 3912312,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 10256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0019580000080168247,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 27.902874999999767,
+          "perReadMilliseconds": 0.10899560546874909,
+          "heapDeltaBytes": 3913744,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 10256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        },
+        {
+          "warmMilliseconds": 0.0020419999927980825,
+          "warmHeapDeltaBytes": 1240,
+          "milliseconds": 27.614833999992697,
+          "perReadMilliseconds": 0.10787044531247147,
+          "heapDeltaBytes": 3912312,
+          "cache": {
+            "mode": "lru",
+            "maxBytes": 65536,
+            "maxRecords": 64,
+            "bytes": 3476,
+            "records": 64,
+            "hits": 0,
+            "misses": 10256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 5
+          },
+          "readCounters": {
+            "hits": 0,
+            "misses": 256,
+            "evictions": 192,
+            "skipped": 0,
+            "invalidations": 1
+          }
+        }
+      ]
+    }
+  ]
+}
