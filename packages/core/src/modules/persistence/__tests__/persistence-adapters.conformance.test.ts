@@ -154,7 +154,17 @@ persistenceAdapterConformance('filesystem', {
           async update() {},
         };
 
-        return new FSPersistence(camaConfig, collectionMeta, filesystem, logger, collectionName, system, queue);
+        const adapter = new FSPersistence(
+          camaConfig,
+          collectionMeta,
+          filesystem,
+          logger,
+          collectionName,
+          system,
+          queue,
+        );
+        await adapter.getData();
+        return adapter;
       },
       createFailingMutation(adapter) {
         jest.spyOn(nodeFs, 'rename').mockRejectedValueOnce(new Error('simulated interruption'));
