@@ -37,6 +37,7 @@
     "release:alpha": "changeset publish --tag alpha --no-git-tag"
   },
   "devDependencies": {
+    "wabt": "1.0.39",
     "@changesets/cli": "^2.29.7",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.0",

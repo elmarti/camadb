@@ -1,0 +1,79 @@
+{
+  "revision": "578639f03a6df416e47d6e3c214351d9397f9781",
+  "sourceHashes": {
+    "packages/benchmarks/src/run.ts": "afa9d2f4ff0ee1bfe501df6aa22d803a8de1c6c47c79db40e1ccbffc111b7f51",
+    "packages/benchmarks/src/config.ts": "5988e46d07cef58929e9829c31e21787d2fd447175ff2249547661aedabb951f",
+    "scripts/speed-lab/map-adapter.js": "c81fe973fad83bb11c661c3ac375a2082e3310918c81113d6f97aac9e3117957",
+    "scripts/speed-lab/hash.wat": "ab0b539a1680b8cae9ce7fb483f47eaa4ac060a9f5618c68441b0af48c321a48",
+    "scripts/speed-lab/hash.js": "c2c7920b0ed093cac9bd5f8473010028a5640a6cd3bf1c6104b9a8754b57a125",
+    "scripts/speed-lab/lookup.js": "5de8a86a48129706caa9790ed63a6942df6ce92f7f6794ecba7fd9d636fac0d1"
+  },
+  "generatedAt": "2026-09-03T07:34:47.215Z",
+  "cpu": "Apple M5",
+  "node": "v24.20.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "jobs": [
+    [
+      "baseline",
+      "fs",
+      "fs-baseline"
+    ],
+    [
+      "wasm",
+      "fs",
+      "fs-wasm"
+    ],
+    [
+      "baseline",
+      "inmemory",
+      "memory-baseline"
+    ],
+    [
+      "map",
+      "inmemory",
+      "memory-map"
+    ],
+    [
+      "map",
+      "inmemory",
+      "memory-map-repeat"
+    ],
+    [
+      "baseline",
+      "inmemory",
+      "memory-baseline-repeat"
+    ],
+    [
+      "wasm",
+      "fs",
+      "fs-wasm-repeat"
+    ],
+    [
+      "baseline",
+      "fs",
+      "fs-baseline-repeat"
+    ],
+    [
+      "baseline",
+      "inmemory",
+      "lookup-baseline"
+    ],
+    [
+      "lookup",
+      "inmemory",
+      "memory-lookup"
+    ],
+    [
+      "lookup",
+      "inmemory",
+      "memory-lookup-repeat"
+    ],
+    [
+      "baseline",
+      "inmemory",
+      "lookup-baseline-repeat"
+    ]
+  ],
+  "note": "Sequential fresh child processes; repeat reverses candidate order. No filesystem durability changes. Hash compilation/startup outside operation timing."
+}

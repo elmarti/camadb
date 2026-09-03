@@ -1,0 +1,469 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-03T07:33:45.029Z",
+  "runtime": {
+    "architecture": "arm64",
+    "cpu": "Apple M5",
+    "node": "v24.20.0",
+    "platform": "darwin",
+    "totalMemoryBytes": 25769803776
+  },
+  "config": {
+    "adapters": [
+      "fs"
+    ],
+    "iterations": 5,
+    "sizes": [
+      100,
+      1000,
+      10000
+    ],
+    "output": "/private/tmp/camadb-speed-lab/docs/benchmarks/speed-lab/fs-wasm.json"
+  },
+  "results": [
+    {
+      "adapter": "fs",
+      "collectionSize": 100,
+      "operation": "bulk-insert",
+      "samples": [
+        {
+          "collectionBytes": 21673,
+          "heapDeltaBytes": 3508888,
+          "milliseconds": 180.937541
+        },
+        {
+          "collectionBytes": 21674,
+          "heapDeltaBytes": 3245736,
+          "milliseconds": 178.19745799999987
+        },
+        {
+          "collectionBytes": 21674,
+          "heapDeltaBytes": 2589024,
+          "milliseconds": 172.6144999999999
+        },
+        {
+          "collectionBytes": 21675,
+          "heapDeltaBytes": 3236808,
+          "milliseconds": 184.26575000000003
+        },
+        {
+          "collectionBytes": 21674,
+          "heapDeltaBytes": 3131440,
+          "milliseconds": 172.53379199999972
+        }
+      ],
+      "median": {
+        "collectionBytes": 21674,
+        "heapDeltaBytes": 3236808,
+        "milliseconds": 178.19745799999987
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 100,
+      "operation": "point-read",
+      "samples": [
+        {
+          "collectionBytes": 21673,
+          "heapDeltaBytes": 112128,
+          "milliseconds": 1.6835839999999962
+        },
+        {
+          "collectionBytes": 21672,
+          "heapDeltaBytes": 111416,
+          "milliseconds": 0.7168339999998352
+        },
+        {
+          "collectionBytes": 21672,
+          "heapDeltaBytes": 92848,
+          "milliseconds": 0.7987500000001546
+        },
+        {
+          "collectionBytes": 21672,
+          "heapDeltaBytes": 90784,
+          "milliseconds": 0.8169579999998859
+        },
+        {
+          "collectionBytes": 21672,
+          "heapDeltaBytes": 88144,
+          "milliseconds": 1.033415999999761
+        }
+      ],
+      "median": {
+        "collectionBytes": 21672,
+        "heapDeltaBytes": 92848,
+        "milliseconds": 0.8169579999998859
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 100,
+      "operation": "point-update",
+      "samples": [
+        {
+          "collectionBytes": 21880,
+          "heapDeltaBytes": 248472,
+          "milliseconds": 29.910125000000107
+        },
+        {
+          "collectionBytes": 21880,
+          "heapDeltaBytes": 242976,
+          "milliseconds": 25.424125000000004
+        },
+        {
+          "collectionBytes": 21879,
+          "heapDeltaBytes": 226872,
+          "milliseconds": 25.451125000000047
+        },
+        {
+          "collectionBytes": 21880,
+          "heapDeltaBytes": 224896,
+          "milliseconds": 25.494124999999713
+        },
+        {
+          "collectionBytes": 21880,
+          "heapDeltaBytes": 220976,
+          "milliseconds": 25.893375000000106
+        }
+      ],
+      "median": {
+        "collectionBytes": 21880,
+        "heapDeltaBytes": 226872,
+        "milliseconds": 25.494124999999713
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 100,
+      "operation": "point-delete",
+      "samples": [
+        {
+          "collectionBytes": 21728,
+          "heapDeltaBytes": 206424,
+          "milliseconds": 16.86666600000001
+        },
+        {
+          "collectionBytes": 21728,
+          "heapDeltaBytes": 200568,
+          "milliseconds": 17.209666999999854
+        },
+        {
+          "collectionBytes": 21728,
+          "heapDeltaBytes": 221024,
+          "milliseconds": 17.71858400000019
+        },
+        {
+          "collectionBytes": 21728,
+          "heapDeltaBytes": 196096,
+          "milliseconds": 17.185375000000022
+        },
+        {
+          "collectionBytes": 21727,
+          "heapDeltaBytes": 195888,
+          "milliseconds": 17.4926660000001
+        }
+      ],
+      "median": {
+        "collectionBytes": 21728,
+        "heapDeltaBytes": 200568,
+        "milliseconds": 17.209666999999854
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "operation": "bulk-insert",
+      "samples": [
+        {
+          "collectionBytes": 196065,
+          "heapDeltaBytes": 4836416,
+          "milliseconds": 587.7580419999995
+        },
+        {
+          "collectionBytes": 196067,
+          "heapDeltaBytes": 5612112,
+          "milliseconds": 585.4051250000002
+        },
+        {
+          "collectionBytes": 196066,
+          "heapDeltaBytes": 5607304,
+          "milliseconds": 583.1169160000009
+        },
+        {
+          "collectionBytes": 196066,
+          "heapDeltaBytes": 5436496,
+          "milliseconds": 600.1459999999988
+        },
+        {
+          "collectionBytes": 196066,
+          "heapDeltaBytes": 18708736,
+          "milliseconds": 589.2689169999994
+        }
+      ],
+      "median": {
+        "collectionBytes": 196066,
+        "heapDeltaBytes": 5607304,
+        "milliseconds": 587.7580419999995
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "operation": "point-read",
+      "samples": [
+        {
+          "collectionBytes": 196065,
+          "heapDeltaBytes": 188040,
+          "milliseconds": 0.872082999999293
+        },
+        {
+          "collectionBytes": 196064,
+          "heapDeltaBytes": 186840,
+          "milliseconds": 0.7929579999999987
+        },
+        {
+          "collectionBytes": 196064,
+          "heapDeltaBytes": 187816,
+          "milliseconds": 0.7678329999998823
+        },
+        {
+          "collectionBytes": 196064,
+          "heapDeltaBytes": 188984,
+          "milliseconds": 0.8566659999996773
+        },
+        {
+          "collectionBytes": 196066,
+          "heapDeltaBytes": 188424,
+          "milliseconds": 0.8299999999999272
+        }
+      ],
+      "median": {
+        "collectionBytes": 196064,
+        "heapDeltaBytes": 188040,
+        "milliseconds": 0.8299999999999272
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "operation": "point-update",
+      "samples": [
+        {
+          "collectionBytes": 196785,
+          "heapDeltaBytes": 426136,
+          "milliseconds": 25.808374999999614
+        },
+        {
+          "collectionBytes": 196786,
+          "heapDeltaBytes": 424904,
+          "milliseconds": 25.726416000000427
+        },
+        {
+          "collectionBytes": 196785,
+          "heapDeltaBytes": 425672,
+          "milliseconds": 25.016999999999825
+        },
+        {
+          "collectionBytes": 196784,
+          "heapDeltaBytes": 433928,
+          "milliseconds": 25.834499999999025
+        },
+        {
+          "collectionBytes": 196785,
+          "heapDeltaBytes": 426296,
+          "milliseconds": 25.953332999999475
+        }
+      ],
+      "median": {
+        "collectionBytes": 196785,
+        "heapDeltaBytes": 426136,
+        "milliseconds": 25.808374999999614
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "operation": "point-delete",
+      "samples": [
+        {
+          "collectionBytes": 196633,
+          "heapDeltaBytes": 410728,
+          "milliseconds": 17.60279199999968
+        },
+        {
+          "collectionBytes": 196634,
+          "heapDeltaBytes": 410968,
+          "milliseconds": 16.94720799999959
+        },
+        {
+          "collectionBytes": 196634,
+          "heapDeltaBytes": 410512,
+          "milliseconds": 17.29125000000022
+        },
+        {
+          "collectionBytes": 196632,
+          "heapDeltaBytes": 410688,
+          "milliseconds": 17.12879199999952
+        },
+        {
+          "collectionBytes": 196632,
+          "heapDeltaBytes": 420000,
+          "milliseconds": 17.783416999998735
+        }
+      ],
+      "median": {
+        "collectionBytes": 196633,
+        "heapDeltaBytes": 410728,
+        "milliseconds": 17.29125000000022
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "operation": "bulk-insert",
+      "samples": [
+        {
+          "collectionBytes": 1838821,
+          "heapDeltaBytes": 11898832,
+          "milliseconds": 724.987333000001
+        },
+        {
+          "collectionBytes": 1838820,
+          "heapDeltaBytes": 11925128,
+          "milliseconds": 683.0421669999996
+        },
+        {
+          "collectionBytes": 1838821,
+          "heapDeltaBytes": 8745792,
+          "milliseconds": 701.1852499999986
+        },
+        {
+          "collectionBytes": 1838820,
+          "heapDeltaBytes": 8670968,
+          "milliseconds": 691.3547089999993
+        },
+        {
+          "collectionBytes": 1838820,
+          "heapDeltaBytes": 8681848,
+          "milliseconds": 723.6130000000012
+        }
+      ],
+      "median": {
+        "collectionBytes": 1838820,
+        "heapDeltaBytes": 8745792,
+        "milliseconds": 701.1852499999986
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "operation": "point-read",
+      "samples": [
+        {
+          "collectionBytes": 1838818,
+          "heapDeltaBytes": 200792,
+          "milliseconds": 0.8217919999988226
+        },
+        {
+          "collectionBytes": 1838818,
+          "heapDeltaBytes": 200696,
+          "milliseconds": 0.7072499999994761
+        },
+        {
+          "collectionBytes": 1838818,
+          "heapDeltaBytes": 200040,
+          "milliseconds": 0.7536249999975553
+        },
+        {
+          "collectionBytes": 1838818,
+          "heapDeltaBytes": 200880,
+          "milliseconds": 0.7937910000000556
+        },
+        {
+          "collectionBytes": 1838818,
+          "heapDeltaBytes": 198232,
+          "milliseconds": 0.7411250000004657
+        }
+      ],
+      "median": {
+        "collectionBytes": 1838818,
+        "heapDeltaBytes": 200696,
+        "milliseconds": 0.7536249999975553
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "operation": "point-update",
+      "samples": [
+        {
+          "collectionBytes": 1843399,
+          "heapDeltaBytes": 474080,
+          "milliseconds": 24.547624999999243
+        },
+        {
+          "collectionBytes": 1843398,
+          "heapDeltaBytes": 469504,
+          "milliseconds": 25.140041000002384
+        },
+        {
+          "collectionBytes": 1843398,
+          "heapDeltaBytes": 464040,
+          "milliseconds": 25.084917000000132
+        },
+        {
+          "collectionBytes": 1843399,
+          "heapDeltaBytes": 469504,
+          "milliseconds": 25.33233299999847
+        },
+        {
+          "collectionBytes": 1843398,
+          "heapDeltaBytes": 469648,
+          "milliseconds": 24.508709000001545
+        }
+      ],
+      "median": {
+        "collectionBytes": 1843398,
+        "heapDeltaBytes": 469504,
+        "milliseconds": 25.084917000000132
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "operation": "point-delete",
+      "samples": [
+        {
+          "collectionBytes": 1843245,
+          "heapDeltaBytes": 439280,
+          "milliseconds": 17.121290999999474
+        },
+        {
+          "collectionBytes": 1843244,
+          "heapDeltaBytes": 442928,
+          "milliseconds": 18.76008400000137
+        },
+        {
+          "collectionBytes": 1843245,
+          "heapDeltaBytes": 438168,
+          "milliseconds": 17.243207999999868
+        },
+        {
+          "collectionBytes": 1843244,
+          "heapDeltaBytes": 440072,
+          "milliseconds": 17.064791000000696
+        },
+        {
+          "collectionBytes": 1843244,
+          "heapDeltaBytes": 440104,
+          "milliseconds": 17.523958000001585
+        }
+      ],
+      "median": {
+        "collectionBytes": 1843244,
+        "heapDeltaBytes": 440072,
+        "milliseconds": 17.243207999999868
+      }
+    }
+  ]
+}
