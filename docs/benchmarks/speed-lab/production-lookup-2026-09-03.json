@@ -1,0 +1,473 @@
+{
+  "schemaVersion": 1,
+  "candidate": "production zero/one-ID lookup fast path",
+  "baseRevision": "6b914a3",
+  "sourceHash": "5e86f168970b5f6756602aef540a794488078fd6f2abfeb6413857f711538889",
+  "note": "Fresh production implementation run. Compare with the separately retained lookup-baseline and injected memory-lookup reports; it does not replace them.",
+  "generatedAt": "2026-09-03T22:04:31.775Z",
+  "runtime": {
+    "architecture": "arm64",
+    "cpu": "Apple M5",
+    "node": "v24.20.0",
+    "platform": "darwin",
+    "totalMemoryBytes": 25769803776
+  },
+  "config": {
+    "adapters": [
+      "inmemory"
+    ],
+    "iterations": 5,
+    "sizes": [
+      100,
+      1000,
+      10000
+    ],
+    "output": "docs/benchmarks/speed-lab/production-lookup-2026-09-03.json"
+  },
+  "results": [
+    {
+      "adapter": "inmemory",
+      "collectionSize": 100,
+      "operation": "bulk-insert",
+      "samples": [
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 332280,
+          "milliseconds": 0.24899999999999523
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 39256,
+          "milliseconds": 0.04129100000000108
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 273880,
+          "milliseconds": 0.029167000000001053
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 34952,
+          "milliseconds": 0.02908299999999997
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 34952,
+          "milliseconds": 0.01954200000000128
+        }
+      ],
+      "median": {
+        "collectionBytes": null,
+        "heapDeltaBytes": 39256,
+        "milliseconds": 0.029167000000001053
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 100,
+      "operation": "point-read",
+      "samples": [
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 44472,
+          "milliseconds": 0.28958300000000037
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 20416,
+          "milliseconds": 0.04345899999999858
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 77192,
+          "milliseconds": 0.03524999999999778
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 24192,
+          "milliseconds": 0.060208000000002926
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 22384,
+          "milliseconds": 0.0347500000000025
+        }
+      ],
+      "median": {
+        "collectionBytes": null,
+        "heapDeltaBytes": 24192,
+        "milliseconds": 0.04345899999999858
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 100,
+      "operation": "point-update",
+      "samples": [
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 46176,
+          "milliseconds": 0.1872499999999988
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 32904,
+          "milliseconds": 0.06341700000000117
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 31432,
+          "milliseconds": 0.04375000000000284
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 31904,
+          "milliseconds": 0.07387500000000102
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 31384,
+          "milliseconds": 0.11062499999999886
+        }
+      ],
+      "median": {
+        "collectionBytes": null,
+        "heapDeltaBytes": 31904,
+        "milliseconds": 0.07387500000000102
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 100,
+      "operation": "point-delete",
+      "samples": [
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 29312,
+          "milliseconds": 0.07508299999999934
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 445368,
+          "milliseconds": 0.04420800000000469
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 26024,
+          "milliseconds": 0.13691599999999937
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 23800,
+          "milliseconds": 0.04145799999999156
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 23912,
+          "milliseconds": 0.037709000000006654
+        }
+      ],
+      "median": {
+        "collectionBytes": null,
+        "heapDeltaBytes": 26024,
+        "milliseconds": 0.04420800000000469
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "operation": "bulk-insert",
+      "samples": [
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 272768,
+          "milliseconds": 0.11341699999999832
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 271112,
+          "milliseconds": 0.1064580000000035
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 271112,
+          "milliseconds": 0.12595799999999713
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 271112,
+          "milliseconds": 0.10658399999999801
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 271192,
+          "milliseconds": 0.14674999999999727
+        }
+      ],
+      "median": {
+        "collectionBytes": null,
+        "heapDeltaBytes": 271112,
+        "milliseconds": 0.11341699999999832
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "operation": "point-read",
+      "samples": [
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 22384,
+          "milliseconds": 0.043707999999995195
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 22384,
+          "milliseconds": 0.054916999999989
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 330328,
+          "milliseconds": 0.05133299999999963
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 23568,
+          "milliseconds": 0.12054200000000037
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 22952,
+          "milliseconds": 0.0605419999999981
+        }
+      ],
+      "median": {
+        "collectionBytes": null,
+        "heapDeltaBytes": 22952,
+        "milliseconds": 0.054916999999989
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "operation": "point-update",
+      "samples": [
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 64296,
+          "milliseconds": 0.15654200000000174
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 64296,
+          "milliseconds": 0.09745800000000315
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 64296,
+          "milliseconds": 0.10695799999999167
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 65832,
+          "milliseconds": 0.0950419999999923
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 65168,
+          "milliseconds": 0.13816700000000992
+        }
+      ],
+      "median": {
+        "collectionBytes": null,
+        "heapDeltaBytes": 64296,
+        "milliseconds": 0.10695799999999167
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "operation": "point-delete",
+      "samples": [
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 58552,
+          "milliseconds": 0.09029200000000515
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 57176,
+          "milliseconds": 0.07708300000000179
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 57176,
+          "milliseconds": 0.07129100000000221
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 58832,
+          "milliseconds": 0.0918749999999875
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 57464,
+          "milliseconds": 0.08808399999999494
+        }
+      ],
+      "median": {
+        "collectionBytes": null,
+        "heapDeltaBytes": 57464,
+        "milliseconds": 0.08808399999999494
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "operation": "bulk-insert",
+      "samples": [
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 3022232,
+          "milliseconds": 1.1704579999999964
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 3037496,
+          "milliseconds": 1.3295420000000036
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 3035408,
+          "milliseconds": 1.1286660000000097
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 3019728,
+          "milliseconds": 0.946124999999995
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 3019728,
+          "milliseconds": 1.1429170000000113
+        }
+      ],
+      "median": {
+        "collectionBytes": null,
+        "heapDeltaBytes": 3022232,
+        "milliseconds": 1.1429170000000113
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "operation": "point-read",
+      "samples": [
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 22576,
+          "milliseconds": 0.1422500000000042
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 16192,
+          "milliseconds": 0.10283300000000395
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 21944,
+          "milliseconds": 0.1300420000000031
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 21944,
+          "milliseconds": 0.10550000000000637
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 21944,
+          "milliseconds": 0.1321670000000097
+        }
+      ],
+      "median": {
+        "collectionBytes": null,
+        "heapDeltaBytes": 21944,
+        "milliseconds": 0.1300420000000031
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "operation": "point-update",
+      "samples": [
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 365960,
+          "milliseconds": 0.7100420000000014
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 347888,
+          "milliseconds": 0.5329580000000078
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 346744,
+          "milliseconds": 0.5212080000000014
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 350560,
+          "milliseconds": 0.5789580000000001
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 348176,
+          "milliseconds": 0.7034580000000119
+        }
+      ],
+      "median": {
+        "collectionBytes": null,
+        "heapDeltaBytes": 348176,
+        "milliseconds": 0.5789580000000001
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "operation": "point-delete",
+      "samples": [
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 350536,
+          "milliseconds": 0.4357080000000053
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 346528,
+          "milliseconds": 0.529500000000013
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 350344,
+          "milliseconds": 0.5505839999999864
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 360152,
+          "milliseconds": 0.4352919999999756
+        },
+        {
+          "collectionBytes": null,
+          "heapDeltaBytes": 350440,
+          "milliseconds": 0.41604199999997604
+        }
+      ],
+      "median": {
+        "collectionBytes": null,
+        "heapDeltaBytes": 350440,
+        "milliseconds": 0.4357080000000053
+      }
+    }
+  ]
+}

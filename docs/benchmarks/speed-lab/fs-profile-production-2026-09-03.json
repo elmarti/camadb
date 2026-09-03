@@ -1,0 +1,701 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-03T22:06:24.607Z",
+  "note": "Inclusive method timings can overlap and must not be summed. Collection seeding is outside each measured operation.",
+  "baseRevision": "6b914a3",
+  "size": 10000,
+  "samples": 3,
+  "runtime": {
+    "node": "v24.20.0",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpu": "Apple M5"
+  },
+  "sourceHashes": {
+    "packages/core/src/modules/persistence/fs/fs.ts": "fd34584ab0a5020fe035afc68b3169ba7f3c1fb6df70474761cfdd5d8c1b5dc4",
+    "packages/core/src/modules/persistence/fs/fs-persistence.ts": "b1147631619da9749d35bed2437c3ddffe9fce21e42998f8e3caa2c8cdb71051",
+    "scripts/speed-lab/profile-fs.js": "8a223b9570a7b86f0cf5132137674bfef6f724e9def81131e3c2a302e7bb897a"
+  },
+  "operations": [
+    {
+      "operation": "bulk-insert",
+      "runs": [
+        {
+          "sample": 0,
+          "milliseconds": 701.812375,
+          "methods": {
+            "Fs.exists": {
+              "calls": 283,
+              "milliseconds": 479.366791
+            },
+            "Fs.fileSize": {
+              "calls": 277,
+              "milliseconds": 2.460526
+            },
+            "Fs.loadJSON": {
+              "calls": 279,
+              "milliseconds": 26.843542
+            },
+            "Fs.mkdir": {
+              "calls": 4,
+              "milliseconds": 0.896959
+            },
+            "Fs.readDir": {
+              "calls": 2,
+              "milliseconds": 0.214917
+            },
+            "Fs.replaceFile": {
+              "calls": 280,
+              "milliseconds": 144001.081001
+            },
+            "Fs.syncContainingDirectory": {
+              "calls": 280,
+              "milliseconds": 4927.137002
+            },
+            "Fs.writeJSON": {
+              "calls": 279,
+              "milliseconds": 144468.344667
+            },
+            "FSPersistence.applyMutation": {
+              "calls": 1,
+              "milliseconds": 630.593083
+            },
+            "FSPersistence.autoCompact": {
+              "calls": 1,
+              "milliseconds": 49.003209
+            },
+            "FSPersistence.getRecords": {
+              "calls": 1,
+              "milliseconds": 20.614625
+            },
+            "FSPersistence.mutateRecords": {
+              "calls": 1,
+              "milliseconds": 679.727542
+            },
+            "FSPersistence.readManifest": {
+              "calls": 3,
+              "milliseconds": 0.613749
+            },
+            "FSPersistence.readRecordsSnapshot": {
+              "calls": 1,
+              "milliseconds": 20.599917
+            },
+            "FSPersistence.readShard": {
+              "calls": 512,
+              "milliseconds": 0.237932
+            },
+            "FSPersistence.writePages": {
+              "calls": 1,
+              "milliseconds": 57.478791
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "milliseconds": 741.9645,
+          "methods": {
+            "Fs.exists": {
+              "calls": 283,
+              "milliseconds": 664.809195
+            },
+            "Fs.fileSize": {
+              "calls": 277,
+              "milliseconds": 2.931165
+            },
+            "Fs.loadJSON": {
+              "calls": 279,
+              "milliseconds": 28.231423
+            },
+            "Fs.mkdir": {
+              "calls": 4,
+              "milliseconds": 0.328667
+            },
+            "Fs.readDir": {
+              "calls": 2,
+              "milliseconds": 0.204667
+            },
+            "Fs.replaceFile": {
+              "calls": 280,
+              "milliseconds": 151383.783466
+            },
+            "Fs.syncContainingDirectory": {
+              "calls": 280,
+              "milliseconds": 7830.200374
+            },
+            "Fs.writeJSON": {
+              "calls": 279,
+              "milliseconds": 152039.801832
+            },
+            "FSPersistence.applyMutation": {
+              "calls": 1,
+              "milliseconds": 673.2225
+            },
+            "FSPersistence.autoCompact": {
+              "calls": 1,
+              "milliseconds": 50.222834
+            },
+            "FSPersistence.getRecords": {
+              "calls": 1,
+              "milliseconds": 17.311042
+            },
+            "FSPersistence.mutateRecords": {
+              "calls": 1,
+              "milliseconds": 723.709791
+            },
+            "FSPersistence.readManifest": {
+              "calls": 3,
+              "milliseconds": 0.607166
+            },
+            "FSPersistence.readRecordsSnapshot": {
+              "calls": 1,
+              "milliseconds": 17.307875
+            },
+            "FSPersistence.readShard": {
+              "calls": 512,
+              "milliseconds": 0.189584
+            },
+            "FSPersistence.writePages": {
+              "calls": 1,
+              "milliseconds": 72.112625
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "milliseconds": 732.601542,
+          "methods": {
+            "Fs.exists": {
+              "calls": 283,
+              "milliseconds": 546.925214
+            },
+            "Fs.fileSize": {
+              "calls": 277,
+              "milliseconds": 2.731651
+            },
+            "Fs.loadJSON": {
+              "calls": 279,
+              "milliseconds": 27.193338
+            },
+            "Fs.mkdir": {
+              "calls": 4,
+              "milliseconds": 0.337627
+            },
+            "Fs.readDir": {
+              "calls": 2,
+              "milliseconds": 0.201958
+            },
+            "Fs.replaceFile": {
+              "calls": 280,
+              "milliseconds": 149117.288794
+            },
+            "Fs.syncContainingDirectory": {
+              "calls": 280,
+              "milliseconds": 9027.355088
+            },
+            "Fs.writeJSON": {
+              "calls": 279,
+              "milliseconds": 149653.5523
+            },
+            "FSPersistence.applyMutation": {
+              "calls": 1,
+              "milliseconds": 662.241417
+            },
+            "FSPersistence.autoCompact": {
+              "calls": 1,
+              "milliseconds": 49.742708
+            },
+            "FSPersistence.getRecords": {
+              "calls": 1,
+              "milliseconds": 19.453667
+            },
+            "FSPersistence.mutateRecords": {
+              "calls": 1,
+              "milliseconds": 712.062917
+            },
+            "FSPersistence.readManifest": {
+              "calls": 3,
+              "milliseconds": 0.487291
+            },
+            "FSPersistence.readRecordsSnapshot": {
+              "calls": 1,
+              "milliseconds": 19.448042
+            },
+            "FSPersistence.readShard": {
+              "calls": 512,
+              "milliseconds": 0.161209
+            },
+            "FSPersistence.writePages": {
+              "calls": 1,
+              "milliseconds": 69.82625
+            }
+          }
+        }
+      ]
+    },
+    {
+      "operation": "point-read",
+      "runs": [
+        {
+          "sample": 0,
+          "milliseconds": 0.792375,
+          "methods": {
+            "Fs.loadJSON": {
+              "calls": 3,
+              "milliseconds": 0.280417
+            },
+            "FSPersistence.getRecords": {
+              "calls": 1,
+              "milliseconds": 0.33975
+            },
+            "FSPersistence.readManifest": {
+              "calls": 1,
+              "milliseconds": 0.089083
+            },
+            "FSPersistence.readRecordsSnapshot": {
+              "calls": 1,
+              "milliseconds": 0.336709
+            },
+            "FSPersistence.readShard": {
+              "calls": 1,
+              "milliseconds": 0.077333
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "milliseconds": 0.470667,
+          "methods": {
+            "Fs.loadJSON": {
+              "calls": 3,
+              "milliseconds": 0.3095
+            },
+            "FSPersistence.getRecords": {
+              "calls": 1,
+              "milliseconds": 0.394417
+            },
+            "FSPersistence.readManifest": {
+              "calls": 1,
+              "milliseconds": 0.108666
+            },
+            "FSPersistence.readRecordsSnapshot": {
+              "calls": 1,
+              "milliseconds": 0.391459
+            },
+            "FSPersistence.readShard": {
+              "calls": 1,
+              "milliseconds": 0.064166
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "milliseconds": 1.374291,
+          "methods": {
+            "Fs.loadJSON": {
+              "calls": 3,
+              "milliseconds": 1.220416
+            },
+            "FSPersistence.getRecords": {
+              "calls": 1,
+              "milliseconds": 1.247083
+            },
+            "FSPersistence.readManifest": {
+              "calls": 1,
+              "milliseconds": 0.427875
+            },
+            "FSPersistence.readRecordsSnapshot": {
+              "calls": 1,
+              "milliseconds": 1.235584
+            },
+            "FSPersistence.readShard": {
+              "calls": 1,
+              "milliseconds": 0.284708
+            }
+          }
+        }
+      ]
+    },
+    {
+      "operation": "point-update",
+      "runs": [
+        {
+          "sample": 0,
+          "milliseconds": 25.103875,
+          "methods": {
+            "Fs.exists": {
+              "calls": 3,
+              "milliseconds": 0.053668
+            },
+            "Fs.fileSize": {
+              "calls": 2,
+              "milliseconds": 0.017958
+            },
+            "Fs.loadJSON": {
+              "calls": 5,
+              "milliseconds": 0.439667
+            },
+            "Fs.replaceFile": {
+              "calls": 3,
+              "milliseconds": 23.972499
+            },
+            "Fs.syncContainingDirectory": {
+              "calls": 3,
+              "milliseconds": 11.325209
+            },
+            "Fs.writeJSON": {
+              "calls": 3,
+              "milliseconds": 24.091
+            },
+            "FSPersistence.applyMutation": {
+              "calls": 1,
+              "milliseconds": 24.375916
+            },
+            "FSPersistence.autoCompact": {
+              "calls": 1,
+              "milliseconds": 0.001792
+            },
+            "FSPersistence.getRecords": {
+              "calls": 1,
+              "milliseconds": 0.314792
+            },
+            "FSPersistence.mutateRecords": {
+              "calls": 1,
+              "milliseconds": 24.462666
+            },
+            "FSPersistence.readManifest": {
+              "calls": 2,
+              "milliseconds": 0.184666
+            },
+            "FSPersistence.readRecordsSnapshot": {
+              "calls": 1,
+              "milliseconds": 0.3125
+            },
+            "FSPersistence.readShard": {
+              "calls": 2,
+              "milliseconds": 0.127749
+            },
+            "FSPersistence.writePages": {
+              "calls": 1,
+              "milliseconds": 8.222625
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "milliseconds": 25.013084,
+          "methods": {
+            "Fs.exists": {
+              "calls": 3,
+              "milliseconds": 0.044542
+            },
+            "Fs.fileSize": {
+              "calls": 2,
+              "milliseconds": 0.027749
+            },
+            "Fs.loadJSON": {
+              "calls": 5,
+              "milliseconds": 0.487124
+            },
+            "Fs.replaceFile": {
+              "calls": 3,
+              "milliseconds": 24.112124
+            },
+            "Fs.syncContainingDirectory": {
+              "calls": 3,
+              "milliseconds": 11.755874
+            },
+            "Fs.writeJSON": {
+              "calls": 3,
+              "milliseconds": 24.223417
+            },
+            "FSPersistence.applyMutation": {
+              "calls": 1,
+              "milliseconds": 24.462334
+            },
+            "FSPersistence.autoCompact": {
+              "calls": 1,
+              "milliseconds": 0.003292
+            },
+            "FSPersistence.getRecords": {
+              "calls": 1,
+              "milliseconds": 0.372291
+            },
+            "FSPersistence.mutateRecords": {
+              "calls": 1,
+              "milliseconds": 24.555334
+            },
+            "FSPersistence.readManifest": {
+              "calls": 2,
+              "milliseconds": 0.176957
+            },
+            "FSPersistence.readRecordsSnapshot": {
+              "calls": 1,
+              "milliseconds": 0.370209
+            },
+            "FSPersistence.readShard": {
+              "calls": 2,
+              "milliseconds": 0.180625
+            },
+            "FSPersistence.writePages": {
+              "calls": 1,
+              "milliseconds": 8.1705
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "milliseconds": 24.4475,
+          "methods": {
+            "Fs.exists": {
+              "calls": 3,
+              "milliseconds": 0.072124
+            },
+            "Fs.fileSize": {
+              "calls": 2,
+              "milliseconds": 0.018749
+            },
+            "Fs.loadJSON": {
+              "calls": 5,
+              "milliseconds": 0.462626
+            },
+            "Fs.replaceFile": {
+              "calls": 3,
+              "milliseconds": 23.511915
+            },
+            "Fs.syncContainingDirectory": {
+              "calls": 3,
+              "milliseconds": 11.836999
+            },
+            "Fs.writeJSON": {
+              "calls": 3,
+              "milliseconds": 23.670084
+            },
+            "FSPersistence.applyMutation": {
+              "calls": 1,
+              "milliseconds": 23.911125
+            },
+            "FSPersistence.autoCompact": {
+              "calls": 1,
+              "milliseconds": 0.001625
+            },
+            "FSPersistence.getRecords": {
+              "calls": 1,
+              "milliseconds": 0.319416
+            },
+            "FSPersistence.mutateRecords": {
+              "calls": 1,
+              "milliseconds": 24.008083
+            },
+            "FSPersistence.readManifest": {
+              "calls": 2,
+              "milliseconds": 0.184375
+            },
+            "FSPersistence.readRecordsSnapshot": {
+              "calls": 1,
+              "milliseconds": 0.317291
+            },
+            "FSPersistence.readShard": {
+              "calls": 2,
+              "milliseconds": 0.147959
+            },
+            "FSPersistence.writePages": {
+              "calls": 1,
+              "milliseconds": 7.834208
+            }
+          }
+        }
+      ]
+    },
+    {
+      "operation": "point-delete",
+      "runs": [
+        {
+          "sample": 0,
+          "milliseconds": 16.70225,
+          "methods": {
+            "Fs.exists": {
+              "calls": 2,
+              "milliseconds": 0.026334
+            },
+            "Fs.fileSize": {
+              "calls": 2,
+              "milliseconds": 0.016458
+            },
+            "Fs.loadJSON": {
+              "calls": 5,
+              "milliseconds": 0.36171
+            },
+            "Fs.replaceFile": {
+              "calls": 2,
+              "milliseconds": 15.894167
+            },
+            "Fs.syncContainingDirectory": {
+              "calls": 2,
+              "milliseconds": 7.976625
+            },
+            "Fs.writeJSON": {
+              "calls": 2,
+              "milliseconds": 15.969292
+            },
+            "FSPersistence.applyMutation": {
+              "calls": 1,
+              "milliseconds": 16.209708
+            },
+            "FSPersistence.autoCompact": {
+              "calls": 1,
+              "milliseconds": 0.001333
+            },
+            "FSPersistence.getRecords": {
+              "calls": 1,
+              "milliseconds": 0.254833
+            },
+            "FSPersistence.mutateRecords": {
+              "calls": 1,
+              "milliseconds": 16.281084
+            },
+            "FSPersistence.readManifest": {
+              "calls": 2,
+              "milliseconds": 0.143792
+            },
+            "FSPersistence.readRecordsSnapshot": {
+              "calls": 1,
+              "milliseconds": 0.2525
+            },
+            "FSPersistence.readShard": {
+              "calls": 2,
+              "milliseconds": 0.113
+            },
+            "FSPersistence.writePages": {
+              "calls": 1,
+              "milliseconds": 0.025292
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "milliseconds": 16.663958,
+          "methods": {
+            "Fs.exists": {
+              "calls": 2,
+              "milliseconds": 0.032749
+            },
+            "Fs.fileSize": {
+              "calls": 2,
+              "milliseconds": 0.026166
+            },
+            "Fs.loadJSON": {
+              "calls": 5,
+              "milliseconds": 0.502166
+            },
+            "Fs.replaceFile": {
+              "calls": 2,
+              "milliseconds": 15.731958
+            },
+            "Fs.syncContainingDirectory": {
+              "calls": 2,
+              "milliseconds": 7.434708
+            },
+            "Fs.writeJSON": {
+              "calls": 2,
+              "milliseconds": 15.823249
+            },
+            "FSPersistence.applyMutation": {
+              "calls": 1,
+              "milliseconds": 16.089375
+            },
+            "FSPersistence.autoCompact": {
+              "calls": 1,
+              "milliseconds": 0.000875
+            },
+            "FSPersistence.getRecords": {
+              "calls": 1,
+              "milliseconds": 0.358833
+            },
+            "FSPersistence.mutateRecords": {
+              "calls": 1,
+              "milliseconds": 16.190625
+            },
+            "FSPersistence.readManifest": {
+              "calls": 2,
+              "milliseconds": 0.205624
+            },
+            "FSPersistence.readRecordsSnapshot": {
+              "calls": 1,
+              "milliseconds": 0.355167
+            },
+            "FSPersistence.readShard": {
+              "calls": 2,
+              "milliseconds": 0.149958
+            },
+            "FSPersistence.writePages": {
+              "calls": 1,
+              "milliseconds": 0.003791
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "milliseconds": 16.5785,
+          "methods": {
+            "Fs.exists": {
+              "calls": 2,
+              "milliseconds": 0.094417
+            },
+            "Fs.fileSize": {
+              "calls": 2,
+              "milliseconds": 0.038666
+            },
+            "Fs.loadJSON": {
+              "calls": 5,
+              "milliseconds": 0.443374
+            },
+            "Fs.replaceFile": {
+              "calls": 2,
+              "milliseconds": 15.582251
+            },
+            "Fs.syncContainingDirectory": {
+              "calls": 2,
+              "milliseconds": 7.548209
+            },
+            "Fs.writeJSON": {
+              "calls": 2,
+              "milliseconds": 15.766083
+            },
+            "FSPersistence.applyMutation": {
+              "calls": 1,
+              "milliseconds": 16.090458
+            },
+            "FSPersistence.autoCompact": {
+              "calls": 1,
+              "milliseconds": 0.002083
+            },
+            "FSPersistence.getRecords": {
+              "calls": 1,
+              "milliseconds": 0.316292
+            },
+            "FSPersistence.mutateRecords": {
+              "calls": 1,
+              "milliseconds": 16.168291
+            },
+            "FSPersistence.readManifest": {
+              "calls": 2,
+              "milliseconds": 0.179167
+            },
+            "FSPersistence.readRecordsSnapshot": {
+              "calls": 1,
+              "milliseconds": 0.313625
+            },
+            "FSPersistence.readShard": {
+              "calls": 2,
+              "milliseconds": 0.132958
+            },
+            "FSPersistence.writePages": {
+              "calls": 1,
+              "milliseconds": 0.05125
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
