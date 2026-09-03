@@ -66,6 +66,18 @@ The median bulk insert took 732.6 ms and invoked 280 atomic file replacements, 2
 
 This identifies durable file fan-out as the next hypothesis to test. The next filesystem prototype should use a sequential segment/batch write and one atomic commit boundary, then rebuild or checkpoint its in-memory locator without publishing hundreds of independently synced shard files. The gate is end-to-end CRUD, recovery and compaction performance—not fewer calls alone. Durability must remain unchanged unless a separately named durability mode is deliberately introduced.
 
+### Append-segment prototype: promising, not accepted
+
+The experimental `segment-adapter.js` frames mutations in one append and makes them visible only after a commit marker included in the same synced write. Recovery applies only committed frames and truncates an incomplete or uncommitted tail. Large batches additionally publish an atomic locator checkpoint. It is injected only into fresh benchmark processes; production does not use it.
+
+At 10,000 records, the latest checkpointed run measured bulk insert at 37.2 ms versus 701–712 ms for the current adapter, point update at 4.3 ms versus 25–26 ms, point delete at 4.1 ms versus 17–18 ms, and point read at 0.35 ms versus 0.70–0.80 ms. In the expanded filesystem workload, a bounded 1 MiB chunk reader measured full reads at 5.1 ms versus 18.2 ms and filtered reads at 6.1 ms versus 19.2 ms.
+
+The initial prototype deliberately remains in the evidence set: opening the file once per record made scans roughly 353 ms. Sharing one file handle reduced them to roughly 85 ms; bounded chunk reads then reduced them to roughly 5–6 ms. These rejected intermediate results demonstrate why point-only measurements are insufficient.
+
+The checkpointed prototype still fails the no-regression gate: reopen plus point read is 2.3 ms versus 0.43 ms for the current adapter. It also lacks production compaction, multi-process writer coordination, checksummed corruption detection and exhaustive interruption coverage. Do not integrate it yet. The next hypothesis is a lazily read, internally sharded locator checkpoint stored as one atomically published file: point reopen should parse one small locator region, while bulk checkpoint publication retains one durability boundary.
+
+Raw evidence is retained in `fs-segment-prototype-2026-09-03.json`, `fs-mixed-segment-2026-09-03.json`, `fs-mixed-segment-shared-reader-2026-09-03.json`, `fs-mixed-segment-chunked-reader-2026-09-03.json`, `fs-segment-checkpointed-2026-09-03.json`, and `fs-mixed-segment-checkpointed-2026-09-03.json`, alongside the newly captured baseline. These files represent successive implementations and must not be pooled as if they were repetitions of one candidate.
+
 ## Method and limits
 
 - Node 24.20.0, Apple M5 arm64, macOS. See `environment.json` for source hashes and process order.
