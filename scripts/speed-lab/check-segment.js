@@ -3,7 +3,10 @@ const fs = require('fs').promises;
 const os = require('os');
 const path = require('path');
 
-require('../../packages/core/dist/modules/persistence/fs/fs-persistence').default = require('./segment-adapter');
+const candidate = process.argv[2] || 'segment';
+require('../../packages/core/dist/modules/persistence/fs/fs-persistence').default = require(
+  candidate === 'embedded' ? './embedded-segment-adapter' : './segment-adapter',
+);
 const { Cama, PersistenceAdapterEnum } = require('../../packages/core/dist');
 
 (async () => {
@@ -21,7 +24,7 @@ const { Cama, PersistenceAdapterEnum } = require('../../packages/core/dist');
     assert.equal((await recovered.findMany({ _id: '501' })).count, 0);
     assert.equal(await recovered.count(), 999);
 
-    const segment = path.join(root, 'records', 'records.segment');
+    const segment = path.join(root, 'records', candidate === 'embedded' ? 'records.embedded-segment' : 'records.segment');
     const committedSize = (await fs.stat(segment)).size;
     const incomplete = Buffer.alloc(12);
     incomplete.writeUInt32BE(1_000, 0);
@@ -29,6 +32,19 @@ const { Cama, PersistenceAdapterEnum } = require('../../packages/core/dist');
     const afterInterruption = await open();
     assert.equal(await afterInterruption.count(), 999);
     assert.equal((await fs.stat(segment)).size, committedSize);
-    process.stdout.write('Segment recovery, update, delete and incomplete-tail truncation passed.\n');
+
+    if (candidate === 'embedded') {
+      const corruptTrailer = Buffer.alloc(24);
+      Buffer.from('CAMATRL1').copy(corruptTrailer);
+      corruptTrailer.writeBigUInt64BE(BigInt(committedSize), 8);
+      corruptTrailer.writeUInt32BE(64, 16);
+      corruptTrailer.writeUInt32BE(0xdeadbeef, 20);
+      await fs.appendFile(segment, corruptTrailer);
+      const afterCorruptTrailer = await open();
+      assert.equal(await afterCorruptTrailer.count(), 999);
+      assert.equal((await fs.stat(segment)).size, committedSize);
+    }
+
+    process.stdout.write('Segment recovery, update, delete and invalid-tail truncation passed.\n');
   } finally { await fs.rm(root, { recursive: true, force: true }); }
 })().catch((error) => { console.error(error); process.exitCode = 1; });

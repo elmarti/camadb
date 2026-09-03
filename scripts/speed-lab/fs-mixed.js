@@ -5,7 +5,8 @@ const os = require('os');
 const path = require('path');
 const candidate = process.argv[2];
 if (candidate === 'segment') require('../../packages/core/dist/modules/persistence/fs/fs-persistence').default = require('./segment-adapter');
-else if (candidate !== 'baseline') throw new Error('Expected baseline or segment');
+else if (candidate === 'embedded') require('../../packages/core/dist/modules/persistence/fs/fs-persistence').default = require('./embedded-segment-adapter');
+else if (candidate !== 'baseline') throw new Error('Expected baseline, segment or embedded');
 const { Cama, PersistenceAdapterEnum } = require('../../packages/core/dist');
 
 (async () => {

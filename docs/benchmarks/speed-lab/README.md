@@ -88,6 +88,49 @@ Bulk insert measured 42.8 ms. That is much faster than the current V3 adapter's 
 
 The lazy results are retained in `fs-segment-lazy-locator-2026-09-03.json`, `fs-segment-lazy-locator-optimized-2026-09-03.json`, and the `fs-mixed-lazy-*` reports. The first file precedes the empty-collection and shared-checkpoint-handle optimisations; do not pool it with the later seven-sample runs.
 
+#### Embedded checkpoint and commit trailer result
+
+The subsequent prototype stores record frames, internally sharded locator data,
+checksummed commit metadata, and a fixed trailer in one append followed by one
+file sync. A commit is visible only when its complete trailer and referenced
+footer validate. Recovery falls back to the preceding valid trailer and
+truncates incomplete or corrupt tails. This remains an injected experiment;
+production storage is unchanged.
+
+At 10,000 records, the original public-API workload measured bulk insert at
+30.4 ms. That is faster than both the current V3 record-page adapter's 701–712
+ms and the retained older whole-collection baseline's 33.8 ms. Point read was
+0.34 ms, point update 4.1 ms, and point delete 4.2 ms, compared with roughly
+0.70–0.80 ms, 25–26 ms, and 17–18 ms respectively for the current adapter.
+The segment occupied 1.49 MB versus 1.84 MB for the current adapter after the
+same workload.
+
+Eleven-sample mixed-workload runs were repeated in reversed order after
+removing a redundant recovery-time file open. Candidate medians were:
+
+| Operation | Embedded, runs 1 / 2 | Current adapter, runs 1 / 2 |
+| --- | ---: | ---: |
+| Point read | 0.056 / 0.053 ms | 0.213 / 0.215 ms |
+| Count all | 7.25 / 7.20 ms | 17.73 / 17.66 ms |
+| Read all | 6.15 / 6.28 ms | 17.61 / 17.54 ms |
+| Filtered read | 7.53 / 7.37 ms | 18.55 / 18.48 ms |
+| Reopen and point read | 0.398 / 0.399 ms | 0.414 / 0.410 ms |
+
+The candidate now clears the measured historical and current speed gates for
+these workloads. The retained recovery check covers updates, deletes, reopening,
+an incomplete tail, and a complete-looking trailer with invalid metadata.
+Clearing the experiment gate is not production acceptance: compaction and
+accurate reclaimable-byte accounting, multi-process writer coordination,
+broader fault injection, and integration with the production adapter contract
+remain outstanding. Those must be implemented without discarding the raw
+experiment or weakening durability.
+
+Raw results are retained in
+`fs-segment-embedded-checkpoint-2026-09-03.json`, the `fs-mixed-embedded-*`
+seven-sample reports, and the `fs-mixed-embedded-open-*` eleven-sample reports.
+The pre-optimisation reports remain intentionally present so the reopen decision
+can be audited rather than inferred only from the final favourable run.
+
 ## Method and limits
 
 - Node 24.20.0, Apple M5 arm64, macOS. See `environment.json` for source hashes and process order.
