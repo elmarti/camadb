@@ -10,15 +10,25 @@ The compatibility adapters currently serialize a collection as one payload. A po
 
 ## Decision
 
-CamaDB 3 will use immutable, bounded pages of records plus a small atomically replaced manifest. The adapter contract will expose record and page operations; collection-level filtering remains above that boundary and consumes records incrementally.
+CamaDB 3 adapters expose bounded record operations; collection-level filtering
+remains above that boundary and consumes records incrementally. Browser adapters
+use their native bounded records/transactions. The filesystem layout uses the
+append-segment amendment below.
 
 ### Identity and layout
 
-The document `_id` is the stable logical record identity. A small root manifest selects copy-on-write locator shards; a stable hash chooses the shard containing the `_id` to physical page, generation, and slot mapping. Pages are limited to 512 records and 1 MiB. A record larger than one page fails before publication.
+The document `_id` is the stable logical record identity. Physical lookup is
+runtime-specific, but uses a stable hash where a sharded locator is required.
+Mutation batches are limited to 10,000 records and an individual record to 1
+MiB. Browser layouts may group records into pages of at most 512 records.
 
 ### Atomic commit boundary
 
-A mutation batch is the public atomic boundary. Writers create immutable replacement pages, persist them, and then atomically publish a new manifest generation. Readers use either the previous or new generation and never a mixture. Filesystem adapters use adjacent temporary files, file and directory sync, and rename. IndexedDB publishes pages and the manifest in one bounded read-write transaction. Orphaned unpublished pages are safe to reclaim.
+A mutation batch is the public atomic boundary. Readers use either the previous
+or new generation and never a mixture. IndexedDB publishes records and metadata
+in one bounded read-write transaction. localStorage publishes generation-keyed
+values before its manifest. The filesystem commit protocol is specified in the
+amendment below.
 
 ### Index hooks
 
@@ -26,7 +36,11 @@ Each committed batch emits an internal change set containing inserted, replaced,
 
 ### Deletion and compaction
 
-Deletes append tombstones to the active generation; they do not rewrite unaffected pages. Compaction copies live records into new pages and publishes them as a new generation. It is resumable, copy-on-write, and safe to abandon before manifest publication. Old pages and tombstones are reclaimed only after the replacement generation is durable and no reader holds it.
+Deletes leave recoverable obsolete data or tombstones; they do not rewrite
+unaffected records. Compaction copies live records into a new physical
+generation. It is copy-on-write and safe to abandon before publication. Old
+storage is reclaimed only after the replacement is durable and no reader holds
+it.
 
 ### Streaming and bulk bounds
 
@@ -47,3 +61,37 @@ The manifest carries a CamaDB storage-format discriminator and version independe
 - Atomicity is defined per bounded batch, not for an unbounded import.
 - Adapters need common recovery, compaction, and change-set conformance tests.
 - Benchmark workloads from #11 remain unchanged and become the acceptance comparison for #83 and #53.
+
+## Filesystem amendment: checksummed append segment
+
+The initial immutable-page filesystem implementation met the bounded-I/O goal,
+but the unchanged benchmark exposed a durability fan-out problem: a 10,000-row
+insert published and synced roughly 280 files. It measured 701–712 ms, more than
+20 times slower than the retained whole-collection baseline. That implementation
+is therefore superseded for filesystem persistence, while IndexedDB and
+localStorage retain their runtime-specific layouts.
+
+The filesystem stores mutation frames, an optional internally sharded locator
+checkpoint, commit metadata, and a fixed checksummed trailer in one sequential
+segment. A mutation batch is appended and synced once. Readers only accept a
+transaction whose trailer and referenced metadata validate; a torn or corrupt
+tail is truncated back to the last valid trailer. Point lookup reads the footer,
+one locator region, and one record frame. Scans use bounded chunks rather than
+opening the file for every row or hydrating it in one read.
+
+Large batches create locator checkpoints. Smaller committed tails are replayed
+over the checkpoint on open, with periodic checkpoints bounding replay work.
+Compaction writes a complete replacement segment, syncs it, atomically renames
+it, and syncs the containing directory. The previous inode remains available to
+already-open snapshot readers; physical replacement is deferred while a reader
+is pinned on platforms where that guarantee cannot be maintained.
+
+This amendment was selected only after reversed-order benchmarks cleared both
+the current record-page adapter and the historical whole-collection bulk gate.
+The prototype measured a 10,000-row bulk insert at 30.4 ms, point operations at
+0.34–4.2 ms, and mixed scans at 6.2–7.5 ms. The raw samples and rejected
+intermediate layouts remain under `docs/benchmarks/speed-lab`.
+
+The segment is format version 3, not a reinterpretation of a 2.x payload.
+Detection remains non-mutating. Any conversion is an explicit migration that
+writes and validates separate version-3 storage before caller-approved use.
