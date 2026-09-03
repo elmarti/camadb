@@ -10,6 +10,10 @@ interface TestDocument {
   value: string;
 }
 
+// Real durable writes and compaction can exceed Jest's default on shared CI disks.
+// This is a correctness-test deadline, not a performance benchmark threshold.
+const DURABLE_COMPACTION_TIMEOUT_MS = 30_000;
+
 describe('filesystem record persistence', () => {
   let databasePath: string;
 
@@ -39,7 +43,7 @@ describe('filesystem record persistence', () => {
     await expect(collection.findMany({ _id: '600' })).resolves.toMatchObject({
       rows: [{ _id: '600', value: 'updated' }],
     });
-  });
+  }, DURABLE_COMPACTION_TIMEOUT_MS);
 
   it('keeps the previous generation readable when manifest publication is interrupted', async () => {
     const collection = await createCollection();
@@ -98,7 +102,7 @@ describe('filesystem record persistence', () => {
     await iterator.return?.();
     await collection.compact();
     expect((await collection.storageStats()).reclaimableBytes).toBe(0);
-  });
+  }, DURABLE_COMPACTION_TIMEOUT_MS);
 
   it('does not report a committed mutation as failed when automatic cleanup fails', async () => {
     const database = new Cama({
@@ -136,5 +140,5 @@ describe('filesystem record persistence', () => {
     await collection.compact();
     expect(await collection.count()).toBe(10_001);
     expect((await collection.storageStats()).reclaimableBytes).toBe(0);
-  }, 30_000);
+  }, DURABLE_COMPACTION_TIMEOUT_MS);
 });
