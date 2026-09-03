@@ -37,4 +37,27 @@ describe('InmemoryPersistence', () => {
     await expect(adapter.getData()).rejects.toThrow('Collection has been destroyed');
     await expect(adapter.update([])).rejects.toThrow('Collection has been destroyed');
   });
+
+  it('gets zero, one, missing, and multiple records by id', async () => {
+    const rows = [
+      { _id: 'first', name: 'John' },
+      { _id: 'second', name: 'Jane' },
+    ];
+    await adapter.insert(rows);
+
+    await expect(adapter.getRecords?.([])).resolves.toEqual(new Map());
+    await expect(adapter.getRecords?.(['first'])).resolves.toEqual(new Map([['first', rows[0]]]));
+    await expect(adapter.getRecords?.(['missing'])).resolves.toEqual(new Map());
+    await expect(adapter.getRecords?.(['second', 'first'])).resolves.toEqual(
+      new Map([
+        ['first', rows[0]],
+        ['second', rows[1]],
+      ]),
+    );
+  });
+
+  it('rejects record lookup after destruction', async () => {
+    await adapter.destroy();
+    await expect(adapter.getRecords?.(['record'])).rejects.toThrow('Collection has been destroyed');
+  });
 });

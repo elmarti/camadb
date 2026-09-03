@@ -51,6 +51,12 @@ export default class InmemoryPersistence implements IPersistenceAdapter {
   }
 
   async getRecords(ids: string[]): Promise<Map<string, any>> {
+    this.checkDestroyed();
+    if (ids.length === 0) return new Map();
+    if (ids.length === 1) {
+      const row = await this.getRecord(ids[0]);
+      return row === undefined ? new Map() : new Map([[ids[0], row]]);
+    }
     const wanted = new Set(ids);
     return new Map(
       this.cache.filter((row: { _id?: string }) => wanted.has(row._id ?? '')).map((row: any) => [row._id, row]),
