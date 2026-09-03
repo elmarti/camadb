@@ -78,6 +78,16 @@ The checkpointed prototype still fails the no-regression gate: reopen plus point
 
 Raw evidence is retained in `fs-segment-prototype-2026-09-03.json`, `fs-mixed-segment-2026-09-03.json`, `fs-mixed-segment-shared-reader-2026-09-03.json`, `fs-mixed-segment-chunked-reader-2026-09-03.json`, `fs-segment-checkpointed-2026-09-03.json`, and `fs-mixed-segment-checkpointed-2026-09-03.json`, alongside the newly captured baseline. These files represent successive implementations and must not be pooled as if they were repetitions of one candidate.
 
+#### Lazy single-file locator result
+
+The next prototype stores 256 internal locator regions in one atomically published checkpoint file. Reopen reads only its footer and the one region needed by a point lookup; scans share one checkpoint handle and retain the bounded 1 MiB segment reader. Seven-sample runs were repeated in reversed candidate order.
+
+At 10,000 records, reopen plus point read measured 0.442 ms versus 0.441 ms when the candidate ran first, and 0.421 ms versus 0.411 ms when it ran second. These differences are below the experiment's material-regression threshold and should be treated as a tie, not a speed claim. Point reads remained approximately four times faster, while full reads, filtered reads and counts remained approximately two to three times faster.
+
+Bulk insert measured 42.8 ms. That is much faster than the current V3 adapter's 701–712 ms, but still slower than the older whole-collection baseline of 33.8 ms. The candidate therefore still fails the stricter historical speed gate. The likely remaining cost is two durability barriers: one synced segment append followed by a separately synced and renamed checkpoint. The next prototype should embed the checkpoint and a fixed, checksummed commit trailer into the same append so a batch has one durability boundary. Recovery must find the last valid trailer after an interrupted append and replay only the committed tail.
+
+The lazy results are retained in `fs-segment-lazy-locator-2026-09-03.json`, `fs-segment-lazy-locator-optimized-2026-09-03.json`, and the `fs-mixed-lazy-*` reports. The first file precedes the empty-collection and shared-checkpoint-handle optimisations; do not pool it with the later seven-sample runs.
+
 ## Method and limits
 
 - Node 24.20.0, Apple M5 arm64, macOS. See `environment.json` for source hashes and process order.
