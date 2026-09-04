@@ -131,6 +131,30 @@ seven-sample reports, and the `fs-mixed-embedded-open-*` eleven-sample reports.
 The pre-optimisation reports remain intentionally present so the reopen decision
 can be audited rather than inferred only from the final favourable run.
 
+#### Production integration
+
+The checksummed segment is now the production filesystem implementation. The
+integration adds format-3 discrimination, non-mutating detection of legacy and
+superseded page stores, bounded backward recovery scanning, one-record replay
+allocation, periodic locator checkpoints, cross-handle revision invalidation,
+snapshot-reader pinning, serialized writers, automatic reclamation accounting,
+and a bounded-record replacement compactor. The compactor still holds locator
+metadata proportional to collection size; it does not hold all document bodies.
+
+The first production run retained below exposed a small reopen regression caused
+by reopening and restating an already-existing segment. That path was removed,
+then both implementations were rerun in reversed order. At 10,000 records, the
+final production medians were 31.4/30.7 ms for bulk insert versus 774.7/708.8 ms
+for the superseded page adapter. Point read, update, delete, scans, counts, and
+reopen-plus-point-read all improved in both run orders. Bulk insertion also
+remained faster than the retained 33.8 ms whole-collection result.
+
+The production reports use the `fs-production-*` and
+`fs-mixed-production-*` prefixes. Preliminary production reports are retained
+to show the optimization step; the `final` reports are the reversed-order
+acceptance comparison. The old page implementation is retained only as a
+benchmark comparator and is not the exported adapter.
+
 ## Method and limits
 
 - Node 24.20.0, Apple M5 arm64, macOS. See `environment.json` for source hashes and process order.

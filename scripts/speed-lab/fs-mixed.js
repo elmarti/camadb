@@ -6,7 +6,8 @@ const path = require('path');
 const candidate = process.argv[2];
 if (candidate === 'segment') require('../../packages/core/dist/modules/persistence/fs/fs-persistence').default = require('./segment-adapter');
 else if (candidate === 'embedded') require('../../packages/core/dist/modules/persistence/fs/fs-persistence').default = require('./embedded-segment-adapter');
-else if (candidate !== 'baseline') throw new Error('Expected baseline, segment or embedded');
+else if (candidate === 'record-pages') require('../../packages/core/dist/modules/persistence/fs/fs-persistence').default = require('./record-page-adapter').default;
+else if (candidate !== 'baseline') throw new Error('Expected baseline, record-pages, segment or embedded');
 const { Cama, PersistenceAdapterEnum } = require('../../packages/core/dist');
 
 (async () => {

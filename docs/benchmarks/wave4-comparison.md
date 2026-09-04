@@ -1,5 +1,31 @@
 # Wave 4: measured storage and remaining limits
 
+## Filesystem follow-up: append-segment integration
+
+The immutable-page filesystem results below are retained because they explain
+why #83 was reopened. The production filesystem adapter now uses the
+benchmark-selected checksummed append segment. Fresh five-sample runs at 10,000
+records, repeated in reversed implementation order, measured:
+
+| Operation | Append segment, runs 1 / 2 | Superseded pages, runs 1 / 2 |
+| --- | ---: | ---: |
+| Bulk insert | 31.4 / 30.7 ms | 774.7 / 708.8 ms |
+| Point read | 0.519 / 0.395 ms | 0.888 / 0.761 ms |
+| Point update | 4.60 / 4.23 ms | 25.52 / 25.59 ms |
+| Point delete | 3.89 / 3.82 ms | 19.03 / 17.61 ms |
+
+The append segment also beats the original 33.8 ms whole-collection bulk
+baseline in both run orders. Eleven-sample mixed runs measured point reads at
+0.055–0.056 ms, full reads at 6.03–6.12 ms, filtered reads at 7.34–7.47 ms,
+and reopen plus point read at 0.380–0.399 ms. Every corresponding page-adapter
+median was slower: 0.215–0.217, 17.77–18.21, 18.66–19.01, and 0.423–0.456 ms.
+
+Raw reports are retained under `docs/benchmarks/speed-lab` with the
+`fs-production-final-*`, `fs-record-pages-*`, `fs-mixed-production-final-*`,
+and `fs-mixed-record-pages-*` prefixes. The remainder of this document is the
+historical Wave 4 report and must not be mistaken for the current filesystem
+implementation.
+
 ## Reproduction and scope
 
 The original storage harness (`packages/benchmarks/src/run.ts` and `config.ts`) is unchanged. The baseline was captured before #83/#53; the comparison uses `develop` commit `65dd30b`, after both implementations merged. Both reports use Node **24.20.0**, Apple **M5 arm64**, macOS, **24 GiB** RAM, the same small deterministic documents, sizes **100/1,000/10,000**, and **five repetitions**. These are separate runs on the same machine, not a controlled hardware laboratory or simultaneous A/B experiment.
