@@ -78,6 +78,83 @@ The checkpointed prototype still fails the no-regression gate: reopen plus point
 
 Raw evidence is retained in `fs-segment-prototype-2026-09-03.json`, `fs-mixed-segment-2026-09-03.json`, `fs-mixed-segment-shared-reader-2026-09-03.json`, `fs-mixed-segment-chunked-reader-2026-09-03.json`, `fs-segment-checkpointed-2026-09-03.json`, and `fs-mixed-segment-checkpointed-2026-09-03.json`, alongside the newly captured baseline. These files represent successive implementations and must not be pooled as if they were repetitions of one candidate.
 
+#### Lazy single-file locator result
+
+The next prototype stores 256 internal locator regions in one atomically published checkpoint file. Reopen reads only its footer and the one region needed by a point lookup; scans share one checkpoint handle and retain the bounded 1 MiB segment reader. Seven-sample runs were repeated in reversed candidate order.
+
+At 10,000 records, reopen plus point read measured 0.442 ms versus 0.441 ms when the candidate ran first, and 0.421 ms versus 0.411 ms when it ran second. These differences are below the experiment's material-regression threshold and should be treated as a tie, not a speed claim. Point reads remained approximately four times faster, while full reads, filtered reads and counts remained approximately two to three times faster.
+
+Bulk insert measured 42.8 ms. That is much faster than the current V3 adapter's 701–712 ms, but still slower than the older whole-collection baseline of 33.8 ms. The candidate therefore still fails the stricter historical speed gate. The likely remaining cost is two durability barriers: one synced segment append followed by a separately synced and renamed checkpoint. The next prototype should embed the checkpoint and a fixed, checksummed commit trailer into the same append so a batch has one durability boundary. Recovery must find the last valid trailer after an interrupted append and replay only the committed tail.
+
+The lazy results are retained in `fs-segment-lazy-locator-2026-09-03.json`, `fs-segment-lazy-locator-optimized-2026-09-03.json`, and the `fs-mixed-lazy-*` reports. The first file precedes the empty-collection and shared-checkpoint-handle optimisations; do not pool it with the later seven-sample runs.
+
+#### Embedded checkpoint and commit trailer result
+
+The subsequent prototype stores record frames, internally sharded locator data,
+checksummed commit metadata, and a fixed trailer in one append followed by one
+file sync. A commit is visible only when its complete trailer and referenced
+footer validate. Recovery falls back to the preceding valid trailer and
+truncates incomplete or corrupt tails. This remains an injected experiment;
+production storage is unchanged.
+
+At 10,000 records, the original public-API workload measured bulk insert at
+30.4 ms. That is faster than both the current V3 record-page adapter's 701–712
+ms and the retained older whole-collection baseline's 33.8 ms. Point read was
+0.34 ms, point update 4.1 ms, and point delete 4.2 ms, compared with roughly
+0.70–0.80 ms, 25–26 ms, and 17–18 ms respectively for the current adapter.
+The segment occupied 1.49 MB versus 1.84 MB for the current adapter after the
+same workload.
+
+Eleven-sample mixed-workload runs were repeated in reversed order after
+removing a redundant recovery-time file open. Candidate medians were:
+
+| Operation | Embedded, runs 1 / 2 | Current adapter, runs 1 / 2 |
+| --- | ---: | ---: |
+| Point read | 0.056 / 0.053 ms | 0.213 / 0.215 ms |
+| Count all | 7.25 / 7.20 ms | 17.73 / 17.66 ms |
+| Read all | 6.15 / 6.28 ms | 17.61 / 17.54 ms |
+| Filtered read | 7.53 / 7.37 ms | 18.55 / 18.48 ms |
+| Reopen and point read | 0.398 / 0.399 ms | 0.414 / 0.410 ms |
+
+The candidate now clears the measured historical and current speed gates for
+these workloads. The retained recovery check covers updates, deletes, reopening,
+an incomplete tail, and a complete-looking trailer with invalid metadata.
+Clearing the experiment gate is not production acceptance: compaction and
+accurate reclaimable-byte accounting, multi-process writer coordination,
+broader fault injection, and integration with the production adapter contract
+remain outstanding. Those must be implemented without discarding the raw
+experiment or weakening durability.
+
+Raw results are retained in
+`fs-segment-embedded-checkpoint-2026-09-03.json`, the `fs-mixed-embedded-*`
+seven-sample reports, and the `fs-mixed-embedded-open-*` eleven-sample reports.
+The pre-optimisation reports remain intentionally present so the reopen decision
+can be audited rather than inferred only from the final favourable run.
+
+#### Production integration
+
+The checksummed segment is now the production filesystem implementation. The
+integration adds format-3 discrimination, non-mutating detection of legacy and
+superseded page stores, bounded backward recovery scanning, one-record replay
+allocation, periodic locator checkpoints, cross-handle revision invalidation,
+snapshot-reader pinning, serialized writers, automatic reclamation accounting,
+and a bounded-record replacement compactor. The compactor still holds locator
+metadata proportional to collection size; it does not hold all document bodies.
+
+The first production run retained below exposed a small reopen regression caused
+by reopening and restating an already-existing segment. That path was removed,
+then both implementations were rerun in reversed order. At 10,000 records, the
+final production medians were 31.4/30.7 ms for bulk insert versus 774.7/708.8 ms
+for the superseded page adapter. Point read, update, delete, scans, counts, and
+reopen-plus-point-read all improved in both run orders. Bulk insertion also
+remained faster than the retained 33.8 ms whole-collection result.
+
+The production reports use the `fs-production-*` and
+`fs-mixed-production-*` prefixes. Preliminary production reports are retained
+to show the optimization step; the `final` reports are the reversed-order
+acceptance comparison. The old page implementation is retained only as a
+benchmark comparator and is not the exported adapter.
+
 ## Method and limits
 
 - Node 24.20.0, Apple M5 arm64, macOS. See `environment.json` for source hashes and process order.

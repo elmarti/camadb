@@ -1,0 +1,450 @@
+{
+  "candidate": "baseline",
+  "generatedAt": "2026-09-04T22:38:05.025Z",
+  "node": "v24.20.0",
+  "size": 10000,
+  "iterations": 11,
+  "samples": [
+    {
+      "operation": "point-read",
+      "iteration": 0,
+      "repetitions": 50,
+      "elapsedMs": 3.1452919999999978,
+      "perOperationMs": 0.06290583999999995,
+      "heapDeltaBytes": 1286008
+    },
+    {
+      "operation": "count-all",
+      "iteration": 0,
+      "repetitions": 5,
+      "elapsedMs": 37.26845800000001,
+      "perOperationMs": 7.453691600000002,
+      "heapDeltaBytes": 14841496
+    },
+    {
+      "operation": "read-all",
+      "iteration": 0,
+      "repetitions": 3,
+      "elapsedMs": 19.128792000000004,
+      "perOperationMs": 6.376264000000002,
+      "heapDeltaBytes": 7640744
+    },
+    {
+      "operation": "filtered-read",
+      "iteration": 0,
+      "repetitions": 3,
+      "elapsedMs": 21.268208000000016,
+      "perOperationMs": 7.089402666666672,
+      "heapDeltaBytes": 6517336
+    },
+    {
+      "operation": "reopen-and-point-read",
+      "iteration": 0,
+      "repetitions": 3,
+      "elapsedMs": 1.3713330000000212,
+      "perOperationMs": 0.4571110000000071,
+      "heapDeltaBytes": 382184
+    },
+    {
+      "operation": "point-read",
+      "iteration": 1,
+      "repetitions": 50,
+      "elapsedMs": 2.8412500000000023,
+      "perOperationMs": 0.05682500000000004,
+      "heapDeltaBytes": 1098576
+    },
+    {
+      "operation": "count-all",
+      "iteration": 1,
+      "repetitions": 5,
+      "elapsedMs": 36.16808400000002,
+      "perOperationMs": 7.2336168000000045,
+      "heapDeltaBytes": 7344120
+    },
+    {
+      "operation": "read-all",
+      "iteration": 1,
+      "repetitions": 3,
+      "elapsedMs": 17.194166000000052,
+      "perOperationMs": 5.7313886666666845,
+      "heapDeltaBytes": 7338568
+    },
+    {
+      "operation": "filtered-read",
+      "iteration": 1,
+      "repetitions": 3,
+      "elapsedMs": 22.458000000000027,
+      "perOperationMs": 7.486000000000009,
+      "heapDeltaBytes": 6468464
+    },
+    {
+      "operation": "reopen-and-point-read",
+      "iteration": 1,
+      "repetitions": 3,
+      "elapsedMs": 1.3134170000000154,
+      "perOperationMs": 0.4378056666666718,
+      "heapDeltaBytes": 365888
+    },
+    {
+      "operation": "point-read",
+      "iteration": 2,
+      "repetitions": 50,
+      "elapsedMs": 2.8061669999999594,
+      "perOperationMs": 0.05612333999999919,
+      "heapDeltaBytes": 1066600
+    },
+    {
+      "operation": "count-all",
+      "iteration": 2,
+      "repetitions": 5,
+      "elapsedMs": 38.093834000000015,
+      "perOperationMs": 7.618766800000003,
+      "heapDeltaBytes": 11441184
+    },
+    {
+      "operation": "read-all",
+      "iteration": 2,
+      "repetitions": 3,
+      "elapsedMs": 18.85683300000005,
+      "perOperationMs": 6.285611000000017,
+      "heapDeltaBytes": 10927848
+    },
+    {
+      "operation": "filtered-read",
+      "iteration": 2,
+      "repetitions": 3,
+      "elapsedMs": 21.578791999999964,
+      "perOperationMs": 7.192930666666655,
+      "heapDeltaBytes": 10340472
+    },
+    {
+      "operation": "reopen-and-point-read",
+      "iteration": 2,
+      "repetitions": 3,
+      "elapsedMs": 1.23924999999997,
+      "perOperationMs": 0.4130833333333233,
+      "heapDeltaBytes": 388176
+    },
+    {
+      "operation": "point-read",
+      "iteration": 3,
+      "repetitions": 50,
+      "elapsedMs": 2.762875000000008,
+      "perOperationMs": 0.05525750000000016,
+      "heapDeltaBytes": 1063320
+    },
+    {
+      "operation": "count-all",
+      "iteration": 3,
+      "repetitions": 5,
+      "elapsedMs": 36.607416,
+      "perOperationMs": 7.3214832,
+      "heapDeltaBytes": 11403672
+    },
+    {
+      "operation": "read-all",
+      "iteration": 3,
+      "repetitions": 3,
+      "elapsedMs": 16.717917000000057,
+      "perOperationMs": 5.572639000000019,
+      "heapDeltaBytes": 10783064
+    },
+    {
+      "operation": "filtered-read",
+      "iteration": 3,
+      "repetitions": 3,
+      "elapsedMs": 22.88074999999992,
+      "perOperationMs": 7.626916666666641,
+      "heapDeltaBytes": 10355800
+    },
+    {
+      "operation": "reopen-and-point-read",
+      "iteration": 3,
+      "repetitions": 3,
+      "elapsedMs": 1.1750419999999622,
+      "perOperationMs": 0.3916806666666541,
+      "heapDeltaBytes": 354584
+    },
+    {
+      "operation": "point-read",
+      "iteration": 4,
+      "repetitions": 50,
+      "elapsedMs": 2.7361660000000256,
+      "perOperationMs": 0.05472332000000051,
+      "heapDeltaBytes": 1068408
+    },
+    {
+      "operation": "count-all",
+      "iteration": 4,
+      "repetitions": 5,
+      "elapsedMs": 35.977250000000026,
+      "perOperationMs": 7.1954500000000055,
+      "heapDeltaBytes": 11403544
+    },
+    {
+      "operation": "read-all",
+      "iteration": 4,
+      "repetitions": 3,
+      "elapsedMs": 18.87295800000004,
+      "perOperationMs": 6.2909860000000135,
+      "heapDeltaBytes": 10927768
+    },
+    {
+      "operation": "filtered-read",
+      "iteration": 4,
+      "repetitions": 3,
+      "elapsedMs": 21.789334000000053,
+      "perOperationMs": 7.2631113333333515,
+      "heapDeltaBytes": 10337880
+    },
+    {
+      "operation": "reopen-and-point-read",
+      "iteration": 4,
+      "repetitions": 3,
+      "elapsedMs": 1.106457999999975,
+      "perOperationMs": 0.368819333333325,
+      "heapDeltaBytes": 352576
+    },
+    {
+      "operation": "point-read",
+      "iteration": 5,
+      "repetitions": 50,
+      "elapsedMs": 4.293083000000024,
+      "perOperationMs": 0.08586166000000048,
+      "heapDeltaBytes": 1070864
+    },
+    {
+      "operation": "count-all",
+      "iteration": 5,
+      "repetitions": 5,
+      "elapsedMs": 36.28091699999993,
+      "perOperationMs": 7.256183399999986,
+      "heapDeltaBytes": 11440832
+    },
+    {
+      "operation": "read-all",
+      "iteration": 5,
+      "repetitions": 3,
+      "elapsedMs": 16.779499999999985,
+      "perOperationMs": 5.5931666666666615,
+      "heapDeltaBytes": 10783064
+    },
+    {
+      "operation": "filtered-read",
+      "iteration": 5,
+      "repetitions": 3,
+      "elapsedMs": 23.083082999999988,
+      "perOperationMs": 7.694360999999996,
+      "heapDeltaBytes": 10357800
+    },
+    {
+      "operation": "reopen-and-point-read",
+      "iteration": 5,
+      "repetitions": 3,
+      "elapsedMs": 1.1970830000000205,
+      "perOperationMs": 0.3990276666666735,
+      "heapDeltaBytes": 352920
+    },
+    {
+      "operation": "point-read",
+      "iteration": 6,
+      "repetitions": 50,
+      "elapsedMs": 2.7308750000000828,
+      "perOperationMs": 0.05461750000000166,
+      "heapDeltaBytes": 1065248
+    },
+    {
+      "operation": "count-all",
+      "iteration": 6,
+      "repetitions": 5,
+      "elapsedMs": 36.08695899999998,
+      "perOperationMs": 7.217391799999996,
+      "heapDeltaBytes": 11438856
+    },
+    {
+      "operation": "read-all",
+      "iteration": 6,
+      "repetitions": 3,
+      "elapsedMs": 18.54058299999997,
+      "perOperationMs": 6.180194333333323,
+      "heapDeltaBytes": 10927800
+    },
+    {
+      "operation": "filtered-read",
+      "iteration": 6,
+      "repetitions": 3,
+      "elapsedMs": 22.008249999999975,
+      "perOperationMs": 7.336083333333325,
+      "heapDeltaBytes": 10339032
+    },
+    {
+      "operation": "reopen-and-point-read",
+      "iteration": 6,
+      "repetitions": 3,
+      "elapsedMs": 1.2381250000000819,
+      "perOperationMs": 0.4127083333333606,
+      "heapDeltaBytes": 352824
+    },
+    {
+      "operation": "point-read",
+      "iteration": 7,
+      "repetitions": 50,
+      "elapsedMs": 2.7780840000000353,
+      "perOperationMs": 0.0555616800000007,
+      "heapDeltaBytes": 1074520
+    },
+    {
+      "operation": "count-all",
+      "iteration": 7,
+      "repetitions": 5,
+      "elapsedMs": 35.45291599999996,
+      "perOperationMs": 7.090583199999992,
+      "heapDeltaBytes": 11388296
+    },
+    {
+      "operation": "read-all",
+      "iteration": 7,
+      "repetitions": 3,
+      "elapsedMs": 16.98599999999999,
+      "perOperationMs": 5.661999999999996,
+      "heapDeltaBytes": 10783064
+    },
+    {
+      "operation": "filtered-read",
+      "iteration": 7,
+      "repetitions": 3,
+      "elapsedMs": 22.949499999999944,
+      "perOperationMs": 7.649833333333315,
+      "heapDeltaBytes": 10350760
+    },
+    {
+      "operation": "reopen-and-point-read",
+      "iteration": 7,
+      "repetitions": 3,
+      "elapsedMs": 1.2542499999999563,
+      "perOperationMs": 0.41808333333331876,
+      "heapDeltaBytes": 351240
+    },
+    {
+      "operation": "point-read",
+      "iteration": 8,
+      "repetitions": 50,
+      "elapsedMs": 2.8002089999999953,
+      "perOperationMs": 0.056004179999999903,
+      "heapDeltaBytes": 784912
+    },
+    {
+      "operation": "count-all",
+      "iteration": 8,
+      "repetitions": 5,
+      "elapsedMs": 40.79508399999986,
+      "perOperationMs": 8.159016799999971,
+      "heapDeltaBytes": 4729032
+    },
+    {
+      "operation": "read-all",
+      "iteration": 8,
+      "repetitions": 3,
+      "elapsedMs": 18.705666000000065,
+      "perOperationMs": 6.235222000000022,
+      "heapDeltaBytes": 39639640
+    },
+    {
+      "operation": "filtered-read",
+      "iteration": 8,
+      "repetitions": 3,
+      "elapsedMs": 22.40970799999991,
+      "perOperationMs": 7.469902666666637,
+      "heapDeltaBytes": 39713984
+    },
+    {
+      "operation": "reopen-and-point-read",
+      "iteration": 8,
+      "repetitions": 3,
+      "elapsedMs": 1.147666000000072,
+      "perOperationMs": 0.38255533333335734,
+      "heapDeltaBytes": 352936
+    },
+    {
+      "operation": "point-read",
+      "iteration": 9,
+      "repetitions": 50,
+      "elapsedMs": 2.9807499999999436,
+      "perOperationMs": 0.05961499999999887,
+      "heapDeltaBytes": 1086600
+    },
+    {
+      "operation": "count-all",
+      "iteration": 9,
+      "repetitions": 5,
+      "elapsedMs": 37.169791999999916,
+      "perOperationMs": 7.433958399999983,
+      "heapDeltaBytes": 11533808
+    },
+    {
+      "operation": "read-all",
+      "iteration": 9,
+      "repetitions": 3,
+      "elapsedMs": 16.28766699999983,
+      "perOperationMs": 5.429222333333276,
+      "heapDeltaBytes": 39599320
+    },
+    {
+      "operation": "filtered-read",
+      "iteration": 9,
+      "repetitions": 3,
+      "elapsedMs": 22.69379099999992,
+      "perOperationMs": 7.564596999999973,
+      "heapDeltaBytes": 39728648
+    },
+    {
+      "operation": "reopen-and-point-read",
+      "iteration": 9,
+      "repetitions": 3,
+      "elapsedMs": 1.1245420000000195,
+      "perOperationMs": 0.3748473333333398,
+      "heapDeltaBytes": 352112
+    },
+    {
+      "operation": "point-read",
+      "iteration": 10,
+      "repetitions": 50,
+      "elapsedMs": 2.7204169999999976,
+      "perOperationMs": 0.05440833999999995,
+      "heapDeltaBytes": 1063064
+    },
+    {
+      "operation": "count-all",
+      "iteration": 10,
+      "repetitions": 5,
+      "elapsedMs": 35.934708,
+      "perOperationMs": 7.1869416,
+      "heapDeltaBytes": 11431616
+    },
+    {
+      "operation": "read-all",
+      "iteration": 10,
+      "repetitions": 3,
+      "elapsedMs": 18.34725000000003,
+      "perOperationMs": 6.11575000000001,
+      "heapDeltaBytes": 39639544
+    },
+    {
+      "operation": "filtered-read",
+      "iteration": 10,
+      "repetitions": 3,
+      "elapsedMs": 21.961125000000038,
+      "perOperationMs": 7.320375000000013,
+      "heapDeltaBytes": 39712224
+    },
+    {
+      "operation": "reopen-and-point-read",
+      "iteration": 10,
+      "repetitions": 3,
+      "elapsedMs": 1.100582999999915,
+      "perOperationMs": 0.3668609999999717,
+      "heapDeltaBytes": 351880
+    }
+  ],
+  "note": "Expanded filesystem workload. Seeding is outside timings. Fresh worktree child process per candidate."
+}

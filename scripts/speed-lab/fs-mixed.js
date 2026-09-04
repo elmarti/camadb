@@ -5,14 +5,17 @@ const os = require('os');
 const path = require('path');
 const candidate = process.argv[2];
 if (candidate === 'segment') require('../../packages/core/dist/modules/persistence/fs/fs-persistence').default = require('./segment-adapter');
-else if (candidate !== 'baseline') throw new Error('Expected baseline or segment');
+else if (candidate === 'embedded') require('../../packages/core/dist/modules/persistence/fs/fs-persistence').default = require('./embedded-segment-adapter');
+else if (candidate === 'record-pages') require('../../packages/core/dist/modules/persistence/fs/fs-persistence').default = require('./record-page-adapter').default;
+else if (candidate !== 'baseline') throw new Error('Expected baseline, record-pages, segment or embedded');
 const { Cama, PersistenceAdapterEnum } = require('../../packages/core/dist');
 
 (async () => {
   const size = 10_000;
+  const iterations = Number(process.argv[4] || 3);
   const samples = [];
   const documents = Array.from({ length: size }, (_, i) => ({ _id: String(i), group: i % 10, value: i }));
-  for (let iteration = 0; iteration < 3; iteration += 1) {
+  for (let iteration = 0; iteration < iterations; iteration += 1) {
     const root = await fsp.mkdtemp(path.join(os.tmpdir(), 'camadb-fs-mixed-'));
     const open = () => new Cama({ path: root, persistenceAdapter: PersistenceAdapterEnum.FS })
       .initCollection('records', { columns: [], indexes: [] });
@@ -39,7 +42,7 @@ const { Cama, PersistenceAdapterEnum } = require('../../packages/core/dist');
       }, (x) => assert.equal(x.rows[0].value, 9999));
     } finally { await fsp.rm(root, { recursive: true, force: true }); }
   }
-  const report = { candidate, generatedAt: new Date().toISOString(), node: process.version, size, samples,
+  const report = { candidate, generatedAt: new Date().toISOString(), node: process.version, size, iterations, samples,
     note: 'Expanded filesystem workload. Seeding is outside timings. Fresh worktree child process per candidate.' };
   const output = path.resolve(process.argv[3]);
   fs.mkdirSync(path.dirname(output), { recursive: true });

@@ -26,40 +26,34 @@ describe('filesystem record persistence', () => {
     await nodeFs.rm(databasePath, { recursive: true, force: true });
   });
 
-  it('writes bounded immutable pages and compacts unreachable generations', async () => {
+  it('writes a committed segment and compacts unreachable frames', async () => {
     const collection = await createCollection();
     await collection.insertMany(
       Array.from({ length: 1_200 }, (_, index) => ({ _id: String(index), value: `row-${index}` })),
     );
-    const pagesPath = path.join(databasePath, 'records', 'pages');
-    expect(await nodeFs.readdir(pagesPath)).toHaveLength(3);
+    const segmentPath = path.join(databasePath, 'records', 'records.segment');
+    const insertedBytes = (await nodeFs.stat(segmentPath)).size;
 
     await collection.updateMany({ _id: '600' }, { $set: { value: 'updated' } });
-    expect(await nodeFs.readdir(pagesPath)).toHaveLength(4);
+    const staleStats = await collection.storageStats();
+    expect(staleStats.reclaimableBytes).toBeGreaterThan(0);
 
     const adapter = collection.container?.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
     await adapter?.compact?.();
-    expect(await nodeFs.readdir(pagesPath)).toHaveLength(3);
+    expect((await collection.storageStats()).reclaimableBytes).toBe(0);
+    expect((await nodeFs.stat(segmentPath)).size).toBeLessThan(insertedBytes + 10_000);
     await expect(collection.findMany({ _id: '600' })).resolves.toMatchObject({
       rows: [{ _id: '600', value: 'updated' }],
     });
   }, DURABLE_COMPACTION_TIMEOUT_MS);
 
-  it('keeps the previous generation readable when manifest publication is interrupted', async () => {
+  it('keeps the previous generation readable when a segment write is interrupted', async () => {
     const collection = await createCollection();
     await collection.insertOne({ _id: 'record', value: 'before' });
-    const realRename = nodeFs.rename.bind(nodeFs);
-    let interrupted = false;
-    jest.spyOn(nodeFs, 'rename').mockImplementation(async (source, destination) => {
-      if (!interrupted && String(destination).endsWith('manifest.json')) {
-        interrupted = true;
-        throw new Error('simulated manifest interruption');
-      }
-      await realRename(source, destination);
-    });
+    jest.spyOn(nodeFs, 'open').mockRejectedValueOnce(new Error('simulated segment interruption'));
 
     await expect(collection.updateMany({ _id: 'record' }, { $set: { value: 'interrupted' } })).rejects.toThrow(
-      'simulated manifest interruption',
+      'simulated segment interruption',
     );
     await expect(collection.findMany({ _id: 'record' })).resolves.toMatchObject({
       rows: [{ _id: 'record', value: 'before' }],
@@ -70,14 +64,54 @@ describe('filesystem record persistence', () => {
     });
   });
 
+  it('recovers the last checksummed commit and truncates invalid tails', async () => {
+    const collection = await createCollection();
+    await collection.insertMany([
+      { _id: 'one', value: 'first' },
+      { _id: 'two', value: 'second' },
+    ]);
+    const segmentPath = path.join(databasePath, 'records', 'records.segment');
+    const committedSize = (await nodeFs.stat(segmentPath)).size;
+
+    await nodeFs.appendFile(segmentPath, Buffer.alloc(12, 0xff));
+    await expect((await createCollection()).count()).resolves.toBe(2);
+    expect((await nodeFs.stat(segmentPath)).size).toBe(committedSize);
+
+    const corruptTrailer = Buffer.alloc(24);
+    Buffer.from('CAMATRL3').copy(corruptTrailer);
+    corruptTrailer.writeBigUInt64BE(BigInt(committedSize), 8);
+    corruptTrailer.writeUInt32BE(64, 16);
+    corruptTrailer.writeUInt32BE(0xdeadbeef, 20);
+    await nodeFs.appendFile(segmentPath, corruptTrailer);
+
+    const recovered = await createCollection();
+    await expect(recovered.findMany({ _id: 'two' })).resolves.toMatchObject({
+      rows: [{ _id: 'two', value: 'second' }],
+    });
+    expect((await nodeFs.stat(segmentPath)).size).toBe(committedSize);
+  });
+
+  it('bounds recovery replay with periodic locator checkpoints', async () => {
+    const collection = await createCollection();
+    await collection.insertOne({ _id: 'record', value: 'initial' });
+    for (let index = 0; index < 260; index += 1) {
+      await collection.updateMany({ _id: 'record' }, { $set: { value: `revision-${index}` } });
+    }
+
+    const reopened = await createCollection();
+    await expect(reopened.findMany({ _id: 'record' })).resolves.toMatchObject({
+      rows: [{ _id: 'record', value: 'revision-259' }],
+    });
+  }, DURABLE_COMPACTION_TIMEOUT_MS);
+
   it('retains a valid generation when physical compaction cleanup fails', async () => {
     const collection = await createCollection();
     await collection.insertOne({ _id: 'record', value: 'before' });
     await collection.updateMany({ _id: 'record' }, { $set: { value: 'after' } });
     const adapter = collection.container?.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
-    jest.spyOn(nodeFs, 'rm').mockRejectedValueOnce(new Error('simulated cleanup interruption'));
+    jest.spyOn(nodeFs, 'rename').mockRejectedValueOnce(new Error('simulated compaction interruption'));
 
-    await expect(adapter?.compact?.()).rejects.toThrow('simulated cleanup interruption');
+    await expect(adapter?.compact?.()).rejects.toThrow('simulated compaction interruption');
     await expect(collection.findMany({ _id: 'record' })).resolves.toMatchObject({
       rows: [{ _id: 'record', value: 'after' }],
     });
@@ -88,7 +122,7 @@ describe('filesystem record persistence', () => {
     return database.initCollection<TestDocument>('records', { columns: [], indexes: [] });
   }
 
-  it('keeps old pages until an active iterator releases its snapshot', async () => {
+  it('keeps old frames until an active iterator releases its snapshot', async () => {
     const collection = await createCollection();
     await collection.insertMany(Array.from({ length: 513 }, (_, index) => ({ _id: String(index), value: 'old' })));
     const adapter = collection.container!.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
@@ -112,7 +146,7 @@ describe('filesystem record persistence', () => {
     });
     const collection = await database.initCollection<TestDocument>('records', { columns: [], indexes: [] });
     await collection.insertOne({ _id: 'record', value: 'before' });
-    jest.spyOn(nodeFs, 'rm').mockRejectedValueOnce(new Error('automatic cleanup interrupted'));
+    jest.spyOn(nodeFs, 'rename').mockRejectedValueOnce(new Error('automatic cleanup interrupted'));
     await expect(collection.updateMany({ _id: 'record' }, { $set: { value: 'after' } })).resolves.toMatchObject({
       modifiedCount: 1,
     });
