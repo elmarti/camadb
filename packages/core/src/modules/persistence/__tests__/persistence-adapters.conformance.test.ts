@@ -193,7 +193,7 @@ persistenceAdapterConformance('filesystem', {
         return adapter;
       },
       createFailingMutation(adapter) {
-        jest.spyOn(nodeFs, 'rename').mockRejectedValueOnce(new Error('simulated interruption'));
+        jest.spyOn(nodeFs, 'open').mockRejectedValueOnce(new Error('simulated interruption'));
         return adapter.insert([{ id: 'interrupted' }]);
       },
       async cleanup() {

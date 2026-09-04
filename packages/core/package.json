@@ -18,6 +18,7 @@
     "README.md"
   ],
   "browser": {
+    "crypto": false,
     "fs": false,
     "path": false
   },
