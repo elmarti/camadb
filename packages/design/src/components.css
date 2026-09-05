@@ -1,0 +1,109 @@
+.cama-button {
+  display: inline-flex;
+  min-height: 2.55rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border: 1px solid transparent;
+  border-radius: var(--cama-radius-pill);
+  padding: 0.65rem 1.05rem;
+  font-size: var(--cama-text-sm);
+  font-weight: 750;
+  line-height: 1;
+  text-decoration: none;
+  transition:
+    transform var(--cama-motion-fast),
+    background var(--cama-motion-fast),
+    border-color var(--cama-motion-fast);
+}
+
+.cama-button:hover {
+  transform: translateY(-1px);
+}
+
+.cama-button--primary {
+  color: white;
+  background: var(--cama-color-ink);
+}
+
+.cama-button--accent {
+  border-color: var(--cama-color-accent-strong);
+  color: var(--cama-color-ink);
+  background: var(--cama-color-accent);
+}
+
+.cama-button--quiet {
+  border-color: var(--cama-color-line);
+  color: var(--cama-color-ink);
+  background: transparent;
+}
+
+.cama-button--danger {
+  border-color: #e2b8b2;
+  color: var(--cama-color-danger);
+  background: transparent;
+}
+
+.cama-card {
+  border: 1px solid var(--cama-color-line);
+  border-radius: var(--cama-radius-lg);
+  background: var(--cama-color-surface);
+  box-shadow: var(--cama-shadow-sm);
+}
+
+.cama-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--cama-color-line);
+  border-radius: var(--cama-radius-pill);
+  padding: 0.42rem 0.7rem;
+  color: var(--cama-color-muted);
+  background: rgb(251 250 246 / 72%);
+  font-size: var(--cama-text-xs);
+  font-weight: 750;
+}
+
+.cama-badge::before {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--cama-color-success);
+  box-shadow: 0 0 0 0.22rem rgb(44 140 98 / 12%);
+  content: '';
+}
+
+.cama-code {
+  overflow: auto;
+  border: 1px solid rgb(255 255 255 / 11%);
+  border-radius: var(--cama-radius-md);
+  padding: var(--cama-space-5);
+  color: #eff7f0;
+  background: var(--cama-color-ink);
+  font-family: var(--cama-font-mono);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.cama-code .token-comment {
+  color: #94a79e;
+}
+
+.cama-code .token-accent {
+  color: var(--cama-color-accent);
+}
+
+.cama-field {
+  width: 100%;
+  border: 1px solid #c7cec8;
+  border-radius: var(--cama-radius-sm);
+  padding: 0.75rem 0.875rem;
+  outline: none;
+  color: var(--cama-color-ink);
+  background: var(--cama-color-surface-raised);
+}
+
+.cama-field:focus {
+  border-color: var(--cama-color-brand);
+  box-shadow: var(--cama-focus);
+}
