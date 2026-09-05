@@ -2,5 +2,28 @@
   "name": "@camadb/studio",
   "version": "0.0.0",
   "private": true,
-  "description": "Reserved workspace application boundary for CamaDB Studio"
+  "description": "Cross-browser CamaDB DevTools explorer",
+  "scripts": {
+    "build": "yarn build:chrome && yarn build:firefox && yarn build:safari && node scripts/verify-builds.js",
+    "build:chrome": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "build:safari": "wxt build -b safari",
+    "compile": "wxt prepare && tsc --noEmit --pretty false",
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox"
+  },
+  "dependencies": {
+    "@camadb/design": "0.1.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@wxt-dev/module-react": "1.2.2",
+    "vite": "8.0.0",
+    "wxt": "0.21.4"
+  }
 }

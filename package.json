@@ -14,7 +14,7 @@
     "examples/*"
   ],
   "scripts": {
-    "build": "tsc --build && yarn workspace @camadb/knowledge-demo build && yarn workspace @camadb/website build",
+    "build": "tsc --build && yarn workspace @camadb/knowledge-demo build && yarn workspace @camadb/studio build && yarn workspace @camadb/website build",
     "benchmark:storage": "yarn workspace @camadb/benchmarks benchmark",
     "benchmark:cache": "yarn workspace @camadb/benchmarks benchmark:cache",
     "benchmark:index": "yarn workspace @camadb/benchmarks benchmark:index",
@@ -23,7 +23,7 @@
     "benchmark:hybrid": "yarn workspace @camadb/benchmarks benchmark:hybrid",
     "benchmark:memory": "yarn workspace @camadb/benchmarks benchmark:memory",
     "clean": "tsc --build --clean",
-    "typecheck": "tsc --build --pretty false && tsc --project packages/core/tsconfig.type-tests.json --pretty false && yarn workspace @camadb/knowledge-demo typecheck && yarn workspace @camadb/website typecheck",
+    "typecheck": "tsc --build --pretty false && tsc --project packages/core/tsconfig.type-tests.json --pretty false && yarn workspace @camadb/knowledge-demo typecheck && yarn workspace @camadb/studio compile && yarn workspace @camadb/website typecheck",
     "lint": "eslint packages apps tests scripts --ext .js,.ts,.tsx",
     "lint:fix": "yarn lint --fix",
     "format": "prettier --write \"{packages,apps,examples,tests,docs}/**/*.{css,js,json,md,mjs,ts,tsx}\"",
