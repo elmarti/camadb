@@ -4,6 +4,10 @@ Wave 5 metadata-index measurements are recorded in the
 [index benchmark report](./wave5-indexes.md). The committed pre-index result is
 the comparison baseline for issue #3.
 
+Full-text retrieval measurements are recorded in the
+[full-text benchmark report](./wave5-full-text.md). Its committed scan result is
+the comparison baseline for issue #4.
+
 The baseline is preserved below. See the [Wave 4 comparison and workload guidance](./wave4-comparison.md) for the post-#83/#53 measurements, cache workloads, regressions, and remaining exit-gate limitations.
 
 See the [speed experiment decision record](./speed-lab/README.md) for measured WASM hashing, Map-backed storage, and JavaScript lookup experiments, including rejected approaches, raw samples, reproduction scripts, and evidence-retention rules. These experiments do not change production storage.

@@ -6,11 +6,13 @@
     "benchmark": "yarn build && node --expose-gc dist/run.js",
     "benchmark:cache": "yarn build && node --expose-gc dist/cache-run.js",
     "benchmark:index": "yarn build && node --expose-gc dist/index-run.js",
+    "benchmark:text": "yarn build && node --expose-gc dist/text-search-run.js",
     "build": "tsc --build",
     "typecheck": "tsc --build --pretty false"
   },
   "dependencies": {
     "@camadb/core": "2.0.1",
-    "@camadb/test-utils": "0.1.0"
+    "@camadb/test-utils": "0.1.0",
+    "fake-indexeddb": "^6.2.2"
   }
 }

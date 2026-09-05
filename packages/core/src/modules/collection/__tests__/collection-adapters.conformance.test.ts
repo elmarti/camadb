@@ -41,7 +41,7 @@ class MemoryStorage implements Storage {
   }
 }
 
-const config = { columns: [], indexes: ['name', 'active', 'score'] };
+const config = { columns: [], indexes: ['name', 'active', 'score'], searchIndexes: ['name'] };
 
 const collectionCrudConformance = (adapterName: string, createContext: () => Promise<CollectionContext>): void => {
   describe(`${adapterName} collection CRUD conformance`, () => {
@@ -129,6 +129,33 @@ const collectionCrudConformance = (adapterName: string, createContext: () => Pro
       await expect(context.collection.count({ name: 'updated' })).resolves.toBe(1);
       await context.collection.insertOne({ _id: 'fourth', name: 'updated', active: true, score: 40 });
       await expect(context.collection.count({ name: 'updated' })).resolves.toBe(2);
+      expect(hydrate).not.toHaveBeenCalled();
+    });
+
+    it('maintains ranked text search across metadata filters and mutations', async () => {
+      await context.collection.insertMany([
+        { _id: 'first', name: 'cobalt harbor record', active: true },
+        { _id: 'second', name: 'cobalt cobalt harbor', active: false },
+        { _id: 'third', name: 'unrelated record', active: true },
+      ]);
+      await expect(context.collection.searchText('cobalt harbor', { limit: 10 })).resolves.toMatchObject([
+        { document: { _id: 'second' }, matchedTerms: ['cobalt', 'harbor'], score: expect.any(Number) },
+        { document: { _id: 'first' } },
+      ]);
+      const adapter = context.collection.container?.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
+      const hydrate = jest.spyOn(adapter as IPersistenceAdapter, 'getData');
+      await expect(context.collection.searchText('cobalt', { filter: { active: true } })).resolves.toMatchObject([
+        { document: { _id: 'first' } },
+      ]);
+      await context.collection.updateMany({ _id: 'first' }, { $set: { name: 'updated searchable value' } });
+      await expect(context.collection.searchText('cobalt')).resolves.toMatchObject([
+        { document: { _id: 'second' } },
+      ]);
+      await expect(context.collection.searchText('searchable')).resolves.toMatchObject([
+        { document: { _id: 'first' } },
+      ]);
+      await context.collection.deleteOne({ _id: 'second' });
+      await expect(context.collection.searchText('cobalt')).resolves.toEqual([]);
       expect(hydrate).not.toHaveBeenCalled();
     });
   });

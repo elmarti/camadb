@@ -146,6 +146,18 @@ export class MetadataIndexedPersistence implements IPersistenceAdapter {
   }
 
   async queryRecords(query: Record<string, unknown>): Promise<any[] | undefined> {
+    const ids = await this.queryRecordIds(query);
+    if (ids === undefined) return;
+    if (ids.length === 0) return [];
+    if (this.adapter.getRecords) {
+      const records = await this.adapter.getRecords(ids);
+      return ids.map((id) => records.get(id)).filter((row) => row !== undefined);
+    }
+    const wanted = new Set(ids);
+    return (await this.adapter.getData()).filter((row: { _id?: string }) => wanted.has(row._id ?? ''));
+  }
+
+  async queryRecordIds(query: Record<string, unknown>): Promise<string[] | undefined> {
     this.checkDestroyed();
     await this.initialized;
     if (!this.hasCandidateConstraint(query)) return;
@@ -156,13 +168,7 @@ export class MetadataIndexedPersistence implements IPersistenceAdapter {
     const orderedSets = candidates.sort((left, right) => left.size - right.size);
     const ids = [...orderedSets[0]].filter((id) => orderedSets.slice(1).every((set) => set.has(id)));
     ids.sort((left, right) => (this.order.get(left) ?? Infinity) - (this.order.get(right) ?? Infinity));
-    if (ids.length === 0) return [];
-    if (this.adapter.getRecords) {
-      const records = await this.adapter.getRecords(ids);
-      return ids.map((id) => records.get(id)).filter((row) => row !== undefined);
-    }
-    const wanted = new Set(ids);
-    return (await this.adapter.getData()).filter((row: { _id?: string }) => wanted.has(row._id ?? ''));
+    return ids;
   }
 
   async insert(rows: any[]): Promise<void> {

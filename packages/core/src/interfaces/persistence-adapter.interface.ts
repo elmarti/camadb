@@ -1,4 +1,5 @@
 import { CacheStats } from './cache.interface';
+import { TextSearchHit, TextSearchOptions } from './text-search.interface';
 
 export interface RecordMutation<T = any> {
   deletes?: string[];
@@ -33,6 +34,9 @@ export interface IPersistenceAdapter {
 
   /** Returns storage-ordered candidates when a metadata index can narrow the query. */
   queryRecords?(query: Record<string, unknown>): Promise<any[] | undefined>;
+  /** Returns storage-ordered candidate identities without loading their records. */
+  queryRecordIds?(query: Record<string, unknown>): Promise<string[] | undefined>;
+  searchText?(query: string, options?: TextSearchOptions<any>): Promise<TextSearchHit<any>[]>;
 
   update(updated: any): Promise<void>;
 

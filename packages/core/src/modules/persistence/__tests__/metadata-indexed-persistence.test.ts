@@ -47,6 +47,7 @@ describe('metadata indexed persistence', () => {
     const indexed = new MetadataIndexedPersistence(adapter, metadata(['group', 'score']), []);
 
     await expect(indexed.queryRecords({ group: 'a' })).resolves.toEqual([adapter.rows[0], adapter.rows[2]]);
+    await expect(indexed.queryRecordIds({ group: 'a' })).resolves.toEqual(['first', 'third']);
     await expect(indexed.queryRecords({ score: { $gte: 20, $lt: 31 } })).resolves.toEqual([
       adapter.rows[1],
       adapter.rows[2],

@@ -13,6 +13,7 @@ import {
 import { DeleteResult, InsertManyResult, InsertOneResult, UpdateResult } from './mutation-result.interface';
 import { StorageStats } from './persistence-adapter.interface';
 import { CacheStats } from './cache.interface';
+import { TextSearchHit, TextSearchOptions } from './text-search.interface';
 
 export interface ICollection<TDocument extends object = Document> {
   container?: ServiceRegistry;
@@ -22,6 +23,10 @@ export interface ICollection<TDocument extends object = Document> {
     query?: Filter<StoredDocument<TDocument>>,
     options?: IQueryOptions<StoredDocument<TDocument>>,
   ): Promise<IFilterResult<StoredDocument<TDocument>>>;
+  searchText(
+    query: string,
+    options?: TextSearchOptions<StoredDocument<TDocument>>,
+  ): Promise<TextSearchHit<StoredDocument<TDocument>>[]>;
   updateMany(
     query: Filter<StoredDocument<TDocument>>,
     delta: Update<Omit<TDocument, '_id'>>,

@@ -21,16 +21,16 @@ describe('localStorage collection metadata', () => {
   it('persists index definitions across collection instances', async () => {
     const first = new CollectionMeta(
       { persistenceAdapter: 'localstorage', path: 'metadata-test' },
-      { columns: [], indexes: ['group'] },
+      { columns: [], indexes: ['group'], searchIndexes: ['body'] },
       'records',
     );
-    await expect(first.get()).resolves.toMatchObject({ indexes: ['group'] });
+    await expect(first.get()).resolves.toMatchObject({ indexes: ['group'], searchIndexes: ['body'] });
 
     const reopened = new CollectionMeta(
       { persistenceAdapter: 'localstorage', path: 'metadata-test' },
-      { columns: [], indexes: ['ignored'] },
+      { columns: [], indexes: ['ignored'], searchIndexes: ['ignored'] },
       'records',
     );
-    await expect(reopened.get()).resolves.toMatchObject({ indexes: ['group'] });
+    await expect(reopened.get()).resolves.toMatchObject({ indexes: ['group'], searchIndexes: ['body'] });
   });
 });
