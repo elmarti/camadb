@@ -21,6 +21,7 @@
     "benchmark:text": "yarn workspace @camadb/benchmarks benchmark:text",
     "benchmark:vector": "yarn workspace @camadb/benchmarks benchmark:vector",
     "benchmark:hybrid": "yarn workspace @camadb/benchmarks benchmark:hybrid",
+    "benchmark:memory": "yarn workspace @camadb/benchmarks benchmark:memory",
     "clean": "tsc --build --clean",
     "typecheck": "tsc --build --pretty false && tsc --project packages/core/tsconfig.type-tests.json --pretty false",
     "lint": "eslint packages tests scripts --ext .js,.ts",
