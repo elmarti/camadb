@@ -56,7 +56,7 @@ if (!buildOnly) {
   }
 
   const paths = workspaces.filter(({ name }) => affected.has(name)).map(({ directory }) => directory);
-  run('yarn', ['eslint', ...paths, '--ext', '.js,.ts,.tsx']);
+  run('yarn', ['eslint', ...paths, '--ext', '.js,.ts,.tsx', '--no-error-on-unmatched-pattern']);
   run('yarn', ['jest', '--config', 'jest.config.js', '--runInBand', '--passWithNoTests', ...paths]);
   run('yarn', ['check:boundaries']);
   run('yarn', ['check:packages']);
