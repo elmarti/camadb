@@ -1,0 +1,15 @@
+{
+  "name": "@camadb/knowledge-demo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Fully local browser knowledge demo for CamaDB",
+  "scripts": {
+    "build": "node build.js",
+    "typecheck": "tsc --project tsconfig.json --pretty false",
+    "start": "node serve.js"
+  },
+  "dependencies": {
+    "@camadb/core": "2.0.1",
+    "@camadb/memory": "0.1.0"
+  }
+}

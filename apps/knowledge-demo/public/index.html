@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#17251f" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src 'none'; img-src 'self' data:; style-src 'self'; script-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'"
+    />
+    <meta
+      name="description"
+      content="Import, embed, store, and retrieve knowledge entirely in your browser with CamaDB."
+    />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./app.css" />
+    <title>CamaDB — Local knowledge lab</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="shell topbar__inner">
+        <div class="brand"><span class="brand__mark">C</span> CamaDB knowledge lab</div>
+        <div class="connection" id="connection-status" aria-live="polite">Checking connection…</div>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <div class="kicker">A fully local retrieval experiment</div>
+          <h1>Your documents.<br />Your browser.<br />Your database.</h1>
+          <p class="hero__lede">
+            Drop in text, search it, inspect every score, disconnect, and keep going. The complete data path—from
+            chunking to retrieval—runs on this device.
+          </p>
+        </div>
+        <aside class="privacy-card">
+          <strong>Network access is blocked.</strong>
+          <p>
+            This page uses <code>connect-src 'none'</code>. Your documents and searches cannot be sent to an API.
+            IndexedDB keeps the knowledge base on this device.
+          </p>
+        </aside>
+      </section>
+
+      <div class="activity" role="status" aria-live="polite">
+        <span id="activity-status">Starting the local database…</span>
+        <span class="memory-count"><span id="memory-count">0</span> memories</span>
+      </div>
+
+      <section class="workspace" aria-label="Knowledge demo">
+        <article class="panel">
+          <div class="panel__header">
+            <div>
+              <div class="eyebrow">Ingest</div>
+              <h2>Add knowledge</h2>
+            </div>
+            <span class="panel__number">01</span>
+          </div>
+          <div class="dropzone" id="dropzone">
+            <label class="file-label" for="file-input">
+              Drop plain-text documents here
+              <small>TXT, Markdown, JSON, or CSV · 2 MB per file</small>
+            </label>
+            <input
+              id="file-input"
+              type="file"
+              multiple
+              accept=".txt,.md,.markdown,.json,.csv,text/plain,text/markdown,application/json,text/csv"
+            />
+          </div>
+          <div class="divider">OR PASTE</div>
+          <label class="field" for="source-name"
+            >Source name
+            <input id="source-name" type="text" value="Pasted notes" maxlength="160" />
+          </label>
+          <label class="field" for="paste-input"
+            >Document text
+            <textarea id="paste-input" placeholder="Paste something you want to retrieve later…"></textarea>
+          </label>
+          <div class="actions">
+            <button class="button button--primary" id="import-button" type="button">Store locally</button>
+            <button class="button button--quiet" id="sample-button" type="button">Load sample</button>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel__header">
+            <div>
+              <div class="eyebrow">Retrieve</div>
+              <h2>Search your knowledge</h2>
+            </div>
+            <span class="panel__number">02</span>
+          </div>
+          <form id="search-form" class="search-bar">
+            <input
+              id="search-query"
+              type="search"
+              required
+              placeholder="What does CamaDB know?"
+              aria-label="Search query"
+            />
+            <select id="search-strategy" aria-label="Retrieval strategy">
+              <option value="hybrid">Hybrid</option>
+              <option value="text">Full text</option>
+              <option value="vector">Vector</option>
+            </select>
+            <button class="button button--accent" type="submit">Recall</button>
+          </form>
+          <div id="results" class="results" aria-live="polite">
+            <p class="empty-state">
+              Import knowledge, then ask a question. Every result includes its ranking evidence.
+            </p>
+          </div>
+        </article>
+
+        <article class="panel panel--wide">
+          <div class="panel__header">
+            <div>
+              <div class="eyebrow">Control</div>
+              <h2>Inspect your local data</h2>
+            </div>
+            <div class="actions">
+              <button class="button button--quiet" id="export-button" type="button">Export JSON</button>
+              <button class="button button--danger" id="clear-button" type="button">Delete everything</button>
+            </div>
+          </div>
+          <div id="memories" class="memories"></div>
+        </article>
+      </section>
+
+      <section class="method" aria-label="How the demo works">
+        <div>
+          <h3>01 · Bounded chunks</h3>
+          <p>Documents are split into chunks of at most 900 characters before an atomic batch insert.</p>
+        </div>
+        <div>
+          <h3>02 · Honest local vectors</h3>
+          <p>
+            A small signed feature hash demonstrates vector retrieval. It is lexical, deterministic, and not marketed as
+            a semantic model.
+          </p>
+        </div>
+        <div>
+          <h3>03 · Inspectable ranking</h3>
+          <p>
+            BM25 terms, vector similarity, ranks, and hybrid scores remain visible instead of disappearing behind an
+            opaque answer.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="inspector">
+      <div class="dialog__inner">
+        <div class="dialog__head">
+          <div class="eyebrow">Raw local record</div>
+          <button class="button button--quiet" id="close-inspector" type="button">Close</button>
+        </div>
+        <div id="inspector-body"></div>
+      </div>
+    </dialog>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

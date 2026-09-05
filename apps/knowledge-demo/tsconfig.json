@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "baseUrl": "../..",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "paths": {
+      "@camadb/core": ["packages/core/src/index.ts"],
+      "@camadb/memory": ["packages/memory/src/index.ts"]
+    },
+    "sourceMap": false
+  },
+  "include": ["src/**/*.ts"]
+}
