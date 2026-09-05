@@ -7,6 +7,8 @@ yarn-error.log
 .cache
 coverage
 .next
+.output
+.wxt
 out
 apps/website/public/demo
 *.tsbuildinfo

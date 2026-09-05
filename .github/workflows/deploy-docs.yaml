@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - main
+    paths:
+      - apps/knowledge-demo/**
+      - apps/website/**
+      - packages/core/**
+      - packages/design/**
+      - packages/memory/**
+      - package.json
+      - .github/workflows/deploy-docs.yaml
 
   workflow_dispatch:
 
@@ -27,6 +35,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
+          cache: yarn
 
       - name: Install Yarn Classic
         run: npm install --global yarn@1.22.22
@@ -37,7 +46,11 @@ jobs:
       - name: Build static website and demo
         env:
           CAMADB_BASE_PATH: /camadb
-        run: yarn build
+        run: |
+          yarn workspace @camadb/core build
+          yarn workspace @camadb/memory build
+          yarn workspace @camadb/knowledge-demo build
+          yarn workspace @camadb/website build
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
