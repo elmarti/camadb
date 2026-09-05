@@ -6,6 +6,8 @@ Node.js integrations require Node.js 22 or newer. Packages support CommonJS `req
 
 This repository is a workspace. The existing `camadb` import is preserved by a compatibility package; new development may use `@camadb/core`. AI memory and embedding provenance contracts live in `@camadb/memory`, while Studio and examples are private workspace applications.
 
+The open-source project also includes a [fully local browser knowledge demo](apps/knowledge-demo/README.md). It imports, chunks, embeds, stores, searches, explains, exports, and deletes knowledge on-device, with outbound application connections blocked by policy. The public CamaDB website and demo cover the database project only; any paid service is treated as a separate product.
+
 See [workspace architecture](docs/architecture.md), [metadata indexes](docs/indexes.md), [full-text search](docs/full-text-search.md), [local development](docs/development.md), [versioning and publishing](docs/versioning-and-publishing.md), and the [2.x compatibility policy](docs/migration-2.x.md).
 
 Stable releases are automated through a Changesets release pull request on `main`. Pushes to `develop` publish unique snapshot releases under npm's `alpha` dist-tag.
@@ -28,9 +30,10 @@ I was struggling to find a solution for Electron-based projects that deal with l
 - Simplicity and versatility - This is built for storing data in dynamic structures
 
 ## Current state
-This is still under active development. Metadata equality/range indexes and
-deterministic full-text search are available; vector and hybrid retrieval are
-not yet implemented.
+This is still under active development. Metadata equality/range indexes,
+deterministic full-text search, exact vector similarity, inspectable hybrid
+retrieval, and the local-first memory API are available on the 3.0 development
+line.
 
 ## Getting started
 [Documentation](https://elmarti.github.io/camadb/classes/Collection.html)

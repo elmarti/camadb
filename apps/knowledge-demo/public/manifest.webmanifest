@@ -1,0 +1,10 @@
+{
+  "name": "CamaDB local knowledge lab",
+  "short_name": "CamaDB lab",
+  "description": "A fully local browser knowledge and retrieval demo.",
+  "display": "standalone",
+  "start_url": "./",
+  "scope": "./",
+  "background_color": "#f2efe7",
+  "theme_color": "#17251f"
+}

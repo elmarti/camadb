@@ -16,7 +16,9 @@ import { ISystem } from '../../../interfaces/system.interface';
 import { assertMutationBound, MAX_PAGE_BYTES } from '../record-pages';
 import { shouldCompact } from '../compaction';
 
-const MAGIC = Buffer.from('CAMATRL3');
+// Keep Node's Buffer out of module initialization so browser bundles can load
+// the IndexedDB adapter without executing filesystem-only globals.
+const MAGIC_TEXT = 'CAMATRL3';
 const TRAILER_BYTES = 24;
 const FORMAT = 3;
 const SCAN_CHUNK_BYTES = 1024 * 1024;
@@ -143,7 +145,7 @@ export default class SegmentPersistence implements IPersistenceAdapter {
   }
   encodeTrailer(footerOffset: number, footer: Buffer): Buffer {
     const trailer = Buffer.allocUnsafe(TRAILER_BYTES);
-    MAGIC.copy(trailer, 0);
+    Buffer.from(MAGIC_TEXT).copy(trailer, 0);
     trailer.writeBigUInt64BE(BigInt(footerOffset), 8);
     trailer.writeUInt32BE(footer.length, 16);
     trailer.writeUInt32BE(this.checksum(footer), 20);
@@ -155,7 +157,7 @@ export default class SegmentPersistence implements IPersistenceAdapter {
     try {
       const trailer = Buffer.allocUnsafe(TRAILER_BYTES);
       const trailerRead = await handle.read(trailer, 0, trailer.length, trailerOffset);
-      if (trailerRead.bytesRead !== TRAILER_BYTES || !trailer.subarray(0, 8).equals(MAGIC)) return;
+      if (trailerRead.bytesRead !== TRAILER_BYTES || !trailer.subarray(0, 8).equals(Buffer.from(MAGIC_TEXT))) return;
       const footerOffset = Number(trailer.readBigUInt64BE(8));
       const footerLength = trailer.readUInt32BE(16);
       if (footerLength > MAX_FOOTER_BYTES || footerOffset < 0 || footerOffset + footerLength !== trailerOffset) return;
@@ -185,18 +187,19 @@ export default class SegmentPersistence implements IPersistenceAdapter {
     // Slow recovery path only: scan backwards with bounded memory for the last
     // checksummed trailer before a torn tail.
     const handle = await fs.open(this.filePath, 'r');
-    const overlap = MAGIC.length - 1;
+    const magic = Buffer.from(MAGIC_TEXT);
+    const overlap = magic.length - 1;
     let end = fileSize;
     try {
       while (end > 0) {
         const start = Math.max(0, end - SCAN_CHUNK_BYTES);
         const data = Buffer.allocUnsafe(end - start);
         const result = await handle.read(data, 0, data.length, start);
-        let cursor = data.subarray(0, result.bytesRead).lastIndexOf(MAGIC);
+        let cursor = data.subarray(0, result.bytesRead).lastIndexOf(magic);
         while (cursor >= 0) {
           const candidate = await this.readFooterAt(start + cursor, handle);
           if (candidate) return candidate;
-          cursor = data.lastIndexOf(MAGIC, cursor - 1);
+          cursor = data.lastIndexOf(magic, cursor - 1);
         }
         if (start === 0) break;
         end = start + overlap;
