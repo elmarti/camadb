@@ -3,6 +3,7 @@ import { assertMutationBound } from '../record-pages';
 import { serializedBytes } from '../compaction';
 
 export default class InmemoryPersistence implements IPersistenceAdapter {
+  readonly recordsResident = true;
   private dbName? = '';
   private destroyed = false;
   private collectionName = '';

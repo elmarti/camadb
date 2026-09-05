@@ -51,6 +51,13 @@ export type { DeleteResult, InsertManyResult, InsertOneResult, UpdateResult } fr
 export type { IPersistenceAdapter } from './interfaces/persistence-adapter.interface';
 export type { StorageStats } from './interfaces/persistence-adapter.interface';
 export type { TextSearchHit, TextSearchMatch, TextSearchOptions } from './interfaces/text-search.interface';
+export type {
+  VectorField,
+  VectorIndexConfig,
+  VectorMetric,
+  VectorSearchHit,
+  VectorSearchOptions,
+} from './interfaces/vector-search.interface';
 export {
   CURRENT_STORAGE_VERSION,
   LEGACY_STORAGE_VERSION,

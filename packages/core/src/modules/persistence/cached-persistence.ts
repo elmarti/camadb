@@ -38,6 +38,8 @@ export class CachedPersistence implements IPersistenceAdapter {
     };
   }
 
+  get recordsResident(): boolean { return this.adapter.recordsResident === true; }
+
   cacheStats(): CacheStats {
     return { ...this.stats };
   }

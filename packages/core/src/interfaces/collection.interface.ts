@@ -14,6 +14,11 @@ import { DeleteResult, InsertManyResult, InsertOneResult, UpdateResult } from '.
 import { StorageStats } from './persistence-adapter.interface';
 import { CacheStats } from './cache.interface';
 import { TextSearchHit, TextSearchOptions } from './text-search.interface';
+import {
+  VectorField,
+  VectorSearchHit,
+  VectorSearchOptions,
+} from './vector-search.interface';
 
 export interface ICollection<TDocument extends object = Document> {
   container?: ServiceRegistry;
@@ -27,6 +32,11 @@ export interface ICollection<TDocument extends object = Document> {
     query: string,
     options?: TextSearchOptions<StoredDocument<TDocument>>,
   ): Promise<TextSearchHit<StoredDocument<TDocument>>[]>;
+  searchVector(
+    field: VectorField<StoredDocument<TDocument>>,
+    vector: readonly number[],
+    options?: VectorSearchOptions<StoredDocument<TDocument>>,
+  ): Promise<VectorSearchHit<StoredDocument<TDocument>>[]>;
   updateMany(
     query: Filter<StoredDocument<TDocument>>,
     delta: Update<Omit<TDocument, '_id'>>,

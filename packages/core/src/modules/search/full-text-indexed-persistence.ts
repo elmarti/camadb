@@ -60,6 +60,8 @@ export class FullTextIndexedPersistence implements IPersistenceAdapter {
     });
   }
 
+  get recordsResident(): boolean { return this.adapter.recordsResident === true; }
+
   async searchText(query: string, options: TextSearchOptions<any> = {}): Promise<TextSearchHit<any>[]> {
     this.checkDestroyed();
     await this.initialized;
@@ -140,6 +142,10 @@ export class FullTextIndexedPersistence implements IPersistenceAdapter {
   queryRecords(query: Record<string, unknown>): Promise<any[] | undefined> {
     this.checkDestroyed();
     return this.adapter.queryRecords?.(query) ?? Promise.resolve(undefined);
+  }
+  queryExactRecords(query: Record<string, unknown>): Promise<any[] | undefined> {
+    this.checkDestroyed();
+    return this.adapter.queryExactRecords?.(query) ?? Promise.resolve(undefined);
   }
   queryRecordIds(query: Record<string, unknown>): Promise<string[] | undefined> {
     this.checkDestroyed();

@@ -30,6 +30,11 @@ import {
   UpdateResult,
 } from '../../interfaces/mutation-result.interface';
 import { TextSearchHit, TextSearchOptions } from '../../interfaces/text-search.interface';
+import {
+  VectorField,
+  VectorSearchHit,
+  VectorSearchOptions,
+} from '../../interfaces/vector-search.interface';
 
 export class Collection<TDocument extends object = Document> implements ICollection<TDocument> {
   public container: ServiceRegistry;
@@ -137,6 +142,16 @@ export class Collection<TDocument extends object = Document> implements ICollect
     this.checkDestroyed();
     if (!this.persistenceAdapter.searchText) throw new Error('Full-text search is unavailable');
     return this.persistenceAdapter.searchText(query, options);
+  }
+
+  async searchVector(
+    field: VectorField<StoredDocument<TDocument>>,
+    vector: readonly number[],
+    options?: VectorSearchOptions<StoredDocument<TDocument>>,
+  ): Promise<VectorSearchHit<StoredDocument<TDocument>>[]> {
+    this.checkDestroyed();
+    if (!this.persistenceAdapter.searchVector) throw new Error('Vector search is unavailable');
+    return this.persistenceAdapter.searchVector(field, vector, options);
   }
 
   /**
