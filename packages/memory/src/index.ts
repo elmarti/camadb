@@ -23,21 +23,28 @@ export type {
   ReembeddingUpdate,
 } from './embedding-provenance';
 
-import type { ProvenancedEmbeddingRecord } from './embedding-provenance';
-
-export interface MemoryRecord<Metadata extends Record<string, unknown> = Record<string, unknown>>
-  extends ProvenancedEmbeddingRecord {
-  content: string;
-  metadata?: Metadata;
-}
-
-export interface RetrievalResult<Metadata extends Record<string, unknown> = Record<string, unknown>> {
-  memory: MemoryRecord<Metadata>;
-  score: number;
-}
-
-export interface MemoryStore<Metadata extends Record<string, unknown> = Record<string, unknown>> {
-  remember(memory: MemoryRecord<Metadata>): Promise<void>;
-  forget(id: string): Promise<void>;
-  retrieve(query: string, limit?: number): Promise<readonly RetrievalResult<Metadata>[]>;
-}
+export { CamaMemory, createMemoryStore } from './memory-store';
+export {
+  MEMORY_CATEGORIES,
+  MEMORY_EXPORT_SCHEMA_VERSION,
+  MEMORY_RECORD_SCHEMA_VERSION,
+} from './memory-types';
+export type {
+  EditMemoryInput,
+  EmbeddingProvider,
+  ForgetResult,
+  ListMemoriesOptions,
+  MemoryCategory,
+  MemoryExport,
+  MemoryRecord,
+  MemoryStore,
+  MemoryStoreOptions,
+  RecallExplanation,
+  RecallOptions,
+  RecallResult,
+  RecallStrategy,
+  RememberInput,
+  StoredMemoryDocument,
+  TextRecallExplanation,
+  VectorRecallExplanation,
+} from './memory-types';

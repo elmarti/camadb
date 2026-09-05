@@ -12,6 +12,7 @@ const textSearchBaseline = report('text-search-baseline-node24-apple-m5.json');
 const textSearchAfter = report('text-search-after-node24-apple-m5.json');
 const textSearchBrowserBaseline = report('text-search-browser-baseline-node24-apple-m5.json');
 const textSearchBrowserAfter = report('text-search-browser-after-node24-apple-m5.json');
+const memoryApiBaseline = report('memory-api-baseline-node24-apple-m5.json');
 
 it('preserves matching environments, settings, and all before/after samples', () => {
   expect(after.runtime).toEqual(baseline.runtime);
@@ -143,5 +144,20 @@ it('retains the browser-adapter search comparison under deterministic API emulat
       (result: any) => result.adapter === adapter && result.operation === 'selective',
     );
     expect(current.median.perOperationMs).toBeLessThan(before.median.perOperationMs);
+  }
+});
+
+it('retains the complete provider-independent memory API baseline', () => {
+  expect(memoryApiBaseline.runtime).toEqual(after.runtime);
+  expect(memoryApiBaseline.config.adapters).toEqual(['fs', 'inmemory']);
+  expect(memoryApiBaseline.config.sizes).toEqual([100, 1000, 10000]);
+  expect(memoryApiBaseline.config.iterations).toBe(5);
+  expect(memoryApiBaseline.workload).toEqual({ batchSize: 10000, dimensions: 32, limit: 10 });
+  expect(memoryApiBaseline.results).toHaveLength(30);
+  for (const result of memoryApiBaseline.results) {
+    expect(result.samples).toHaveLength(5);
+    expect(result.repetitions).toBe(result.operation === 'inspect' ? 100 :
+      result.operation === 'batch-remember' ? 1 : 10);
+    expect(result.median.perOperationMs).toBeGreaterThanOrEqual(0);
   }
 });
