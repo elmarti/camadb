@@ -6,7 +6,7 @@ Node.js integrations require Node.js 22 or newer. Packages support CommonJS `req
 
 This repository is a workspace. The existing `camadb` import is preserved by a compatibility package; new development may use `@camadb/core`. AI memory and embedding provenance contracts live in `@camadb/memory`, while Studio and examples are private workspace applications.
 
-See [workspace architecture](docs/architecture.md), [local development](docs/development.md), [versioning and publishing](docs/versioning-and-publishing.md), and the [2.x compatibility policy](docs/migration-2.x.md).
+See [workspace architecture](docs/architecture.md), [metadata indexes](docs/indexes.md), [local development](docs/development.md), [versioning and publishing](docs/versioning-and-publishing.md), and the [2.x compatibility policy](docs/migration-2.x.md).
 
 Stable releases are automated through a Changesets release pull request on `main`. Pushes to `develop` publish unique snapshot releases under npm's `alpha` dist-tag.
 
@@ -28,9 +28,8 @@ I was struggling to find a solution for Electron-based projects that deal with l
 - Simplicity and versatility - This is built for storing data in dynamic structures
 
 ## Current state
-This is still under active development and a few features are missing:
-- Indexes - We're finding that this is fast even without these, but every little helps
-- Rich text search 
+This is still under active development. Metadata equality and range indexes are
+available; rich text search is not yet implemented.
 
 ## Getting started
 [Documentation](https://elmarti.github.io/camadb/classes/Collection.html)
@@ -59,7 +58,7 @@ All of these config options are optional:
 
 ### Initializing a collection
 - Use the columns field to add specific data types for rows. This does _need_ to be done for each column, but is essential for date objects
-- Indexes aren't currently implemented, but the lookup is still very fast across 10 million rows
+- Use `indexes` for frequently queried top-level scalar fields. See the [index guide](docs/indexes.md) for supported predicates and tradeoffs.
 ```
  interface Message {
    _id: string;
@@ -73,7 +72,7 @@ All of these config options are optional:
       type:'date',
       title:'createdAt'
     }],
-    indexes: [],
+    indexes: ['name'],
   });
 ```
 

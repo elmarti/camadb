@@ -24,6 +24,11 @@ describe('CollectionMeta', () => {
   it('should update the meta value', async () => {
     const metaStructure = { collectionName: 'test', columns: [], indexes: [] };
     await collectionMeta.update('test', metaStructure);
-    expect(await collectionMeta.get()).toBeUndefined()
+    expect(await collectionMeta.get()).toEqual(metaStructure);
+  });
+
+  it('initialises configured index metadata', async () => {
+    collectionMeta = new CollectionMeta('records', { columns: [], indexes: ['group'] });
+    await expect(collectionMeta.get()).resolves.toEqual({ collectionName: 'records', columns: [], indexes: ['group'] });
   });
 });

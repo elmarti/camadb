@@ -11,6 +11,7 @@ import { CacheMode } from '../../../interfaces/cache.interface';
 interface RecordDocument {
   name: string;
   active: boolean;
+  score?: number;
 }
 
 interface CollectionContext {
@@ -40,7 +41,7 @@ class MemoryStorage implements Storage {
   }
 }
 
-const config = { columns: [], indexes: [] };
+const config = { columns: [], indexes: ['name', 'active', 'score'] };
 
 const collectionCrudConformance = (adapterName: string, createContext: () => Promise<CollectionContext>): void => {
   describe(`${adapterName} collection CRUD conformance`, () => {
@@ -101,6 +102,33 @@ const collectionCrudConformance = (adapterName: string, createContext: () => Pro
       );
       await expect(context.collection.count({ _id: 'first' })).resolves.toBe(1);
       await expect(context.collection.deleteOne({ _id: 'second' })).resolves.toMatchObject({ deletedCount: 1 });
+      expect(hydrate).not.toHaveBeenCalled();
+    });
+
+    it('maintains metadata indexes across insert, range update, and delete', async () => {
+      await context.collection.insertMany([
+        { _id: 'first', name: 'a', active: true, score: 10 },
+        { _id: 'second', name: 'b', active: true, score: 20 },
+        { _id: 'third', name: 'a', active: false, score: 30 },
+      ]);
+      await expect(context.collection.count({ name: 'a' })).resolves.toBe(2); // build/warm the derived indexes
+      const adapter = context.collection.container?.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
+      const hydrate = jest.spyOn(adapter as IPersistenceAdapter, 'getData');
+
+      await expect(context.collection.findMany({ score: { $gte: 20, $lte: 30 } })).resolves.toMatchObject({
+        rows: [
+          { _id: 'second', score: 20 },
+          { _id: 'third', score: 30 },
+        ],
+      });
+      await expect(
+        context.collection.updateMany({ score: { $gte: 20 } }, { $set: { name: 'updated' } }),
+      ).resolves.toMatchObject({ modifiedCount: 2 });
+      await expect(context.collection.count({ name: 'updated' })).resolves.toBe(2);
+      await expect(context.collection.deleteOne({ name: 'updated' })).resolves.toMatchObject({ deletedCount: 1 });
+      await expect(context.collection.count({ name: 'updated' })).resolves.toBe(1);
+      await context.collection.insertOne({ _id: 'fourth', name: 'updated', active: true, score: 40 });
+      await expect(context.collection.count({ name: 'updated' })).resolves.toBe(2);
       expect(hydrate).not.toHaveBeenCalled();
     });
   });

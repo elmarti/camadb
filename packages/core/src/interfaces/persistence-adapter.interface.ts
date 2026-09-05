@@ -31,6 +31,9 @@ export interface IPersistenceAdapter {
   cacheStats?(): CacheStats;
   clearCache?(): void;
 
+  /** Returns storage-ordered candidates when a metadata index can narrow the query. */
+  queryRecords?(query: Record<string, unknown>): Promise<any[] | undefined>;
+
   update(updated: any): Promise<void>;
 
   destroy(): Promise<void>;

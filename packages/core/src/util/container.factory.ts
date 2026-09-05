@@ -26,6 +26,7 @@ import { NoopSystem } from '../modules/system/noop.system';
 import { TYPES } from '../types';
 import { ServiceRegistry } from './service-registry';
 import { CachedPersistence } from '../modules/persistence/cached-persistence';
+import { MetadataIndexedPersistence } from '../modules/persistence/metadata-indexed-persistence';
 
 export const containerFactory = (
   collectionName: string,
@@ -63,15 +64,15 @@ export const containerFactory = (
       break;
     }
     case 'indexeddb':
-      collectionMeta = new IndexedDbCollectionMeta();
+      collectionMeta = new IndexedDbCollectionMeta(camaConfig, collectionConfig, collectionName);
       persistence = new IndexedDbPersistence(camaConfig, logger, collectionName);
       break;
     case 'localstorage':
-      collectionMeta = new LocalStorageCollectionMeta();
+      collectionMeta = new LocalStorageCollectionMeta(camaConfig, collectionConfig, collectionName);
       persistence = new LocalStoragePersistence(camaConfig, logger, collectionName);
       break;
     case 'inmemory':
-      collectionMeta = new InMemoryCollectionMeta();
+      collectionMeta = new InMemoryCollectionMeta(collectionName, collectionConfig);
       persistence = new InMemoryPersistence();
       break;
     default:
@@ -79,6 +80,7 @@ export const containerFactory = (
   }
 
   persistence = new CachedPersistence(persistence, camaConfig.cache);
+  persistence = new MetadataIndexedPersistence(persistence, collectionMeta, collectionConfig.indexes);
 
   return registry
     .set(TYPES.Logger, logger)

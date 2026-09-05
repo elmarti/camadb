@@ -18,3 +18,12 @@ New documents receive an immutable string `_id` when one is not supplied.
 Duplicate identities are rejected, including across overlapping mutations.
 Insert, update, upsert, and delete methods return acknowledged mutation results
 with the affected IDs or counts.
+
+## Metadata indexes
+
+Collection `indexes` accelerate top-level scalar equality and range predicates,
+including intersections. Persistent adapters retain the original definitions;
+index contents rebuild from committed records and never replace storage as the
+source of truth. Unsupported query shapes safely retain scan behavior. See the
+[index guide](../../docs/indexes.md) for supported operators, memory tradeoffs,
+and benchmarks.
