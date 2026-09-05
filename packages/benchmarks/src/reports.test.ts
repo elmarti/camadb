@@ -7,6 +7,7 @@ const baseline = report('baseline-node24-apple-m5.json');
 const after = report('after-wave4-node24-apple-m5.json');
 const cache = report('cache-wave4-node24-apple-m5.json');
 const indexBaseline = report('index-baseline-node24-apple-m5.json');
+const indexAfter = report('index-after-node24-apple-m5.json');
 
 it('preserves matching environments, settings, and all before/after samples', () => {
   expect(after.runtime).toEqual(baseline.runtime);
@@ -59,5 +60,26 @@ it('records reproducible unindexed equality and range query baselines', () => {
       result.operation === 'cold-equality-count' ? 1 : result.operation === 'unindexed-miss-count' ? 5 : 20,
     );
     expect(result.median.perOperationMs).toBeGreaterThanOrEqual(0);
+  }
+});
+
+it('retains an identical metadata-index comparison with faster steady indexed queries', () => {
+  expect(indexAfter.runtime).toEqual(indexBaseline.runtime);
+  expect(indexAfter.indexes).toEqual(indexBaseline.indexes);
+  expect({ ...indexAfter.config, output: undefined }).toEqual({ ...indexBaseline.config, output: undefined });
+  const key = (result: any) => `${result.adapter}/${result.collectionSize}/${result.operation}`;
+  expect(indexAfter.results.map(key)).toEqual(indexBaseline.results.map(key));
+  for (const result of indexAfter.results) expect(result.samples).toHaveLength(5);
+
+  for (const adapter of ['fs', 'inmemory']) {
+    for (const operation of ['equality-count', 'range-count', 'intersection-count']) {
+      const before = indexBaseline.results.find(
+        (result: any) => result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
+      );
+      const current = indexAfter.results.find(
+        (result: any) => result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
+      );
+      expect(current.median.perOperationMs).toBeLessThan(before.median.perOperationMs);
+    }
   }
 });
