@@ -27,11 +27,7 @@ export class QueryService<T extends object> implements IQueryService<T> {
    */
   async filter(query: Filter<T> = {}, options: IQueryOptions<T> = {}): Promise<IFilterResult<T>> {
     const filterResult: any = {};
-    const identity = this.identityQuery(query);
-    let data =
-      identity !== undefined && this.persistenceAdapter.getRecord
-        ? [await this.persistenceAdapter.getRecord(identity)].filter((row): row is T => row !== undefined)
-        : ((await this.persistenceAdapter.getData()) as T[]);
+    let data = await this.candidateData(query);
     if (Object.keys(query).length > 0) {
       data = data.filter(sift(query as any));
     }
@@ -59,6 +55,15 @@ export class QueryService<T extends object> implements IQueryService<T> {
       await this.persistenceAdapter.mutateRecords({ puts: [row] });
       return this.updateResult(1);
     }
+    if (this.persistenceAdapter.queryRecords && this.persistenceAdapter.mutateRecords) {
+      const candidates = await this.persistenceAdapter.queryRecords(query as Record<string, unknown>);
+      if (candidates !== undefined) {
+        const updated = (candidates as T[]).filter(sift(query as any)).map((row) => ({ ...row }));
+        updated.forEach((row) => this.applyUpdate(row, delta));
+        if (updated.length > 0) await this.persistenceAdapter.mutateRecords({ puts: updated });
+        return this.updateResult(updated.length);
+      }
+    }
     const data = (await this.persistenceAdapter.getData()) as T[];
     this.logger.log(LogLevel.Debug, 'Iterating pages');
     const siftPointer = this.logger.startTimer();
@@ -82,6 +87,19 @@ export class QueryService<T extends object> implements IQueryService<T> {
       await this.persistenceAdapter.mutateRecords({ deletes: [identity] });
       return { acknowledged: true, deletedCount: 1 };
     }
+    if (this.persistenceAdapter.queryRecords && this.persistenceAdapter.mutateRecords) {
+      const candidates = await this.persistenceAdapter.queryRecords(query as Record<string, unknown>);
+      if (candidates !== undefined) {
+        const matches = (candidates as T[]).filter(sift(query as any));
+        const toDelete = limit === undefined ? matches : matches.slice(0, limit);
+        if (toDelete.length > 0) {
+          await this.persistenceAdapter.mutateRecords({
+            deletes: toDelete.map((row) => (row as T & { _id: string })._id),
+          });
+        }
+        return { acknowledged: true, deletedCount: toDelete.length };
+      }
+    }
     const data = (await this.persistenceAdapter.getData()) as T[];
     const matches = data.filter(sift(query as any));
     const toDelete = limit === undefined ? matches : matches.slice(0, limit);
@@ -99,6 +117,10 @@ export class QueryService<T extends object> implements IQueryService<T> {
     if (identity !== undefined && this.persistenceAdapter.getRecord) {
       const row = (await this.persistenceAdapter.getRecord(identity)) as T | undefined;
       return row && sift(query as any)(row) ? 1 : 0;
+    }
+    if (this.persistenceAdapter.queryRecords) {
+      const candidates = await this.persistenceAdapter.queryRecords(query as Record<string, unknown>);
+      if (candidates !== undefined) return (candidates as T[]).filter(sift(query as any)).length;
     }
     const data = (await this.persistenceAdapter.getData()) as T[];
     if (Object.keys(query).length === 0) return data.length;
@@ -133,6 +155,18 @@ export class QueryService<T extends object> implements IQueryService<T> {
     return entries.length === 1 && entries[0][0] === '_id' && typeof entries[0][1] === 'string'
       ? entries[0][1]
       : undefined;
+  }
+
+  private async candidateData(query: Filter<T>): Promise<T[]> {
+    const identity = this.identityQuery(query);
+    if (identity !== undefined && this.persistenceAdapter.getRecord) {
+      return [await this.persistenceAdapter.getRecord(identity)].filter((row): row is T => row !== undefined);
+    }
+    if (this.persistenceAdapter.queryRecords) {
+      const candidates = await this.persistenceAdapter.queryRecords(query as Record<string, unknown>);
+      if (candidates !== undefined) return candidates as T[];
+    }
+    return (await this.persistenceAdapter.getData()) as T[];
   }
 
   private updateResult(count: number): UpdateResult {

@@ -4,7 +4,11 @@ import { IMetaStructure } from '../../../interfaces/meta-structure.interface';
 
 
 export class CollectionMeta implements ICollectionMeta {
-  private meta:any;
+  private meta?: IMetaStructure;
+
+  constructor(collectionName?: string, config?: ICollectionConfig) {
+    if (collectionName && config) this.meta = { ...config, collectionName };
+  }
 
 
   /**
@@ -15,8 +19,8 @@ export class CollectionMeta implements ICollectionMeta {
    * @param config - The collection config
    */
   async init(collectionName: string, config: ICollectionConfig): Promise<void> {
-    return Promise.resolve();
-     }
+    this.meta ??= { ...config, collectionName };
+  }
 
   /**
    * Update the meta value
@@ -24,9 +28,7 @@ export class CollectionMeta implements ICollectionMeta {
    * @param metaStructure - the value to be to be applied to the meta
    */
   async update(collectionName: string, metaStructure: IMetaStructure): Promise<void> {
-
-    return Promise.resolve();
-
+    this.meta = { ...metaStructure, collectionName };
   }
 
   /**

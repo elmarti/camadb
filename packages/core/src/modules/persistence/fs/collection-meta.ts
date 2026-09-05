@@ -39,6 +39,7 @@ export class CollectionMeta implements ICollectionMeta {
 
       if (await this.fs.exists(path.join(this.dbPath, this.fileName))) {
         this.logger.log(LogLevel.Info, 'Already exists');
+        this.meta = await this.fs.loadJSON<IMetaStructure>(path.join(this.dbPath, this.fileName));
         return;
       }
       this.logger.log(LogLevel.Info, 'Does not exist, creating' + this.fileName);

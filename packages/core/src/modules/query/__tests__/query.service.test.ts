@@ -240,6 +240,29 @@ describe('QueryService', () => {
     await expect(queryService.count()).resolves.toBe(3);
   });
 
+  it('uses metadata-index candidates without hydrating the full collection', async () => {
+    persistenceAdapter.queryRecords = jest.fn().mockResolvedValue([
+      { _id: 'first', value: 'A' },
+      { _id: 'second', value: 'B' },
+    ]);
+    persistenceAdapter.mutateRecords = jest.fn().mockResolvedValue(undefined);
+
+    await expect(queryService.filter({ value: 'A' })).resolves.toMatchObject({
+      count: 1,
+      rows: [{ _id: 'first', value: 'A' }],
+    });
+    await expect(queryService.count({ value: 'A' })).resolves.toBe(1);
+    await expect(queryService.update({ value: 'A' }, { $set: { value: 'C' } })).resolves.toMatchObject({
+      modifiedCount: 1,
+    });
+    expect(persistenceAdapter.mutateRecords).toHaveBeenLastCalledWith({
+      puts: [{ _id: 'first', value: 'C' }],
+    });
+    await expect(queryService.delete({ value: 'A' })).resolves.toMatchObject({ deletedCount: 1 });
+    expect(persistenceAdapter.mutateRecords).toHaveBeenLastCalledWith({ deletes: ['first'] });
+    expect(persistenceAdapter.getData).not.toHaveBeenCalled();
+  });
+
   it('deletes one or all matching rows and reports the count', async () => {
     const data = [{ id: 1, value: 'A' }, { id: 2, value: 'A' }, { id: 3, value: 'B' }];
     (persistenceAdapter.getData as jest.Mock).mockResolvedValue(data);

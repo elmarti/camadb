@@ -5,6 +5,7 @@
   "scripts": {
     "benchmark": "yarn build && node --expose-gc dist/run.js",
     "benchmark:cache": "yarn build && node --expose-gc dist/cache-run.js",
+    "benchmark:index": "yarn build && node --expose-gc dist/index-run.js",
     "build": "tsc --build",
     "typecheck": "tsc --build --pretty false"
   },

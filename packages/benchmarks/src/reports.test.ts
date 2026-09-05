@@ -6,6 +6,8 @@ const report = (name: string) =>
 const baseline = report('baseline-node24-apple-m5.json');
 const after = report('after-wave4-node24-apple-m5.json');
 const cache = report('cache-wave4-node24-apple-m5.json');
+const indexBaseline = report('index-baseline-node24-apple-m5.json');
+const indexAfter = report('index-after-node24-apple-m5.json');
 
 it('preserves matching environments, settings, and all before/after samples', () => {
   expect(after.runtime).toEqual(baseline.runtime);
@@ -41,6 +43,43 @@ it('records the complete cache matrix with validated budgets and lookup accounti
       expect(sample.milliseconds).toBeGreaterThanOrEqual(0);
       expect(sample.warmMilliseconds).toBeGreaterThanOrEqual(0);
       expect(sample.readCounters.hits + sample.readCounters.misses).toBe(row.mode === 'disabled' ? 0 : 256);
+    }
+  }
+});
+
+it('records reproducible unindexed equality and range query baselines', () => {
+  expect(indexBaseline.runtime).toEqual(after.runtime);
+  expect(indexBaseline.indexes).toEqual(['group', 'score']);
+  expect(indexBaseline.config.adapters).toEqual(['fs', 'inmemory']);
+  expect(indexBaseline.config.sizes).toEqual([1000, 10000, 100000]);
+  expect(indexBaseline.config.iterations).toBe(5);
+  expect(indexBaseline.results).toHaveLength(30);
+  for (const result of indexBaseline.results) {
+    expect(result.samples).toHaveLength(5);
+    expect(result.repetitions).toBe(
+      result.operation === 'cold-equality-count' ? 1 : result.operation === 'unindexed-miss-count' ? 5 : 20,
+    );
+    expect(result.median.perOperationMs).toBeGreaterThanOrEqual(0);
+  }
+});
+
+it('retains an identical metadata-index comparison with faster steady indexed queries', () => {
+  expect(indexAfter.runtime).toEqual(indexBaseline.runtime);
+  expect(indexAfter.indexes).toEqual(indexBaseline.indexes);
+  expect({ ...indexAfter.config, output: undefined }).toEqual({ ...indexBaseline.config, output: undefined });
+  const key = (result: any) => `${result.adapter}/${result.collectionSize}/${result.operation}`;
+  expect(indexAfter.results.map(key)).toEqual(indexBaseline.results.map(key));
+  for (const result of indexAfter.results) expect(result.samples).toHaveLength(5);
+
+  for (const adapter of ['fs', 'inmemory']) {
+    for (const operation of ['equality-count', 'range-count', 'intersection-count']) {
+      const before = indexBaseline.results.find(
+        (result: any) => result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
+      );
+      const current = indexAfter.results.find(
+        (result: any) => result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
+      );
+      expect(current.median.perOperationMs).toBeLessThan(before.median.perOperationMs);
     }
   }
 });
