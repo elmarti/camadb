@@ -6,6 +6,7 @@ interface Message {
   title: string;
   read: boolean;
   attempts: number;
+  embedding: number[];
 }
 
 export async function assertCollectionContracts(
@@ -16,18 +17,20 @@ export async function assertCollectionContracts(
     title: 'Hello',
     read: false,
     attempts: 0,
+    embedding: [1, 0, 0],
   });
   await collection.insertMany([{
     _id: 'message-2',
     title: 'Typed throughout',
     read: true,
     attempts: 1,
+    embedding: [0, 1, 0],
   }]);
 
   // @ts-expect-error required document fields cannot be omitted
   await collection.insertOne({ _id: 'incomplete' });
   // @ts-expect-error field types cannot change between calls
-  await collection.insertOne({ _id: 'bad', title: 'Bad', read: 'no', attempts: 0 });
+  await collection.insertOne({ _id: 'bad', title: 'Bad', read: 'no', attempts: 0, embedding: [1, 0, 0] });
 
   const result = await collection.findMany({
     read: false,
@@ -47,6 +50,20 @@ export async function assertCollectionContracts(
   void searchScore;
   // @ts-expect-error text-search metadata filters preserve document field types
   await collection.searchText('hello', { filter: { attempts: 'many' } });
+
+  const vectorHits = await collection.searchVector('embedding', [1, 0, 0], {
+    filter: { read: false },
+    limit: 5,
+    metric: 'cosine',
+  });
+  const vectorMessage: Message = vectorHits[0].document;
+  const vectorScore: number = vectorHits[0].score;
+  void vectorMessage;
+  void vectorScore;
+  // @ts-expect-error vector search fields must contain numeric vectors
+  await collection.searchVector('title', [1, 0, 0]);
+  // @ts-expect-error vector-search metadata filters preserve document field types
+  await collection.searchVector('embedding', [1, 0, 0], { filter: { attempts: 'many' } });
 
   // @ts-expect-error filters use the collection's field types
   await collection.findMany({ attempts: 'many' });
@@ -84,6 +101,7 @@ export async function assertCollectionContracts(
   const initialized = await database.initCollection<Message>('messages', {
     columns: [],
     indexes: [],
+    vectorIndexes: [{ field: 'embedding', dimensions: 3 }],
   });
   const initializedResult = await initialized.findMany({ _id: 'message-1' });
   const initializedMessage: Message = initializedResult.rows[0];
@@ -94,7 +112,7 @@ export async function assertCollectionContracts(
   const deletedCount: number = deleted.deletedCount;
   const upserted = await collection.upsert(
     { title: 'new' },
-    { title: 'new', read: false, attempts: 0 },
+    { title: 'new', read: false, attempts: 0, embedding: [1, 0, 0] },
   );
   const upsertedId: string | undefined = upserted.upsertedId;
   void count;

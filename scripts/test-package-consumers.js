@@ -124,9 +124,11 @@ const collection = await database.initCollection('searchable', {
   columns: [],
   indexes: [],
   searchIndexes: ['body'],
+  vectorIndexes: [{ field: 'embedding', dimensions: 3 }],
 });
-await collection.insertOne({ body: 'local browser search' });
+await collection.insertOne({ body: 'local browser search', embedding: [1, 0, 0] });
 await collection.searchText('browser');
+await collection.searchVector('embedding', [1, 0, 0]);
 `,
   );
   buildSync({
