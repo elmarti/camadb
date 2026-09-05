@@ -25,7 +25,16 @@ const provenance = (overrides: Partial<EmbeddingProvenance> = {}): EmbeddingProv
 
 it('keeps embedding provenance attached to a memory record', () => {
   const source = provenance();
-  const memory: MemoryRecord = { id: 'one', content: 'hello', embedding: [0, 1], embeddingProvenance: source };
+  const memory: MemoryRecord = {
+    category: 'fact',
+    content: 'hello',
+    createdAt: '2026-08-31T00:00:00.000Z',
+    embedding: [0, 1],
+    embeddingProvenance: source,
+    id: 'one',
+    schemaVersion: 1,
+    updatedAt: '2026-08-31T00:00:00.000Z',
+  };
   expect(memory.embeddingProvenance).toBe(source);
 });
 
