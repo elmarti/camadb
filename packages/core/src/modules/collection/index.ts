@@ -29,6 +29,7 @@ import {
   InsertOneResult,
   UpdateResult,
 } from '../../interfaces/mutation-result.interface';
+import { TextSearchHit, TextSearchOptions } from '../../interfaces/text-search.interface';
 
 export class Collection<TDocument extends object = Document> implements ICollection<TDocument> {
   public container: ServiceRegistry;
@@ -127,6 +128,15 @@ export class Collection<TDocument extends object = Document> implements ICollect
     const result = await this.queryService.filter(query, options);
     this.logger.endTimer(LogLevel.Debug, pointer, 'Finding many');
     return result;
+  }
+
+  async searchText(
+    query: string,
+    options?: TextSearchOptions<StoredDocument<TDocument>>,
+  ): Promise<TextSearchHit<StoredDocument<TDocument>>[]> {
+    this.checkDestroyed();
+    if (!this.persistenceAdapter.searchText) throw new Error('Full-text search is unavailable');
+    return this.persistenceAdapter.searchText(query, options);
   }
 
   /**

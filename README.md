@@ -6,7 +6,7 @@ Node.js integrations require Node.js 22 or newer. Packages support CommonJS `req
 
 This repository is a workspace. The existing `camadb` import is preserved by a compatibility package; new development may use `@camadb/core`. AI memory and embedding provenance contracts live in `@camadb/memory`, while Studio and examples are private workspace applications.
 
-See [workspace architecture](docs/architecture.md), [metadata indexes](docs/indexes.md), [local development](docs/development.md), [versioning and publishing](docs/versioning-and-publishing.md), and the [2.x compatibility policy](docs/migration-2.x.md).
+See [workspace architecture](docs/architecture.md), [metadata indexes](docs/indexes.md), [full-text search](docs/full-text-search.md), [local development](docs/development.md), [versioning and publishing](docs/versioning-and-publishing.md), and the [2.x compatibility policy](docs/migration-2.x.md).
 
 Stable releases are automated through a Changesets release pull request on `main`. Pushes to `develop` publish unique snapshot releases under npm's `alpha` dist-tag.
 
@@ -28,8 +28,9 @@ I was struggling to find a solution for Electron-based projects that deal with l
 - Simplicity and versatility - This is built for storing data in dynamic structures
 
 ## Current state
-This is still under active development. Metadata equality and range indexes are
-available; rich text search is not yet implemented.
+This is still under active development. Metadata equality/range indexes and
+deterministic full-text search are available; vector and hybrid retrieval are
+not yet implemented.
 
 ## Getting started
 [Documentation](https://elmarti.github.io/camadb/classes/Collection.html)
@@ -73,8 +74,22 @@ All of these config options are optional:
       title:'createdAt'
     }],
     indexes: ['name'],
+    searchIndexes: ['name', 'description'],
   });
 ```
+
+### Full-text search
+
+```ts
+const hits = await collection.searchText('dummy data', {
+  match: 'all',
+  limit: 10,
+});
+```
+
+Hits contain the typed document, its deterministic BM25 score, and the matched
+normalized terms. See the [full-text search guide](docs/full-text-search.md) for
+tokenization, filtering, recovery, and performance details.
 
 In 2.x, the type parameter could be supplied independently to methods such as
 `findMany<T>()`. In 3.x, move it to `initCollection<T>()` once so inserts,

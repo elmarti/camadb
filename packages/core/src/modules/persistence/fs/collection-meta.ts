@@ -66,7 +66,7 @@ export class CollectionMeta implements ICollectionMeta {
     const updateCollectionMetaTask = () => {
       this.logger.log(LogLevel.Info, 'Updating meta file');
 
-      const dbPath = this.config.path || path.join(process.cwd(), './.cama', collectionName);
+      const dbPath = this.dbPath ?? path.join(this.system.getOutputPath(), collectionName);
       this.meta = metaStructure;
       this.meta = Object.assign({}, this.meta, metaStructure);
       this.logger.log(LogLevel.Info, 'Writing meta file');

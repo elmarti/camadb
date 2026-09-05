@@ -27,3 +27,11 @@ index contents rebuild from committed records and never replace storage as the
 source of truth. Unsupported query shapes safely retain scan behavior. See the
 [index guide](../../docs/indexes.md) for supported operators, memory tradeoffs,
 and benchmarks.
+
+## Full-text search
+
+Configure top-level string fields with `searchIndexes` and call `searchText` for
+deterministic BM25-ranked keyword retrieval. Results expose the typed document,
+score, and matched terms; optional metadata filters are applied before scoring
+when an index can resolve them. Derived postings rebuild from committed records.
+See the [full-text guide](../../docs/full-text-search.md).

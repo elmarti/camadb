@@ -5,16 +5,16 @@ describe('IndexedDB collection metadata', () => {
     const database = `metadata-${Date.now()}-${Math.random()}`;
     const first = new CollectionMeta(
       { persistenceAdapter: 'indexeddb', path: database },
-      { columns: [], indexes: ['group'] },
+      { columns: [], indexes: ['group'], searchIndexes: ['body'] },
       'records',
     );
-    await expect(first.get()).resolves.toMatchObject({ indexes: ['group'] });
+    await expect(first.get()).resolves.toMatchObject({ indexes: ['group'], searchIndexes: ['body'] });
 
     const reopened = new CollectionMeta(
       { persistenceAdapter: 'indexeddb', path: database },
-      { columns: [], indexes: ['ignored'] },
+      { columns: [], indexes: ['ignored'], searchIndexes: ['ignored'] },
       'records',
     );
-    await expect(reopened.get()).resolves.toMatchObject({ indexes: ['group'] });
+    await expect(reopened.get()).resolves.toMatchObject({ indexes: ['group'], searchIndexes: ['body'] });
   });
 });

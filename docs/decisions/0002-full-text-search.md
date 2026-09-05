@@ -58,8 +58,8 @@ changes stored documents.
 
 The implementation is pure TypeScript with no Node-only dependency, allowing
 the CPU work to run inside a browser Worker chosen by the application. Index
-memory is proportional to indexed tokens and postings, not than collection
-size. The benchmark report must publish cold-build cost, steady query latency,
+memory is proportional to indexed tokens and postings and therefore grows with
+the indexed corpus. The benchmark report must publish cold-build cost, steady query latency,
 heap observations, and the unindexed scan comparison. Applications exceeding
 the documented range should use a dedicated search engine.
 
@@ -71,4 +71,3 @@ the documented range should use a dedicated search engine.
 - Adding a large search dependency before measuring the narrow native design.
 - WASM by default. It remains an experiment only if identical end-to-end
   workloads show a material gain after initialization and data-transfer costs.
-

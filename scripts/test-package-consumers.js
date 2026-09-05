@@ -119,7 +119,14 @@ void memory;
   write(
     'browser-entry.js',
     `import { Cama, PersistenceAdapterEnum } from '@camadb/core';
-new Cama({ persistenceAdapter: PersistenceAdapterEnum.InMemory });
+const database = new Cama({ persistenceAdapter: PersistenceAdapterEnum.InMemory });
+const collection = await database.initCollection('searchable', {
+  columns: [],
+  indexes: [],
+  searchIndexes: ['body'],
+});
+await collection.insertOne({ body: 'local browser search' });
+await collection.searchText('browser');
 `,
   );
   buildSync({

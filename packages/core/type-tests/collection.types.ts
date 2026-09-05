@@ -36,6 +36,18 @@ export async function assertCollectionContracts(
   const message: Message = result.rows[0];
   void message;
 
+  const textHits = await collection.searchText('hello world', {
+    filter: { read: false },
+    limit: 10,
+    match: 'all',
+  });
+  const searchedMessage: Message = textHits[0].document;
+  const searchScore: number = textHits[0].score;
+  void searchedMessage;
+  void searchScore;
+  // @ts-expect-error text-search metadata filters preserve document field types
+  await collection.searchText('hello', { filter: { attempts: 'many' } });
+
   // @ts-expect-error filters use the collection's field types
   await collection.findMany({ attempts: 'many' });
   // @ts-expect-error unknown document fields are rejected

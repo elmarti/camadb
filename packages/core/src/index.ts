@@ -50,6 +50,7 @@ export type { AggregationPipeline, AggregationStage, Document, DocumentId, Field
 export type { DeleteResult, InsertManyResult, InsertOneResult, UpdateResult } from './interfaces/mutation-result.interface';
 export type { IPersistenceAdapter } from './interfaces/persistence-adapter.interface';
 export type { StorageStats } from './interfaces/persistence-adapter.interface';
+export type { TextSearchHit, TextSearchMatch, TextSearchOptions } from './interfaces/text-search.interface';
 export {
   CURRENT_STORAGE_VERSION,
   LEGACY_STORAGE_VERSION,
