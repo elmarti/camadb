@@ -8,6 +8,7 @@
     "benchmark:index": "yarn build && node --expose-gc dist/index-run.js",
     "benchmark:text": "yarn build && node --expose-gc dist/text-search-run.js",
     "benchmark:vector": "yarn build && node --expose-gc dist/vector-search-run.js",
+    "benchmark:hybrid": "yarn build && node --expose-gc dist/hybrid-search-run.js",
     "build": "tsc --build",
     "typecheck": "tsc --build --pretty false"
   },
