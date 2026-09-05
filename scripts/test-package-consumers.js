@@ -53,9 +53,19 @@ try {
     `const assert = require('assert');
 const core = require('@camadb/core');
 const compatibility = require('camadb');
-require('@camadb/memory');
+const memory = require('@camadb/memory');
 assert.strictEqual(typeof core.Cama, 'function');
 assert.strictEqual(compatibility.Cama, core.Cama);
+assert.deepStrictEqual(
+  memory.prepareEmbeddingQuery(
+    { provider: 'local', model: 'small', dimensions: 2, schemaVersion: 'v1' },
+    {
+      embedding: [1, 0],
+      provenance: { provider: 'local', model: 'small', dimensions: 2, schemaVersion: 'v1' },
+    },
+  ),
+  [1, 0],
+);
 (async () => {
   const db = new core.Cama({ persistenceAdapter: core.PersistenceAdapterEnum.InMemory, cache: { mode: 'lru' } });
   const collection = await db.initCollection('cached', { columns: [], indexes: [] });
@@ -77,7 +87,7 @@ import { Cama as CompatibilityCama } from 'camadb';
 import * as memory from '@camadb/memory';
 assert.strictEqual(typeof CoreCama, 'function');
 assert.strictEqual(CompatibilityCama, CoreCama);
-assert.ok(memory);
+assert.strictEqual(typeof memory.planReembedding, 'function');
 const db = new CoreCama({ persistenceAdapter: PersistenceAdapterEnum.InMemory, cache: { mode: 'lazy' } });
 const collection = await db.initCollection('cached', { columns: [], indexes: [] });
 await collection.insertOne({ _id: 'a', value: 1 });
@@ -95,9 +105,15 @@ await collection.destroy();
     'types.ts',
     `import { Cama, PersistenceAdapterEnum, type ICamaConfig, type CacheConfig, type CacheStats } from '@camadb/core';
 import { Cama as CompatibilityCama } from 'camadb';
-import type { MemoryRecord } from '@camadb/memory';
+import type { EmbeddingProfile, MemoryRecord } from '@camadb/memory';
 const cache: CacheConfig = { mode: 'lru', maxBytes: 1024, maxRecords: 10 };
 const config: ICamaConfig = { persistenceAdapter: PersistenceAdapterEnum.InMemory, cache };
+const embeddingProfile: EmbeddingProfile = {
+  provider: 'local',
+  model: 'small',
+  dimensions: 3,
+  schemaVersion: 'v1',
+};
 async function stats(): Promise<CacheStats> {
   const collection = await database.initCollection('typed', { columns: [], indexes: [] });
   return collection.cacheStats();
@@ -106,6 +122,7 @@ const database: Cama = new CompatibilityCama(config);
 const memory: MemoryRecord = { id: 'one', content: 'hello' };
 void database;
 void memory;
+void embeddingProfile;
 `,
   );
   write(
@@ -119,6 +136,14 @@ void memory;
   write(
     'browser-entry.js',
     `import { Cama, PersistenceAdapterEnum } from '@camadb/core';
+import { prepareEmbeddingQuery } from '@camadb/memory';
+prepareEmbeddingQuery(
+  { provider: 'browser', model: 'small', dimensions: 3, schemaVersion: 'v1' },
+  {
+    embedding: [1, 0, 0],
+    provenance: { provider: 'browser', model: 'small', dimensions: 3, schemaVersion: 'v1' },
+  },
+);
 const database = new Cama({ persistenceAdapter: PersistenceAdapterEnum.InMemory });
 const collection = await database.initCollection('searchable', {
   columns: [],

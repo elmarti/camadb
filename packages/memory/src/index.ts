@@ -1,16 +1,33 @@
-export interface EmbeddingProvenance {
-  provider: string;
-  model: string;
-  dimensions: number;
-  createdAt: string;
-  revision?: string;
-}
+export {
+  EmbeddingCompatibilityError,
+  assertEmbeddingCompatibility,
+  compareEmbeddingProvenance,
+  createEmbeddingProvenance,
+  planReembedding,
+  prepareEmbeddingQuery,
+  stageReembedding,
+  validateEmbeddingProfile,
+  validateEmbeddingVector,
+} from './embedding-provenance';
+export type {
+  EmbeddingCompatibility,
+  EmbeddingCompatibilityField,
+  EmbeddingCompatibilityMismatch,
+  EmbeddingProfile,
+  EmbeddingProvenance,
+  EmbeddingQuery,
+  ProvenancedEmbeddingRecord,
+  ReembeddingPlan,
+  ReembeddingPlanItem,
+  ReembeddingReason,
+  ReembeddingUpdate,
+} from './embedding-provenance';
 
-export interface MemoryRecord<Metadata extends Record<string, unknown> = Record<string, unknown>> {
-  id: string;
+import type { ProvenancedEmbeddingRecord } from './embedding-provenance';
+
+export interface MemoryRecord<Metadata extends Record<string, unknown> = Record<string, unknown>>
+  extends ProvenancedEmbeddingRecord {
   content: string;
-  embedding?: readonly number[];
-  embeddingProvenance?: EmbeddingProvenance;
   metadata?: Metadata;
 }
 
