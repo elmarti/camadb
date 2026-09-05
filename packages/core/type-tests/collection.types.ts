@@ -65,6 +65,24 @@ export async function assertCollectionContracts(
   // @ts-expect-error vector-search metadata filters preserve document field types
   await collection.searchVector('embedding', [1, 0, 0], { filter: { attempts: 'many' } });
 
+  const hybridHits = await collection.searchHybrid({
+    filter: { read: false },
+    fusion: { strategy: 'rrf', textWeight: 1.5, vectorWeight: 1 },
+    limit: 5,
+    text: { query: 'hello', match: 'all' },
+    vector: { field: 'embedding', metric: 'dot', query: [1, 0, 0] },
+  });
+  const hybridMessage: Message = hybridHits[0].document;
+  const finalScore: number = hybridHits[0].score;
+  const textScore: number | undefined = hybridHits[0].components.text?.score;
+  void hybridMessage;
+  void finalScore;
+  void textScore;
+  // @ts-expect-error hybrid vector fields must contain numeric vectors
+  await collection.searchHybrid({ text: { query: 'hello' }, vector: { field: 'title', query: [1, 0, 0] } });
+  // @ts-expect-error hybrid metadata filters preserve document field types
+  await collection.searchHybrid({ filter: { attempts: 'many' }, text: { query: 'hello' }, vector: { field: 'embedding', query: [1, 0, 0] } });
+
   // @ts-expect-error filters use the collection's field types
   await collection.findMany({ attempts: 'many' });
   // @ts-expect-error unknown document fields are rejected

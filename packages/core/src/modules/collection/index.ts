@@ -35,6 +35,8 @@ import {
   VectorSearchHit,
   VectorSearchOptions,
 } from '../../interfaces/vector-search.interface';
+import { HybridSearchHit, HybridSearchOptions } from '../../interfaces/hybrid-search.interface';
+import { fuseHybridResults, resolveHybridFusion } from '../search/hybrid-search';
 
 export class Collection<TDocument extends object = Document> implements ICollection<TDocument> {
   public container: ServiceRegistry;
@@ -152,6 +154,42 @@ export class Collection<TDocument extends object = Document> implements ICollect
     this.checkDestroyed();
     if (!this.persistenceAdapter.searchVector) throw new Error('Vector search is unavailable');
     return this.persistenceAdapter.searchVector(field, vector, options);
+  }
+
+  async searchHybrid(
+    options: HybridSearchOptions<StoredDocument<TDocument>>,
+  ): Promise<HybridSearchHit<StoredDocument<TDocument>>[]> {
+    this.checkDestroyed();
+    const limit = options.limit ?? 10;
+    if (!Number.isSafeInteger(limit) || limit < 0) {
+      throw new Error('Hybrid search limit must be a non-negative integer');
+    }
+    if (limit === 0) return [];
+    const candidateLimit = options.candidateLimit ?? Math.max(50, limit * 5);
+    if (!Number.isSafeInteger(candidateLimit) || candidateLimit < limit) {
+      throw new Error('Hybrid search candidateLimit must be an integer greater than or equal to limit');
+    }
+    const fusion = resolveHybridFusion(options.fusion);
+    const searchText = () => fusion.textWeight === 0
+      ? Promise.resolve([])
+      : this.searchText(options.text.query, {
+          filter: options.filter,
+          limit: candidateLimit,
+          match: options.text.match,
+        });
+    const searchVector = () => fusion.vectorWeight === 0
+      ? Promise.resolve([])
+      : this.searchVector(options.vector.field, options.vector.query, {
+          filter: options.filter,
+          limit: candidateLimit,
+          metric: options.vector.metric,
+        });
+    // Concurrent storage scans contend on filesystem and browser adapters. Resident
+    // collections can overlap promise setup without introducing I/O contention.
+    const [textHits, vectorHits] = this.persistenceAdapter.recordsResident
+      ? await Promise.all([searchText(), searchVector()])
+      : [await searchText(), await searchVector()];
+    return fuseHybridResults(textHits, vectorHits, fusion, limit);
   }
 
   /**

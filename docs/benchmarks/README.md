@@ -12,6 +12,10 @@ Exact vector retrieval measurements and supported-size guidance are recorded in
 the [vector-search benchmark report](./wave5-vector-search.md). The raw 32- and
 384-dimensional samples are retained for issue #84.
 
+Inspectable keyword/vector fusion measurements are recorded in the
+[hybrid-search benchmark report](./wave5-hybrid-search.md), including the
+rejected concurrent-I/O path and run-to-run filesystem variance for issue #85.
+
 The baseline is preserved below. See the [Wave 4 comparison and workload guidance](./wave4-comparison.md) for the post-#83/#53 measurements, cache workloads, regressions, and remaining exit-gate limitations.
 
 See the [speed experiment decision record](./speed-lab/README.md) for measured WASM hashing, Map-backed storage, and JavaScript lookup experiments, including rejected approaches, raw samples, reproduction scripts, and evidence-retention rules. These experiments do not change production storage.

@@ -126,6 +126,7 @@ export class MetadataIndexedPersistence implements IPersistenceAdapter {
   private built = false;
   private destroyed = false;
   private nextSequence = 0;
+  private refreshing?: Promise<void>;
   private revision?: string;
   private readonly initialized: Promise<void>;
 
@@ -226,6 +227,15 @@ export class MetadataIndexedPersistence implements IPersistenceAdapter {
 
   private async ensureFresh(): Promise<void> {
     await this.initialized;
+    const refresh = this.refreshing ??= this.refreshIndex();
+    try {
+      await refresh;
+    } finally {
+      if (this.refreshing === refresh) this.refreshing = undefined;
+    }
+  }
+
+  private async refreshIndex(): Promise<void> {
     const revision = await this.readRevision();
     if (this.built && revision === this.revision) return;
     await this.rebuildFromStorage();
