@@ -19,6 +19,7 @@ import {
   VectorSearchHit,
   VectorSearchOptions,
 } from './vector-search.interface';
+import { HybridSearchHit, HybridSearchOptions } from './hybrid-search.interface';
 
 export interface ICollection<TDocument extends object = Document> {
   container?: ServiceRegistry;
@@ -37,6 +38,9 @@ export interface ICollection<TDocument extends object = Document> {
     vector: readonly number[],
     options?: VectorSearchOptions<StoredDocument<TDocument>>,
   ): Promise<VectorSearchHit<StoredDocument<TDocument>>[]>;
+  searchHybrid(
+    options: HybridSearchOptions<StoredDocument<TDocument>>,
+  ): Promise<HybridSearchHit<StoredDocument<TDocument>>[]>;
   updateMany(
     query: Filter<StoredDocument<TDocument>>,
     delta: Update<Omit<TDocument, '_id'>>,

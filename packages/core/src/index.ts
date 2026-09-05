@@ -58,6 +58,15 @@ export type {
   VectorSearchHit,
   VectorSearchOptions,
 } from './interfaces/vector-search.interface';
+export type {
+  HybridSearchHit,
+  HybridSearchOptions,
+  HybridFusion,
+  HybridTextComponent,
+  HybridVectorComponent,
+  ReciprocalRankFusion,
+  WeightedScoreFusion,
+} from './interfaces/hybrid-search.interface';
 export {
   CURRENT_STORAGE_VERSION,
   LEGACY_STORAGE_VERSION,
