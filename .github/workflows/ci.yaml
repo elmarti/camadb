@@ -18,8 +18,32 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Find affected workspaces
+    runs-on: ubuntu-latest
+    outputs:
+      workspaces: ${{ steps.affected.outputs.workspaces }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Resolve affected workspaces and dependants
+        id: affected
+        env:
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: echo "workspaces=$(node scripts/affected-workspaces.js "$BASE_SHA" "$GITHUB_SHA")" >> "$GITHUB_OUTPUT"
+
   validate:
-    name: Build and test (Node.js ${{ matrix.node-version }})
+    name: Validate affected workspaces (Node.js ${{ matrix.node-version }})
+    needs: changes
+    if: needs.changes.outputs.workspaces != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
@@ -30,11 +54,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
+          cache: yarn
 
       - name: Install Yarn Classic
         run: npm install --global yarn@1.22.22
@@ -42,5 +69,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Validate workspace and published packages
-        run: yarn release:check
+      - name: Validate affected workspaces and published packages
+        env:
+          AFFECTED_WORKSPACES: ${{ needs.changes.outputs.workspaces }}
+        run: yarn validate:affected

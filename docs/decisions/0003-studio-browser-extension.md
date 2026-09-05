@@ -45,6 +45,16 @@ Safari is built from the same source, then packaged and signed using Apple's
 Safari Web Extension tooling. Browser-specific behavior belongs in transport
 adapters; protocol and UI code must not depend on a vendor namespace.
 
+## Continuous integration
+
+Pull-request validation resolves changed workspaces from the Git diff, expands
+them to include downstream workspace dependants, and builds only the affected
+graph and its prerequisites. Changes to shared build or CI configuration remain
+conservative and validate the complete monorepo. Website deployment is scoped
+to the website, embedded demo, and their dependencies; application-only changes
+do not start npm publishing. Changesets remain the authority for selecting which
+versioned packages are published.
+
 An eventual Electron data client is a separate project. It may consume the same
 inspection protocol through an authenticated extension connector while adding
 filesystem databases and larger local workflows. That future transport must be
