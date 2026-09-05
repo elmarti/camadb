@@ -8,6 +8,7 @@ const after = report('after-wave4-node24-apple-m5.json');
 const cache = report('cache-wave4-node24-apple-m5.json');
 const indexBaseline = report('index-baseline-node24-apple-m5.json');
 const indexAfter = report('index-after-node24-apple-m5.json');
+const textSearchBaseline = report('text-search-baseline-node24-apple-m5.json');
 
 it('preserves matching environments, settings, and all before/after samples', () => {
   expect(after.runtime).toEqual(baseline.runtime);
@@ -81,5 +82,18 @@ it('retains an identical metadata-index comparison with faster steady indexed qu
       );
       expect(current.median.perOperationMs).toBeLessThan(before.median.perOperationMs);
     }
+  }
+});
+
+it('records the reproducible full-text scan baseline', () => {
+  expect(textSearchBaseline.runtime).toEqual(indexAfter.runtime);
+  expect(textSearchBaseline.config.adapters).toEqual(['fs', 'inmemory']);
+  expect(textSearchBaseline.config.sizes).toEqual([1000, 10000, 100000]);
+  expect(textSearchBaseline.config.iterations).toBe(5);
+  expect(textSearchBaseline.results).toHaveLength(24);
+  for (const result of textSearchBaseline.results) {
+    expect(result.samples).toHaveLength(5);
+    expect(result.repetitions).toBe(result.operation === 'cold-selective' ? 1 : result.operation === 'common' ? 5 : 10);
+    expect(result.median.perOperationMs).toBeGreaterThanOrEqual(0);
   }
 });
