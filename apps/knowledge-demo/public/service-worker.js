@@ -1,5 +1,5 @@
-const CACHE = 'camadb-knowledge-demo-v1';
-const ASSETS = ['./', './index.html', './app.css', './app.js', './manifest.webmanifest'];
+const CACHE = 'camadb-knowledge-demo-v2';
+const ASSETS = ['./', './index.html', './app.css', './app.js', './camadb-mark.svg', './manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)));

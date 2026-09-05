@@ -18,7 +18,7 @@ describe('local browser knowledge journey', () => {
       fs.readFile(path.join(publicDirectory, 'service-worker.js'), 'utf8'),
     ]);
     expect(page).toContain("connect-src 'none'");
-    for (const asset of ['./index.html', './app.css', './app.js', './manifest.webmanifest']) {
+    for (const asset of ['./index.html', './app.css', './app.js', './camadb-mark.svg', './manifest.webmanifest']) {
       expect(worker).toContain(`'${asset}'`);
     }
     expect(worker).toContain('event.request.method');

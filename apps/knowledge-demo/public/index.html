@@ -17,17 +17,20 @@
     <title>CamaDB — Local knowledge lab</title>
   </head>
   <body>
+    <a class="cama-skip-link" href="#knowledge-workspace">Skip to knowledge workspace</a>
     <header class="topbar">
-      <div class="shell topbar__inner">
-        <div class="brand"><span class="brand__mark">C</span> CamaDB knowledge lab</div>
+      <div class="cama-shell topbar__inner">
+        <div class="brand cama-brand">
+          <img class="brand__mark cama-brand__mark" src="./camadb-mark.svg" alt="" /> CamaDB knowledge lab
+        </div>
         <div class="connection" id="connection-status" aria-live="polite">Checking connection…</div>
       </div>
     </header>
 
-    <main class="shell">
+    <main class="cama-shell">
       <section class="hero">
         <div>
-          <div class="kicker">A fully local retrieval experiment</div>
+          <div class="kicker cama-kicker">A fully local retrieval experiment</div>
           <h1>Your documents.<br />Your browser.<br />Your database.</h1>
           <p class="hero__lede">
             Drop in text, search it, inspect every score, disconnect, and keep going. The complete data path—from
@@ -48,11 +51,11 @@
         <span class="memory-count"><span id="memory-count">0</span> memories</span>
       </div>
 
-      <section class="workspace" aria-label="Knowledge demo">
-        <article class="panel">
+      <section class="workspace" id="knowledge-workspace" aria-label="Knowledge demo">
+        <article class="panel cama-card">
           <div class="panel__header">
             <div>
-              <div class="eyebrow">Ingest</div>
+              <div class="eyebrow cama-kicker">Ingest</div>
               <h2>Add knowledge</h2>
             </div>
             <span class="panel__number">01</span>
@@ -79,15 +82,19 @@
             <textarea id="paste-input" placeholder="Paste something you want to retrieve later…"></textarea>
           </label>
           <div class="actions">
-            <button class="button button--primary" id="import-button" type="button">Store locally</button>
-            <button class="button button--quiet" id="sample-button" type="button">Load sample</button>
+            <button class="button button--primary cama-button cama-button--primary" id="import-button" type="button">
+              Store locally
+            </button>
+            <button class="button button--quiet cama-button cama-button--quiet" id="sample-button" type="button">
+              Load sample
+            </button>
           </div>
         </article>
 
-        <article class="panel">
+        <article class="panel cama-card">
           <div class="panel__header">
             <div>
-              <div class="eyebrow">Retrieve</div>
+              <div class="eyebrow cama-kicker">Retrieve</div>
               <h2>Search your knowledge</h2>
             </div>
             <span class="panel__number">02</span>
@@ -105,7 +112,7 @@
               <option value="text">Full text</option>
               <option value="vector">Vector</option>
             </select>
-            <button class="button button--accent" type="submit">Recall</button>
+            <button class="button button--accent cama-button cama-button--accent" type="submit">Recall</button>
           </form>
           <div id="results" class="results" aria-live="polite">
             <p class="empty-state">
@@ -114,15 +121,19 @@
           </div>
         </article>
 
-        <article class="panel panel--wide">
+        <article class="panel panel--wide cama-card">
           <div class="panel__header">
             <div>
-              <div class="eyebrow">Control</div>
+              <div class="eyebrow cama-kicker">Control</div>
               <h2>Inspect your local data</h2>
             </div>
             <div class="actions">
-              <button class="button button--quiet" id="export-button" type="button">Export JSON</button>
-              <button class="button button--danger" id="clear-button" type="button">Delete everything</button>
+              <button class="button button--quiet cama-button cama-button--quiet" id="export-button" type="button">
+                Export JSON
+              </button>
+              <button class="button button--danger cama-button cama-button--danger" id="clear-button" type="button">
+                Delete everything
+              </button>
             </div>
           </div>
           <div id="memories" class="memories"></div>
@@ -154,8 +165,10 @@
     <dialog id="inspector">
       <div class="dialog__inner">
         <div class="dialog__head">
-          <div class="eyebrow">Raw local record</div>
-          <button class="button button--quiet" id="close-inspector" type="button">Close</button>
+          <div class="eyebrow cama-kicker">Raw local record</div>
+          <button class="button button--quiet cama-button cama-button--quiet" id="close-inspector" type="button">
+            Close
+          </button>
         </div>
         <div id="inspector-body"></div>
       </div>
