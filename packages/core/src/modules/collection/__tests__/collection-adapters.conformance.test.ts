@@ -185,6 +185,33 @@ const collectionCrudConformance = (adapterName: string, createContext: () => Pro
         .rejects.toThrow('dimension 2; expected 3');
       expect(hydrate).not.toHaveBeenCalled();
     });
+
+    it('combines keyword and vector ranks with inspectable deterministic fusion', async () => {
+      await context.collection.insertMany([
+        { _id: 'first', name: 'cobalt record', active: true, embedding: [1, 0, 0] },
+        { _id: 'second', name: 'cobalt cobalt record', active: true, embedding: [0.9, 0.1, 0] },
+        { _id: 'third', name: 'unrelated record', active: false, embedding: [-1, 0, 0] },
+      ]);
+      const hits = await context.collection.searchHybrid({
+        candidateLimit: 3,
+        filter: { active: true },
+        fusion: { strategy: 'rrf', rankConstant: 10, textWeight: 1, vectorWeight: 1 },
+        limit: 2,
+        text: { query: 'cobalt' },
+        vector: { field: 'embedding', metric: 'cosine', query: [1, 0, 0] },
+      });
+      expect(hits.map(({ document }) => document._id)).toEqual(['second', 'first']);
+      expect(hits[0]).toMatchObject({
+        components: {
+          text: { matchedTerms: ['cobalt'], rank: 1, score: expect.any(Number) },
+          vector: { rank: 2, score: expect.any(Number) },
+        },
+        score: expect.any(Number),
+      });
+      expect(hits[0].score).toBeCloseTo(
+        hits[0].components.text!.contribution + hits[0].components.vector!.contribution,
+      );
+    });
   });
 };
 
