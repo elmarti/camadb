@@ -38,7 +38,11 @@ const setStatus = (message: string, tone: 'busy' | 'error' | 'ready' = 'ready'):
   status.dataset.tone = tone;
 };
 
-const button = (label: string, action: () => Promise<void>, className = 'button button--quiet'): HTMLButtonElement => {
+const button = (
+  label: string,
+  action: () => Promise<void>,
+  className = 'button button--quiet cama-button cama-button--quiet',
+): HTMLButtonElement => {
   const control = document.createElement('button');
   control.className = className;
   control.type = 'button';
@@ -88,7 +92,7 @@ const memoryCard = (record: MemoryRecord<KnowledgeMetadata>): HTMLElement => {
   actions.className = 'card-actions';
   actions.append(
     button('Inspect', () => inspectRecord(record.id)),
-    button('Delete', () => forgetRecord(record.id), 'button button--danger'),
+    button('Delete', () => forgetRecord(record.id), 'button button--danger cama-button cama-button--danger'),
   );
   card.append(meta, content, actions);
   return card;

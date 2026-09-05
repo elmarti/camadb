@@ -6,3 +6,7 @@ yarn-error.log
 .DS_Store
 .cache
 coverage
+.next
+out
+apps/website/public/demo
+*.tsbuildinfo

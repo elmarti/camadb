@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">CamaDB</title>
+  <rect width="64" height="64" rx="18" fill="#17251f"/>
+  <path d="M45.5 18.7c-3.4-2.5-7.6-3.9-12-3.9C22 14.8 14.8 22 14.8 32.1S22 49.3 33.5 49.3c4.8 0 9.1-1.4 12.6-4l-5.3-7.2a12.4 12.4 0 0 1-7.3 2.3c-5.5 0-9.4-3.2-9.4-8.3s3.9-8.4 9.4-8.4c2.9 0 5.3.8 7.3 2.4l4.7-7.4Z" fill="#cbf070"/>
+  <circle cx="47.5" cy="32" r="4.5" fill="#f2efe7"/>
+</svg>

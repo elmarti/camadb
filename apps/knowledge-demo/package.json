@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@camadb/core": "2.0.1",
+    "@camadb/design": "0.1.0",
     "@camadb/memory": "0.1.0"
   }
 }

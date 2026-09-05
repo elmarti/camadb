@@ -1,0 +1,22 @@
+{
+  "name": "@camadb/website",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Public website for the open-source CamaDB database",
+  "scripts": {
+    "build": "next build && node scripts/copy-demo.js",
+    "dev": "node scripts/copy-demo.js --public && next dev",
+    "start": "node scripts/copy-demo.js --public && next dev",
+    "typecheck": "tsc --noEmit --pretty false"
+  },
+  "dependencies": {
+    "@camadb/design": "0.1.0",
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0"
+  }
+}

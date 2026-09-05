@@ -33,4 +33,6 @@ for (const file of ['index.html', 'manifest.webmanifest', 'service-worker.js']) 
   fs.copyFileSync(path.join(root, 'public', file), path.join(output, file));
 }
 
+fs.copyFileSync(path.join(root, '../../packages/design/assets/camadb-mark.svg'), path.join(output, 'camadb-mark.svg'));
+
 console.log('Built the offline knowledge demo in apps/knowledge-demo/dist.');
