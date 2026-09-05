@@ -145,6 +145,8 @@ export class MetadataIndexedPersistence implements IPersistenceAdapter {
     });
   }
 
+  get recordsResident(): boolean { return this.adapter.recordsResident === true; }
+
   async queryRecords(query: Record<string, unknown>): Promise<any[] | undefined> {
     const ids = await this.queryRecordIds(query);
     if (ids === undefined) return;
@@ -155,6 +157,12 @@ export class MetadataIndexedPersistence implements IPersistenceAdapter {
     }
     const wanted = new Set(ids);
     return (await this.adapter.getData()).filter((row: { _id?: string }) => wanted.has(row._id ?? ''));
+  }
+
+  async queryExactRecords(query: Record<string, unknown>): Promise<any[] | undefined> {
+    await this.initialized;
+    if (!this.isFullyIndexed(query)) return;
+    return this.queryRecords(query);
   }
 
   async queryRecordIds(query: Record<string, unknown>): Promise<string[] | undefined> {
@@ -286,6 +294,29 @@ export class MetadataIndexedPersistence implements IPersistenceAdapter {
       }
       return this.indexes.has(field) && this.indexes.get(field)?.match(condition) !== undefined;
     });
+  }
+
+  private isFullyIndexed(query: Record<string, unknown>): boolean {
+    const entries = Object.entries(query);
+    return entries.length > 0 && entries.every(([field, condition]) => {
+      if (field === '$and' && Array.isArray(condition) && condition.length > 0) {
+        return condition.every((child) => child !== null && typeof child === 'object' && !Array.isArray(child) &&
+          this.isFullyIndexed(child as Record<string, unknown>));
+      }
+      return this.indexes.has(field) && this.isExactCondition(condition) &&
+        this.indexes.get(field)?.match(condition) !== undefined;
+    });
+  }
+
+  private isExactCondition(condition: unknown): boolean {
+    if (isIndexValue(condition)) return true;
+    if (!condition || typeof condition !== 'object' || Array.isArray(condition)) return false;
+    const operators = condition as Record<string, unknown>;
+    const keys = Object.keys(operators);
+    if (keys.length === 0 || keys.some((key) => !['$eq', '$gt', '$gte', '$lt', '$lte'].includes(key))) return false;
+    if ('$gt' in operators && '$gte' in operators) return false;
+    if ('$lt' in operators && '$lte' in operators) return false;
+    return Object.values(operators).every(isIndexValue);
   }
 
   private clearIndexes(): void {

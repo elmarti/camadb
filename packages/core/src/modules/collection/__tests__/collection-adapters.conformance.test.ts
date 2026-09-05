@@ -12,6 +12,7 @@ interface RecordDocument {
   name: string;
   active: boolean;
   score?: number;
+  embedding?: number[];
 }
 
 interface CollectionContext {
@@ -41,7 +42,12 @@ class MemoryStorage implements Storage {
   }
 }
 
-const config = { columns: [], indexes: ['name', 'active', 'score'], searchIndexes: ['name'] };
+const config = {
+  columns: [],
+  indexes: ['name', 'active', 'score'],
+  searchIndexes: ['name'],
+  vectorIndexes: [{ field: 'embedding', dimensions: 3 }],
+};
 
 const collectionCrudConformance = (adapterName: string, createContext: () => Promise<CollectionContext>): void => {
   describe(`${adapterName} collection CRUD conformance`, () => {
@@ -156,6 +162,27 @@ const collectionCrudConformance = (adapterName: string, createContext: () => Pro
       ]);
       await context.collection.deleteOne({ _id: 'second' });
       await expect(context.collection.searchText('cobalt')).resolves.toEqual([]);
+      expect(hydrate).not.toHaveBeenCalled();
+    });
+
+    it('performs bounded exact vector search with metadata pre-filtering', async () => {
+      await context.collection.insertMany([
+        { _id: 'first', name: 'first', active: true, embedding: [1, 0, 0] },
+        { _id: 'second', name: 'second', active: false, embedding: [0.9, 0.1, 0] },
+        { _id: 'third', name: 'third', active: true, embedding: [-1, 0, 0] },
+      ]);
+      await expect(context.collection.searchVector('embedding', [1, 0, 0], {
+        filter: { active: true },
+        limit: 2,
+        metric: 'cosine',
+      })).resolves.toMatchObject([
+        { document: { _id: 'first' }, score: 1 },
+        { document: { _id: 'third' }, score: -1 },
+      ]);
+      const adapter = context.collection.container?.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
+      const hydrate = jest.spyOn(adapter as IPersistenceAdapter, 'getData');
+      await expect(context.collection.searchVector('embedding', [1, 0], { limit: 1 }))
+        .rejects.toThrow('dimension 2; expected 3');
       expect(hydrate).not.toHaveBeenCalled();
     });
   });

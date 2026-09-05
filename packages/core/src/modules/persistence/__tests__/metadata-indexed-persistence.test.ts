@@ -108,6 +108,20 @@ describe('metadata indexed persistence', () => {
     await expect(indexed.queryRecords({ score: { $gte: 10 } })).resolves.toBeUndefined();
   });
 
+  it('only reports exact results when every filter condition is represented by an index', async () => {
+    const adapter = new RevisionAdapter();
+    adapter.rows = [
+      { _id: 'first', group: 'a', active: true, score: 10 },
+      { _id: 'second', group: 'a', active: false, score: 20 },
+    ];
+    const indexed = new MetadataIndexedPersistence(adapter, metadata(['group', 'score']), []);
+
+    await expect(indexed.queryExactRecords({ group: 'a', score: { $gte: 10 } })).resolves.toEqual(adapter.rows);
+    await expect(indexed.queryExactRecords({ group: 'a', active: true })).resolves.toBeUndefined();
+    await expect(indexed.queryExactRecords({ group: { $ne: 'b' } })).resolves.toBeUndefined();
+    await expect(indexed.queryExactRecords({ score: { $gt: 5, $gte: 10 } })).resolves.toBeUndefined();
+  });
+
   it('falls back to configured definitions when metadata is unavailable', async () => {
     const adapter = new RevisionAdapter();
     adapter.rows = [{ _id: 'first', group: 'a' }];

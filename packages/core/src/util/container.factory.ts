@@ -28,6 +28,7 @@ import { ServiceRegistry } from './service-registry';
 import { CachedPersistence } from '../modules/persistence/cached-persistence';
 import { MetadataIndexedPersistence } from '../modules/persistence/metadata-indexed-persistence';
 import { FullTextIndexedPersistence } from '../modules/search/full-text-indexed-persistence';
+import { VectorSearchPersistence } from '../modules/search/vector-search-persistence';
 
 export const containerFactory = (
   collectionName: string,
@@ -83,6 +84,7 @@ export const containerFactory = (
   persistence = new CachedPersistence(persistence, camaConfig.cache);
   persistence = new MetadataIndexedPersistence(persistence, collectionMeta, collectionConfig.indexes);
   persistence = new FullTextIndexedPersistence(persistence, collectionMeta, collectionConfig.searchIndexes ?? []);
+  persistence = new VectorSearchPersistence(persistence, collectionMeta, collectionConfig.vectorIndexes ?? []);
 
   return registry
     .set(TYPES.Logger, logger)
