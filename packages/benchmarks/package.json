@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@camadb/core": "2.0.1",
-    "@camadb/test-utils": "0.1.0"
+    "@camadb/test-utils": "0.1.0",
+    "fake-indexeddb": "^6.2.2"
   }
 }

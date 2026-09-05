@@ -9,6 +9,9 @@ const cache = report('cache-wave4-node24-apple-m5.json');
 const indexBaseline = report('index-baseline-node24-apple-m5.json');
 const indexAfter = report('index-after-node24-apple-m5.json');
 const textSearchBaseline = report('text-search-baseline-node24-apple-m5.json');
+const textSearchAfter = report('text-search-after-node24-apple-m5.json');
+const textSearchBrowserBaseline = report('text-search-browser-baseline-node24-apple-m5.json');
+const textSearchBrowserAfter = report('text-search-browser-after-node24-apple-m5.json');
 
 it('preserves matching environments, settings, and all before/after samples', () => {
   expect(after.runtime).toEqual(baseline.runtime);
@@ -95,5 +98,50 @@ it('records the reproducible full-text scan baseline', () => {
     expect(result.samples).toHaveLength(5);
     expect(result.repetitions).toBe(result.operation === 'cold-selective' ? 1 : result.operation === 'common' ? 5 : 10);
     expect(result.median.perOperationMs).toBeGreaterThanOrEqual(0);
+  }
+});
+
+it('retains an identical full-text comparison with faster steady queries', () => {
+  expect(textSearchAfter.runtime).toEqual(textSearchBaseline.runtime);
+  expect(textSearchAfter.engine).toBe('indexed');
+  expect({ ...textSearchAfter.config, output: undefined }).toEqual({
+    ...textSearchBaseline.config,
+    output: undefined,
+  });
+  const key = (result: any) => `${result.adapter}/${result.collectionSize}/${result.operation}`;
+  expect(textSearchAfter.results.map(key)).toEqual(textSearchBaseline.results.map(key));
+  for (const result of textSearchAfter.results) expect(result.samples).toHaveLength(5);
+
+  for (const adapter of ['fs', 'inmemory']) {
+    for (const operation of ['selective', 'common', 'metadata-filtered']) {
+      const before = textSearchBaseline.results.find(
+        (result: any) => result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
+      );
+      const current = textSearchAfter.results.find(
+        (result: any) => result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
+      );
+      expect(current.median.perOperationMs).toBeLessThan(before.median.perOperationMs);
+    }
+  }
+});
+
+it('retains the browser-adapter search comparison under deterministic API emulation', () => {
+  expect(textSearchBrowserAfter.runtime).toEqual(textSearchBrowserBaseline.runtime);
+  expect(textSearchBrowserBaseline.config.adapters).toEqual(['indexeddb', 'localstorage']);
+  expect(textSearchBrowserBaseline.config.sizes).toEqual([1000]);
+  expect(textSearchBrowserBaseline.config.iterations).toBe(5);
+  expect(textSearchBrowserBaseline.results).toHaveLength(8);
+  expect(textSearchBrowserAfter.results).toHaveLength(8);
+  for (const result of [...textSearchBrowserBaseline.results, ...textSearchBrowserAfter.results]) {
+    expect(result.samples).toHaveLength(5);
+  }
+  for (const adapter of ['indexeddb', 'localstorage']) {
+    const before = textSearchBrowserBaseline.results.find(
+      (result: any) => result.adapter === adapter && result.operation === 'selective',
+    );
+    const current = textSearchBrowserAfter.results.find(
+      (result: any) => result.adapter === adapter && result.operation === 'selective',
+    );
+    expect(current.median.perOperationMs).toBeLessThan(before.median.perOperationMs);
   }
 });
