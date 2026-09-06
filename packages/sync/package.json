@@ -1,6 +1,6 @@
 {
   "name": "@camadb/sync",
-  "version": "0.1.0",
+  "version": "0.2.0-rc.0",
   "description": "Versioned synchronization protocol and local reference adapter for CamaDB",
   "license": "MIT",
   "main": "dist/index.js",

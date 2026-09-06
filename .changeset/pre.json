@@ -1,0 +1,35 @@
+{
+  "mode": "pre",
+  "tag": "rc",
+  "initialVersions": {
+    "@camadb/knowledge-demo": "0.0.0",
+    "@camadb/studio": "0.0.0",
+    "@camadb/website": "0.0.0",
+    "@camadb/example-basic": "0.0.0",
+    "@camadb/benchmarks": "0.0.0",
+    "camadb": "2.0.1",
+    "@camadb/core": "2.0.1",
+    "@camadb/design": "0.1.0",
+    "@camadb/memory": "0.1.0",
+    "@camadb/sync": "0.1.0",
+    "@camadb/test-utils": "0.1.0"
+  },
+  "changesets": [
+    "automatic-storage-compaction",
+    "brave-cameras-build",
+    "browser-module-initialization",
+    "configurable-record-cache",
+    "embedding-provenance",
+    "exact-vector-search",
+    "inspectable-hybrid-search",
+    "local-first-memory",
+    "quiet-cats-delete",
+    "quiet-databases-update",
+    "record-oriented-storage",
+    "smart-pears-sync",
+    "tidy-filesystem-writes",
+    "typed-collection-api",
+    "typed-crud-identity",
+    "warm-rivers-migrate"
+  ]
+}

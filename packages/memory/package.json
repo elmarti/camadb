@@ -1,6 +1,6 @@
 {
   "name": "@camadb/memory",
-  "version": "0.1.0",
+  "version": "0.2.0-rc.0",
   "description": "AI memory, retrieval, and embedding provenance contracts for CamaDB",
   "license": "MIT",
   "main": "dist/index.js",
@@ -23,7 +23,7 @@
     "test": "jest --config ../../jest.config.js packages/memory/src --runInBand"
   },
   "dependencies": {
-    "@camadb/core": "2.0.1"
+    "@camadb/core": "3.0.0-rc.0"
   },
   "engines": {
     "node": ">=22"

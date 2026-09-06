@@ -16,8 +16,8 @@
     "typecheck": "tsc --build --pretty false"
   },
   "dependencies": {
-    "@camadb/core": "2.0.1",
-    "@camadb/memory": "0.1.0",
+    "@camadb/core": "3.0.0-rc.0",
+    "@camadb/memory": "0.2.0-rc.0",
     "@camadb/test-utils": "0.1.0",
     "fake-indexeddb": "^6.2.2"
   }

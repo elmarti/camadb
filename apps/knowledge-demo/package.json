@@ -9,8 +9,8 @@
     "start": "node serve.js"
   },
   "dependencies": {
-    "@camadb/core": "2.0.1",
+    "@camadb/core": "3.0.0-rc.0",
     "@camadb/design": "0.1.0",
-    "@camadb/memory": "0.1.0"
+    "@camadb/memory": "0.2.0-rc.0"
   }
 }
