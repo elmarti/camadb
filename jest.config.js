@@ -12,6 +12,7 @@ module.exports = {
   moduleNameMapper: {
     '^@camadb/core$': '<rootDir>/packages/core/src/index.ts',
     '^@camadb/memory$': '<rootDir>/packages/memory/src/index.ts',
+    '^@camadb/sync$': '<rootDir>/packages/sync/src/index.ts',
     '^@camadb/test-utils$': '<rootDir>/packages/test-utils/src/index.ts',
     '^camadb$': '<rootDir>/packages/camadb/src/index.ts',
   },

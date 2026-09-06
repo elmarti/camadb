@@ -5,7 +5,7 @@ const os = require('os');
 
 const root = path.resolve(__dirname, '..');
 const dryRun = process.argv.includes('--dry-run');
-const order = ['core', 'memory', 'camadb'];
+const order = ['core', 'memory', 'sync', 'camadb'];
 
 for (const directory of order) {
   const cwd = path.join(root, 'packages', directory);

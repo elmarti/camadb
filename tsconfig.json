@@ -4,6 +4,7 @@
     { "path": "packages/core" },
     { "path": "packages/camadb" },
     { "path": "packages/memory" },
+    { "path": "packages/sync" },
     { "path": "packages/test-utils" },
     { "path": "packages/benchmarks" },
     { "path": "tests/integration" }
