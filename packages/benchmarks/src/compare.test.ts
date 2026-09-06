@@ -1,4 +1,4 @@
-import { compareReports } from './compare';
+import { blockingRegressionIds, compareReports } from './compare';
 
 const report = (samples: number[]) => ({
   config: { adapters: ['inmemory'], iterations: samples.length, sizes: [1_000] },
@@ -60,4 +60,15 @@ it('rejects mismatched workloads and undersampled reports', () => {
   expect(() => compareReports(report([1, 1, 1]), report([1, 1, 1]), options)).toThrow(
     'Regression gating requires at least five samples',
   );
+});
+
+it('blocks only regressions reproduced by an independent confirmation run', () => {
+  const first = compareReports(report([1, 1.01, 1.02, 1.03, 1.04]), report([1.3, 1.31, 1.32, 1.33, 1.34]), options);
+  const second = compareReports(report([1, 1.01, 1.02, 1.03, 1.04]), report([1.4, 1.41, 1.42, 1.43, 1.44]), options);
+  const comparisons = [{ name: 'storage', report: second }];
+
+  expect(
+    blockingRegressionIds(comparisons, new Set(blockingRegressionIds([{ name: 'storage', report: first }]))),
+  ).toEqual(['storage/inmemory/1000/point-read']);
+  expect(blockingRegressionIds(comparisons, new Set(['metadata/inmemory/1000/cold-equality-count']))).toEqual([]);
 });

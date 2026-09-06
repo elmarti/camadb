@@ -79,7 +79,7 @@ jobs:
     needs: changes
     if: github.event_name == 'pull_request' && contains(needs.changes.outputs.workspaces, '@camadb/benchmarks')
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     steps:
       - name: Checkout candidate
@@ -160,11 +160,27 @@ jobs:
 
       - name: Compare benchmark distributions
         working-directory: candidate
-        run: node packages/benchmarks/dist/compare.js --baseline ../benchmark-results/baseline --candidate ../benchmark-results/candidate
+        run: |
+          if node packages/benchmarks/dist/compare.js --baseline ../benchmark-results/baseline --candidate ../benchmark-results/candidate --write-regressions ../benchmark-results/baseline-regressions.json; then
+            exit 0
+          fi
+
+          echo "The initial comparison found a regression. Repeating all workloads to distinguish a code change from hosted-runner noise."
+          node packages/benchmarks/dist/ci-run.js --runner-dir ../baseline/packages/benchmarks/dist --output-dir ../benchmark-results/baseline-confirmation
+          node packages/benchmarks/dist/ci-run.js --runner-dir packages/benchmarks/dist --output-dir ../benchmark-results/candidate-confirmation
+          node packages/benchmarks/dist/compare.js --baseline ../benchmark-results/baseline-confirmation --candidate ../benchmark-results/candidate-confirmation --confirm-regressions ../benchmark-results/baseline-regressions.json
 
       - name: Enforce the reviewed performance floor
         working-directory: candidate
-        run: node packages/benchmarks/dist/compare.js --baseline ../benchmark-results/reviewed --candidate ../benchmark-results/candidate
+        run: |
+          if node packages/benchmarks/dist/compare.js --baseline ../benchmark-results/reviewed --candidate ../benchmark-results/candidate --write-regressions ../benchmark-results/reviewed-regressions.json; then
+            exit 0
+          fi
+
+          echo "The initial floor comparison found a regression. Repeating all workloads before rejecting the candidate."
+          node packages/benchmarks/dist/ci-run.js --runner-dir ../reviewed/packages/benchmarks/dist --output-dir ../benchmark-results/reviewed-confirmation
+          node packages/benchmarks/dist/ci-run.js --runner-dir packages/benchmarks/dist --output-dir ../benchmark-results/floor-candidate-confirmation
+          node packages/benchmarks/dist/compare.js --baseline ../benchmark-results/reviewed-confirmation --candidate ../benchmark-results/floor-candidate-confirmation --confirm-regressions ../benchmark-results/reviewed-regressions.json
 
       - name: Upload raw benchmark reports
         if: always()
