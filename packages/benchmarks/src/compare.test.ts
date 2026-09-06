@@ -44,6 +44,15 @@ it('does not call overlapping noisy distributions a regression', () => {
   expect(comparison.regressions).toEqual([]);
 });
 
+it('keeps cumulative tolerated changes below a fixed reviewed floor', () => {
+  const reviewed = report([1, 1.01, 1.02, 1.03, 1.04]);
+  const currentBase = report([1.18, 1.19, 1.2, 1.21, 1.22]);
+  const candidate = report([1.42, 1.43, 1.44, 1.45, 1.46]);
+
+  expect(compareReports(currentBase, candidate, options).regressions).toEqual([]);
+  expect(compareReports(reviewed, candidate, options).regressions).toHaveLength(1);
+});
+
 it('rejects mismatched workloads and undersampled reports', () => {
   expect(() =>
     compareReports(report([1, 1, 1, 1, 1]), { ...report([1, 1, 1, 1, 1]), engine: 'other' }, options),

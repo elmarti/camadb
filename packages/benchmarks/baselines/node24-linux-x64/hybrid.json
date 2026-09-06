@@ -1,0 +1,640 @@
+{
+  "schemaVersion": 1,
+  "engine": "native",
+  "generatedAt": "2026-09-06T18:12:32.253Z",
+  "workload": {
+    "candidateLimit": 50,
+    "dimensions": 32,
+    "limit": 10,
+    "rankConstant": 60
+  },
+  "runtime": {
+    "architecture": "x64",
+    "cpu": "AMD EPYC 7763 64-Core Processor",
+    "node": "v24.20.0",
+    "platform": "linux",
+    "totalMemoryBytes": 16766414848
+  },
+  "config": {
+    "adapters": [
+      "fs",
+      "inmemory"
+    ],
+    "iterations": 5,
+    "sizes": [
+      1000,
+      10000
+    ],
+    "output": "/home/runner/work/camadb/camadb/benchmark-results/candidate/hybrid.json"
+  },
+  "results": [
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "operation": "cold-balanced",
+      "repetitions": 1,
+      "samples": [
+        {
+          "heapDeltaBytes": 2641336,
+          "milliseconds": 30.86011400000001,
+          "perOperationMs": 30.86011400000001
+        },
+        {
+          "heapDeltaBytes": 1701456,
+          "milliseconds": 26.24775599999998,
+          "perOperationMs": 26.24775599999998
+        },
+        {
+          "heapDeltaBytes": 1730320,
+          "milliseconds": 21.860051,
+          "perOperationMs": 21.860051
+        },
+        {
+          "heapDeltaBytes": 9457680,
+          "milliseconds": 24.703147000000058,
+          "perOperationMs": 24.703147000000058
+        },
+        {
+          "heapDeltaBytes": 9481208,
+          "milliseconds": 24.887091000000055,
+          "perOperationMs": 24.887091000000055
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 2641336,
+        "milliseconds": 24.887091000000055,
+        "perOperationMs": 24.887091000000055
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "operation": "balanced",
+      "repetitions": 10,
+      "samples": [
+        {
+          "heapDeltaBytes": 3118296,
+          "milliseconds": 53.47028999999998,
+          "perOperationMs": 5.347028999999997
+        },
+        {
+          "heapDeltaBytes": 3333144,
+          "milliseconds": 48.72546500000004,
+          "perOperationMs": 4.872546500000004
+        },
+        {
+          "heapDeltaBytes": 2913888,
+          "milliseconds": 49.45570699999996,
+          "perOperationMs": 4.945570699999996
+        },
+        {
+          "heapDeltaBytes": 3442416,
+          "milliseconds": 54.799267999999984,
+          "perOperationMs": 5.4799267999999985
+        },
+        {
+          "heapDeltaBytes": 3355864,
+          "milliseconds": 49.63939899999991,
+          "perOperationMs": 4.963939899999991
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 3333144,
+        "milliseconds": 49.63939899999991,
+        "perOperationMs": 4.963939899999991
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "operation": "metadata-filtered",
+      "repetitions": 10,
+      "samples": [
+        {
+          "heapDeltaBytes": 5776880,
+          "milliseconds": 27.820007999999973,
+          "perOperationMs": 2.7820007999999974
+        },
+        {
+          "heapDeltaBytes": 5694536,
+          "milliseconds": 25.159187999999972,
+          "perOperationMs": 2.515918799999997
+        },
+        {
+          "heapDeltaBytes": 5691824,
+          "milliseconds": 21.41253400000005,
+          "perOperationMs": 2.141253400000005
+        },
+        {
+          "heapDeltaBytes": 5640968,
+          "milliseconds": 22.63212699999997,
+          "perOperationMs": 2.263212699999997
+        },
+        {
+          "heapDeltaBytes": 5640536,
+          "milliseconds": 22.162300000000187,
+          "perOperationMs": 2.2162300000000186
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 5691824,
+        "milliseconds": 22.63212699999997,
+        "perOperationMs": 2.263212699999997
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 1000,
+      "operation": "text-weighted",
+      "repetitions": 10,
+      "samples": [
+        {
+          "heapDeltaBytes": 2910528,
+          "milliseconds": 50.95965100000001,
+          "perOperationMs": 5.095965100000001
+        },
+        {
+          "heapDeltaBytes": 2895016,
+          "milliseconds": 48.36623599999996,
+          "perOperationMs": 4.836623599999996
+        },
+        {
+          "heapDeltaBytes": 2872928,
+          "milliseconds": 48.27569699999992,
+          "perOperationMs": 4.827569699999993
+        },
+        {
+          "heapDeltaBytes": 3469704,
+          "milliseconds": 49.77544,
+          "perOperationMs": 4.977544
+        },
+        {
+          "heapDeltaBytes": 3431288,
+          "milliseconds": 49.084675999999945,
+          "perOperationMs": 4.9084675999999945
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 2910528,
+        "milliseconds": 49.084675999999945,
+        "perOperationMs": 4.9084675999999945
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "operation": "cold-balanced",
+      "repetitions": 1,
+      "samples": [
+        {
+          "heapDeltaBytes": 10251504,
+          "milliseconds": 151.61277499999983,
+          "perOperationMs": 151.61277499999983
+        },
+        {
+          "heapDeltaBytes": 26803432,
+          "milliseconds": 145.76379999999972,
+          "perOperationMs": 145.76379999999972
+        },
+        {
+          "heapDeltaBytes": 33715384,
+          "milliseconds": 127.12939300000016,
+          "perOperationMs": 127.12939300000016
+        },
+        {
+          "heapDeltaBytes": 34349144,
+          "milliseconds": 128.3934050000007,
+          "perOperationMs": 128.3934050000007
+        },
+        {
+          "heapDeltaBytes": 34320560,
+          "milliseconds": 122.09425900000042,
+          "perOperationMs": 122.09425900000042
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 33715384,
+        "milliseconds": 128.3934050000007,
+        "perOperationMs": 128.3934050000007
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "operation": "balanced",
+      "repetitions": 10,
+      "samples": [
+        {
+          "heapDeltaBytes": 791248,
+          "milliseconds": 417.47880299999997,
+          "perOperationMs": 41.7478803
+        },
+        {
+          "heapDeltaBytes": 18956568,
+          "milliseconds": 427.87194699999964,
+          "perOperationMs": 42.787194699999965
+        },
+        {
+          "heapDeltaBytes": 42727760,
+          "milliseconds": 463.3648060000005,
+          "perOperationMs": 46.33648060000005
+        },
+        {
+          "heapDeltaBytes": 20142000,
+          "milliseconds": 485.62907499999983,
+          "perOperationMs": 48.56290749999998
+        },
+        {
+          "heapDeltaBytes": 578160,
+          "milliseconds": 489.99253599999975,
+          "perOperationMs": 48.999253599999975
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 18956568,
+        "milliseconds": 463.3648060000005,
+        "perOperationMs": 46.33648060000005
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "operation": "metadata-filtered",
+      "repetitions": 10,
+      "samples": [
+        {
+          "heapDeltaBytes": 28462480,
+          "milliseconds": 227.87822000000006,
+          "perOperationMs": 22.787822000000006
+        },
+        {
+          "heapDeltaBytes": 26167912,
+          "milliseconds": 208.4241360000001,
+          "perOperationMs": 20.842413600000008
+        },
+        {
+          "heapDeltaBytes": 19553232,
+          "milliseconds": 233.1186629999993,
+          "perOperationMs": 23.311866299999927
+        },
+        {
+          "heapDeltaBytes": 19591760,
+          "milliseconds": 197.95372399999997,
+          "perOperationMs": 19.795372399999998
+        },
+        {
+          "heapDeltaBytes": 21570224,
+          "milliseconds": 208.62282800000048,
+          "perOperationMs": 20.86228280000005
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 21570224,
+        "milliseconds": 208.62282800000048,
+        "perOperationMs": 20.86228280000005
+      }
+    },
+    {
+      "adapter": "fs",
+      "collectionSize": 10000,
+      "operation": "text-weighted",
+      "repetitions": 10,
+      "samples": [
+        {
+          "heapDeltaBytes": -1180064,
+          "milliseconds": 462.6150349999998,
+          "perOperationMs": 46.26150349999998
+        },
+        {
+          "heapDeltaBytes": 33854112,
+          "milliseconds": 481.5452519999999,
+          "perOperationMs": 48.15452519999999
+        },
+        {
+          "heapDeltaBytes": 38658128,
+          "milliseconds": 499.1716660000002,
+          "perOperationMs": 49.917166600000016
+        },
+        {
+          "heapDeltaBytes": 20230184,
+          "milliseconds": 481.83267799999976,
+          "perOperationMs": 48.183267799999975
+        },
+        {
+          "heapDeltaBytes": 35383936,
+          "milliseconds": 505.05704700000024,
+          "perOperationMs": 50.505704700000024
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 33854112,
+        "milliseconds": 481.83267799999976,
+        "perOperationMs": 48.183267799999975
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "operation": "cold-balanced",
+      "repetitions": 1,
+      "samples": [
+        {
+          "heapDeltaBytes": 3638728,
+          "milliseconds": 3.566748999999618,
+          "perOperationMs": 3.566748999999618
+        },
+        {
+          "heapDeltaBytes": 3632720,
+          "milliseconds": 3.503521999999066,
+          "perOperationMs": 3.503521999999066
+        },
+        {
+          "heapDeltaBytes": 3632720,
+          "milliseconds": 3.3365599999997357,
+          "perOperationMs": 3.3365599999997357
+        },
+        {
+          "heapDeltaBytes": 3632720,
+          "milliseconds": 3.3203510000003007,
+          "perOperationMs": 3.3203510000003007
+        },
+        {
+          "heapDeltaBytes": 3652528,
+          "milliseconds": 3.237336000000141,
+          "perOperationMs": 3.237336000000141
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 3632720,
+        "milliseconds": 3.3365599999997357,
+        "perOperationMs": 3.3365599999997357
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "operation": "balanced",
+      "repetitions": 10,
+      "samples": [
+        {
+          "heapDeltaBytes": 2853080,
+          "milliseconds": 3.962829000000056,
+          "perOperationMs": 0.3962829000000056
+        },
+        {
+          "heapDeltaBytes": 2961896,
+          "milliseconds": 4.545465000001059,
+          "perOperationMs": 0.4545465000001059
+        },
+        {
+          "heapDeltaBytes": 2963168,
+          "milliseconds": 4.12380900000062,
+          "perOperationMs": 0.41238090000006195
+        },
+        {
+          "heapDeltaBytes": 2963168,
+          "milliseconds": 4.065520000000106,
+          "perOperationMs": 0.40655200000001057
+        },
+        {
+          "heapDeltaBytes": 2843512,
+          "milliseconds": 3.7040560000004916,
+          "perOperationMs": 0.3704056000000492
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 2961896,
+        "milliseconds": 4.065520000000106,
+        "perOperationMs": 0.40655200000001057
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "operation": "metadata-filtered",
+      "repetitions": 10,
+      "samples": [
+        {
+          "heapDeltaBytes": 2561616,
+          "milliseconds": 3.5548579999995127,
+          "perOperationMs": 0.3554857999999513
+        },
+        {
+          "heapDeltaBytes": 2550392,
+          "milliseconds": 4.516720999999961,
+          "perOperationMs": 0.45167209999999614
+        },
+        {
+          "heapDeltaBytes": 2550392,
+          "milliseconds": 3.0446670000001177,
+          "perOperationMs": 0.30446670000001175
+        },
+        {
+          "heapDeltaBytes": 2550224,
+          "milliseconds": 3.059613999999783,
+          "perOperationMs": 0.3059613999999783
+        },
+        {
+          "heapDeltaBytes": 2549144,
+          "milliseconds": 3.204123999999865,
+          "perOperationMs": 0.3204123999999865
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 2550392,
+        "milliseconds": 3.204123999999865,
+        "perOperationMs": 0.3204123999999865
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 1000,
+      "operation": "text-weighted",
+      "repetitions": 10,
+      "samples": [
+        {
+          "heapDeltaBytes": 2919208,
+          "milliseconds": 4.117827000000034,
+          "perOperationMs": 0.4117827000000034
+        },
+        {
+          "heapDeltaBytes": 2965568,
+          "milliseconds": 5.307224000000133,
+          "perOperationMs": 0.5307224000000133
+        },
+        {
+          "heapDeltaBytes": 2875576,
+          "milliseconds": 4.053157000000283,
+          "perOperationMs": 0.4053157000000283
+        },
+        {
+          "heapDeltaBytes": 2965400,
+          "milliseconds": 5.656804000000193,
+          "perOperationMs": 0.5656804000000193
+        },
+        {
+          "heapDeltaBytes": 2933552,
+          "milliseconds": 4.134720000000016,
+          "perOperationMs": 0.41347200000000156
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 2933552,
+        "milliseconds": 4.134720000000016,
+        "perOperationMs": 0.41347200000000156
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "operation": "cold-balanced",
+      "repetitions": 1,
+      "samples": [
+        {
+          "heapDeltaBytes": 36955984,
+          "milliseconds": 30.5580030000001,
+          "perOperationMs": 30.5580030000001
+        },
+        {
+          "heapDeltaBytes": 36917832,
+          "milliseconds": 28.8971760000004,
+          "perOperationMs": 28.8971760000004
+        },
+        {
+          "heapDeltaBytes": 36951624,
+          "milliseconds": 29.3259450000005,
+          "perOperationMs": 29.3259450000005
+        },
+        {
+          "heapDeltaBytes": 36962208,
+          "milliseconds": 27.300559999999678,
+          "perOperationMs": 27.300559999999678
+        },
+        {
+          "heapDeltaBytes": 36944576,
+          "milliseconds": 27.501664999999775,
+          "perOperationMs": 27.501664999999775
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 36951624,
+        "milliseconds": 28.8971760000004,
+        "perOperationMs": 28.8971760000004
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "operation": "balanced",
+      "repetitions": 10,
+      "samples": [
+        {
+          "heapDeltaBytes": 14535544,
+          "milliseconds": 20.293250000000626,
+          "perOperationMs": 2.0293250000000627
+        },
+        {
+          "heapDeltaBytes": 14830032,
+          "milliseconds": 19.220766000000367,
+          "perOperationMs": 1.9220766000000367
+        },
+        {
+          "heapDeltaBytes": 14769544,
+          "milliseconds": 19.68848799999978,
+          "perOperationMs": 1.968848799999978
+        },
+        {
+          "heapDeltaBytes": 14817752,
+          "milliseconds": 18.029504999998608,
+          "perOperationMs": 1.8029504999998607
+        },
+        {
+          "heapDeltaBytes": 14468592,
+          "milliseconds": 18.944509999999354,
+          "perOperationMs": 1.8944509999999355
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 14769544,
+        "milliseconds": 19.220766000000367,
+        "perOperationMs": 1.9220766000000367
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "operation": "metadata-filtered",
+      "repetitions": 10,
+      "samples": [
+        {
+          "heapDeltaBytes": 21005576,
+          "milliseconds": 20.66033900000002,
+          "perOperationMs": 2.066033900000002
+        },
+        {
+          "heapDeltaBytes": 20968704,
+          "milliseconds": 20.741319999999178,
+          "perOperationMs": 2.074131999999918
+        },
+        {
+          "heapDeltaBytes": 21061544,
+          "milliseconds": 20.3406930000001,
+          "perOperationMs": 2.0340693000000103
+        },
+        {
+          "heapDeltaBytes": 20881640,
+          "milliseconds": 22.94669199999953,
+          "perOperationMs": 2.294669199999953
+        },
+        {
+          "heapDeltaBytes": 20808696,
+          "milliseconds": 22.70343899999898,
+          "perOperationMs": 2.270343899999898
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 20968704,
+        "milliseconds": 20.741319999999178,
+        "perOperationMs": 2.074131999999918
+      }
+    },
+    {
+      "adapter": "inmemory",
+      "collectionSize": 10000,
+      "operation": "text-weighted",
+      "repetitions": 10,
+      "samples": [
+        {
+          "heapDeltaBytes": 15276880,
+          "milliseconds": 19.681424000000334,
+          "perOperationMs": 1.9681424000000334
+        },
+        {
+          "heapDeltaBytes": 15274544,
+          "milliseconds": 19.00239899999906,
+          "perOperationMs": 1.900239899999906
+        },
+        {
+          "heapDeltaBytes": 15335816,
+          "milliseconds": 20.72594200000094,
+          "perOperationMs": 2.0725942000000943
+        },
+        {
+          "heapDeltaBytes": 15543992,
+          "milliseconds": 18.932418000000325,
+          "perOperationMs": 1.8932418000000326
+        },
+        {
+          "heapDeltaBytes": 15489360,
+          "milliseconds": 19.559236999999484,
+          "perOperationMs": 1.9559236999999485
+        }
+      ],
+      "median": {
+        "heapDeltaBytes": 15335816,
+        "milliseconds": 19.559236999999484,
+        "perOperationMs": 1.9559236999999485
+      }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
 import * as path from 'path';
 
 const report = (name: string) =>
@@ -13,6 +13,10 @@ const textSearchAfter = report('text-search-after-node24-apple-m5.json');
 const textSearchBrowserBaseline = report('text-search-browser-baseline-node24-apple-m5.json');
 const textSearchBrowserAfter = report('text-search-browser-after-node24-apple-m5.json');
 const memoryApiBaseline = report('memory-api-baseline-node24-apple-m5.json');
+const reviewedFloorDirectory = path.resolve(__dirname, '../baselines/node24-linux-x64');
+const reviewedFloorManifest = JSON.parse(
+  readFileSync(path.resolve(__dirname, '../baselines/node24-linux-x64.manifest.json'), 'utf8'),
+);
 
 it('preserves matching environments, settings, and all before/after samples', () => {
   expect(after.runtime).toEqual(baseline.runtime);
@@ -79,10 +83,12 @@ it('retains an identical metadata-index comparison with faster steady indexed qu
   for (const adapter of ['fs', 'inmemory']) {
     for (const operation of ['equality-count', 'range-count', 'intersection-count']) {
       const before = indexBaseline.results.find(
-        (result: any) => result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
+        (result: any) =>
+          result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
       );
       const current = indexAfter.results.find(
-        (result: any) => result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
+        (result: any) =>
+          result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
       );
       expect(current.median.perOperationMs).toBeLessThan(before.median.perOperationMs);
     }
@@ -116,10 +122,12 @@ it('retains an identical full-text comparison with faster steady queries', () =>
   for (const adapter of ['fs', 'inmemory']) {
     for (const operation of ['selective', 'common', 'metadata-filtered']) {
       const before = textSearchBaseline.results.find(
-        (result: any) => result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
+        (result: any) =>
+          result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
       );
       const current = textSearchAfter.results.find(
-        (result: any) => result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
+        (result: any) =>
+          result.adapter === adapter && result.collectionSize === 100000 && result.operation === operation,
       );
       expect(current.median.perOperationMs).toBeLessThan(before.median.perOperationMs);
     }
@@ -156,8 +164,35 @@ it('retains the complete provider-independent memory API baseline', () => {
   expect(memoryApiBaseline.results).toHaveLength(30);
   for (const result of memoryApiBaseline.results) {
     expect(result.samples).toHaveLength(5);
-    expect(result.repetitions).toBe(result.operation === 'inspect' ? 100 :
-      result.operation === 'batch-remember' ? 1 : 10);
+    expect(result.repetitions).toBe(
+      result.operation === 'inspect' ? 100 : result.operation === 'batch-remember' ? 1 : 10,
+    );
     expect(result.median.perOperationMs).toBeGreaterThanOrEqual(0);
+  }
+});
+
+it('retains the complete reviewed CI floor and its source identity', () => {
+  expect(reviewedFloorManifest).toMatchObject({
+    architecture: 'x64',
+    nodeMajor: 24,
+    platform: 'linux',
+    schemaVersion: 1,
+    sourceCommit: expect.stringMatching(/^[a-f0-9]{40}$/),
+    sourceRun: expect.any(Number),
+  });
+  expect(
+    readdirSync(reviewedFloorDirectory)
+      .filter((file) => file.endsWith('.json'))
+      .sort(),
+  ).toEqual(reviewedFloorManifest.reports);
+
+  for (const file of reviewedFloorManifest.reports) {
+    const current = JSON.parse(readFileSync(path.join(reviewedFloorDirectory, file), 'utf8'));
+    expect(current.schemaVersion).toBe(1);
+    expect(current.runtime).toMatchObject({ architecture: 'x64', platform: 'linux' });
+    expect(Number(current.runtime.node.match(/^v(\d+)/)?.[1])).toBe(24);
+    expect(current.config.iterations).toBeGreaterThanOrEqual(5);
+    expect(current.results.length).toBeGreaterThan(0);
+    for (const result of current.results) expect(result.samples).toHaveLength(current.config.iterations);
   }
 });
