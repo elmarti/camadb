@@ -73,3 +73,63 @@ jobs:
         env:
           AFFECTED_WORKSPACES: ${{ needs.changes.outputs.workspaces }}
         run: yarn validate:affected
+
+  performance:
+    name: Compare performance with PR base
+    needs: changes
+    if: github.event_name == 'pull_request' && contains(needs.changes.outputs.workspaces, '@camadb/benchmarks')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          path: candidate
+
+      - name: Checkout pull request base
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: baseline
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: yarn
+          cache-dependency-path: candidate/yarn.lock
+
+      - name: Install Yarn Classic
+        run: npm install --global yarn@1.22.22
+
+      - name: Install baseline dependencies
+        working-directory: baseline
+        run: yarn install --frozen-lockfile
+
+      - name: Install candidate dependencies
+        working-directory: candidate
+        run: yarn install --frozen-lockfile
+
+      - name: Run baseline workloads
+        working-directory: baseline
+        run: |
+          yarn workspace @camadb/benchmarks build
+          node ../candidate/packages/benchmarks/dist/ci-run.js --runner-dir packages/benchmarks/dist --output-dir ../benchmark-results/baseline
+
+      - name: Run candidate workloads
+        working-directory: candidate
+        run: yarn workspace @camadb/benchmarks benchmark:ci --output-dir ../benchmark-results/candidate
+
+      - name: Compare benchmark distributions
+        working-directory: candidate
+        run: yarn workspace @camadb/benchmarks benchmark:compare --baseline ../benchmark-results/baseline --candidate ../benchmark-results/candidate
+
+      - name: Upload raw benchmark reports
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: performance-comparison-${{ github.event.pull_request.number }}
+          path: benchmark-results
+          retention-days: 30

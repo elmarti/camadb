@@ -1,5 +1,7 @@
 # Storage benchmark baseline
 
+Pull requests are protected by the [CI performance regression policy](./ci-regression-policy.md), which compares base and candidate commits on the same runner and publishes the raw reports.
+
 Wave 5 metadata-index measurements are recorded in the
 [index benchmark report](./wave5-indexes.md). The committed pre-index result is
 the comparison baseline for issue #3.
