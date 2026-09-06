@@ -8,9 +8,9 @@ This repository is a workspace. The existing `camadb` import is preserved by a c
 
 The open-source project also includes a [Next.js public website](apps/website/README.md) and [fully local browser knowledge demo](apps/knowledge-demo/README.md). The demo imports, chunks, embeds, stores, searches, explains, exports, and deletes knowledge on-device, with outbound application connections blocked by policy. Both use the framework-independent [CamaDB design system](docs/design-system.md). The public website and demo cover the database project only; any paid service is treated as a separate product.
 
-See [workspace architecture](docs/architecture.md), [metadata indexes](docs/indexes.md), [full-text search](docs/full-text-search.md), [local development](docs/development.md), [versioning and publishing](docs/versioning-and-publishing.md), and the [2.x compatibility policy](docs/migration-2.x.md).
+See the [CamaDB 3 API guide](docs/api.md), [supported runtimes and workloads](docs/supported-workloads.md), [release-readiness record](docs/release-readiness.md), [workspace architecture](docs/architecture.md), [metadata indexes](docs/indexes.md), [full-text search](docs/full-text-search.md), [local development](docs/development.md), [versioning and publishing](docs/versioning-and-publishing.md), and the [2.x compatibility policy](docs/migration-2.x.md).
 
-Stable releases are automated through a Changesets release pull request on `main`. Pushes to `develop` publish unique snapshot releases under npm's `alpha` dist-tag.
+Stable releases are automated through a Changesets release pull request on `main`. Develop pushes publish unique `alpha` snapshots until committed RC mode begins; exact release candidates use the manual `rc` workflow.
 
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
@@ -25,7 +25,7 @@ I was struggling to find a solution for Electron-based projects that deal with l
 
 ## Goals
 
-- Fast querying/insertion/manipulation of data, up to 1 million rows
+- Measured querying, insertion, and manipulation with explicit workload limits rather than a blanket row-count claim
 - Frictionless integration with supported Node.js, Electron and browser runtimes
 - Rich API
 - Full TypeScript support
@@ -33,14 +33,14 @@ I was struggling to find a solution for Electron-based projects that deal with l
 
 ## Current state
 
-This is still under active development. Metadata equality/range indexes,
+The 3.0 release-candidate line is under validation. Metadata equality/range indexes,
 deterministic full-text search, exact vector similarity, inspectable hybrid
 retrieval, and the local-first memory API are available on the 3.0 development
 line.
 
 ## Getting started
 
-[Documentation](https://elmarti.github.io/camadb/classes/Collection.html)
+[Project website](https://elmarti.github.io/camadb/) · [API guide](docs/api.md)
 
 ### Installing
 

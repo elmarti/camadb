@@ -43,6 +43,12 @@ were built. Registry credentials and trusted-publisher configuration are still
 verified during the release-candidate rehearsal; static CI cannot prove an
 external account is configured correctly.
 
+Release candidates are exact committed `rc.N` versions and publish only from a
+manual workflow dispatch on `develop`. That workflow runs the same release gate,
+publishes under the `rc` tag, and retries clean registry-consumer tests while npm
+propagates the new packages. It never moves `latest`. See the
+[release-candidate process](./release-candidate.md).
+
 Run the complete local audit with:
 
 ```sh

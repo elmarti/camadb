@@ -7,12 +7,12 @@ why #83 was reopened. The production filesystem adapter now uses the
 benchmark-selected checksummed append segment. Fresh five-sample runs at 10,000
 records, repeated in reversed implementation order, measured:
 
-| Operation | Append segment, runs 1 / 2 | Superseded pages, runs 1 / 2 |
-| --- | ---: | ---: |
-| Bulk insert | 31.4 / 30.7 ms | 774.7 / 708.8 ms |
-| Point read | 0.519 / 0.395 ms | 0.888 / 0.761 ms |
-| Point update | 4.60 / 4.23 ms | 25.52 / 25.59 ms |
-| Point delete | 3.89 / 3.82 ms | 19.03 / 17.61 ms |
+| Operation    | Append segment, runs 1 / 2 | Superseded pages, runs 1 / 2 |
+| ------------ | -------------------------: | ---------------------------: |
+| Bulk insert  |             31.4 / 30.7 ms |             774.7 / 708.8 ms |
+| Point read   |           0.519 / 0.395 ms |             0.888 / 0.761 ms |
+| Point update |             4.60 / 4.23 ms |             25.52 / 25.59 ms |
+| Point delete |             3.89 / 3.82 ms |             19.03 / 17.61 ms |
 
 The append segment also beats the original 33.8 ms whole-collection bulk
 baseline in both run orders. Eleven-sample mixed runs measured point reads at
@@ -119,7 +119,7 @@ The measured envelope is **100–10,000 small records on one Node/macOS machine*
 
 ## Wave 4 exit audit
 
-**Implemented and covered by correctness tests:** record-level identity paths, explicit legacy-format detection/migration facilities, interrupted-write and compaction recovery, automatic reclamation, and cache modes/invalidation across all adapters. The reproducible Node before/after measurements are now recorded.
+**Implemented and covered by correctness tests:** record-level identity paths, read-only legacy-format detection and refusal, interrupted-write and compaction recovery, automatic reclamation, and cache modes/invalidation across all adapters. The reproducible Node before/after measurements are now recorded.
 
 **Still short of the original scalable-storage gate:**
 
