@@ -64,9 +64,12 @@ if (!buildOnly) {
   run('yarn', ['jest', '--config', 'jest.config.js', '--runInBand', '--passWithNoTests', ...paths]);
   run('yarn', ['check:boundaries']);
   run('yarn', ['check:packages']);
-  if (workspaces.some(({ name, manifest }) => affected.has(name) && !manifest.private)) {
+  const affectedPublicPackages = workspaces
+    .filter(({ name, manifest }) => affected.has(name) && !manifest.private)
+    .map(({ name }) => name);
+  if (affectedPublicPackages.length > 0) {
     run('yarn', ['test:integration']);
-    run('yarn', ['test:packages']);
+    run('node', ['scripts/test-package-consumers.js', ...affectedPublicPackages]);
     run('node', ['scripts/publish-workspaces.js', '--dry-run']);
   }
 }

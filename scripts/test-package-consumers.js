@@ -4,6 +4,7 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const { buildSync } = require('esbuild');
+const { loadWorkspaces } = require('./affected-workspaces');
 
 const root = path.resolve(__dirname, '..');
 const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'camadb-package-consumers-'));
@@ -29,6 +30,99 @@ function write(relativePath, contents) {
   const destination = path.join(consumerDirectory, relativePath);
   fs.mkdirSync(path.dirname(destination), { recursive: true });
   fs.writeFileSync(destination, contents);
+}
+
+function testSelectedPackages(requestedNames) {
+  const workspaces = loadWorkspaces(root);
+  const publicByName = new Map(workspaces.filter(({ manifest }) => !manifest.private).map((workspace) => [workspace.name, workspace]));
+  const requested = new Set(requestedNames);
+  for (const name of requested) {
+    if (!publicByName.has(name)) throw new Error(`Unknown public package: ${name}`);
+  }
+
+  const included = new Set();
+  function include(name) {
+    if (included.has(name)) return;
+    const workspace = publicByName.get(name);
+    if (!workspace) return;
+    included.add(name);
+    for (const dependency of Object.keys(workspace.manifest.dependencies || {})) include(dependency);
+  }
+  for (const name of requested) include(name);
+
+  try {
+    fs.mkdirSync(packageDirectory, { recursive: true });
+    fs.mkdirSync(consumerDirectory, { recursive: true });
+    const packagePaths = [...included].map((name) => {
+      const workspace = publicByName.get(name);
+      const output = run('npm', ['pack', '--json', '--pack-destination', packageDirectory], {
+        cwd: path.join(root, workspace.directory),
+      });
+      const [{ filename }] = JSON.parse(output);
+      return path.join(packageDirectory, filename);
+    });
+    write('package.json', JSON.stringify({ name: 'camadb-package-consumer', private: true, type: 'module' }));
+    run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--no-package-lock', ...packagePaths], {
+      cwd: consumerDirectory,
+    });
+
+    const commonJs = ["const assert = require('assert');"];
+    const esm = ["import assert from 'node:assert';"];
+    const types = [];
+    const browser = [];
+    if (requested.has('@camadb/core')) {
+      commonJs.push("const core = require('@camadb/core');", "assert.strictEqual(typeof core.Cama, 'function');");
+      esm.push("const core = await import('@camadb/core');", "assert.strictEqual(typeof core.Cama, 'function');");
+      types.push("import { Cama, PersistenceAdapterEnum } from '@camadb/core';", "void new Cama({ persistenceAdapter: PersistenceAdapterEnum.InMemory });");
+      browser.push("import { Cama, PersistenceAdapterEnum } from '@camadb/core';", "void new Cama({ persistenceAdapter: PersistenceAdapterEnum.InMemory });");
+    }
+    if (requested.has('camadb')) {
+      commonJs.push("const compatibility = require('camadb');", "assert.strictEqual(typeof compatibility.Cama, 'function');");
+      esm.push("const compatibility = await import('camadb');", "assert.strictEqual(typeof compatibility.Cama, 'function');");
+      types.push("import { Cama as CompatibilityCama } from 'camadb';", 'void CompatibilityCama;');
+      browser.push("import { Cama as CompatibilityCama } from 'camadb';", 'void CompatibilityCama;');
+    }
+    if (requested.has('@camadb/memory')) {
+      commonJs.push("const memory = require('@camadb/memory');", "assert.strictEqual(typeof memory.CamaMemory, 'function');");
+      esm.push("const memory = await import('@camadb/memory');", "assert.strictEqual(typeof memory.planReembedding, 'function');");
+      types.push("import type { MemoryRecord } from '@camadb/memory';", 'const memoryRecord: MemoryRecord = {} as MemoryRecord;', 'void memoryRecord;');
+      browser.push("import { prepareEmbeddingQuery } from '@camadb/memory';", 'void prepareEmbeddingQuery;');
+    }
+    if (requested.has('@camadb/sync')) {
+      commonJs.push("const sync = require('@camadb/sync');", 'assert.strictEqual(sync.SYNC_PROTOCOL_VERSION, 1);');
+      esm.push("const sync = await import('@camadb/sync');", 'assert.strictEqual(sync.SYNC_PROTOCOL_VERSION, 1);');
+      types.push("import { LocalSyncReplica, type SyncMutation } from '@camadb/sync';", "const replica = new LocalSyncReplica('typed');", 'void ({} as SyncMutation);', 'void replica;');
+      browser.push("import { LocalSyncReplica } from '@camadb/sync';", "void new LocalSyncReplica('browser');");
+    }
+
+    write('require.cjs', `${commonJs.join('\n')}\n`);
+    run(process.execPath, ['require.cjs'], { cwd: consumerDirectory });
+    write('import.mjs', `${esm.join('\n')}\n`);
+    run(process.execPath, ['import.mjs'], { cwd: consumerDirectory });
+    write('types.ts', `${types.join('\n')}\n`);
+    write('tsconfig.json', JSON.stringify({ compilerOptions: { module: 'NodeNext', moduleResolution: 'NodeNext', strict: true, noEmit: true } }));
+    run(process.execPath, [require.resolve('typescript/bin/tsc'), '-p', 'tsconfig.json'], { cwd: consumerDirectory });
+    write('browser-entry.js', `${browser.join('\n')}\n`);
+    buildSync({
+      absWorkingDir: consumerDirectory,
+      entryPoints: ['browser-entry.js'],
+      bundle: true,
+      platform: 'browser',
+      format: 'esm',
+      outfile: path.join(consumerDirectory, 'browser-bundle.js'),
+      logLevel: 'silent',
+    });
+    assert.ok(fs.statSync(path.join(consumerDirectory, 'browser-bundle.js')).size > 0);
+    console.log(`Published package consumers passed for: ${[...requested].join(', ')}`);
+  } finally {
+    fs.rmSync(temporaryRoot, { recursive: true, force: true });
+  }
+}
+
+const requestedPackages = process.argv.slice(2);
+if (requestedPackages.length > 0) {
+  testSelectedPackages(requestedPackages);
+  process.exit(0);
 }
 
 try {
