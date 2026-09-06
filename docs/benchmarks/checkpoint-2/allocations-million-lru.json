@@ -1,0 +1,529 @@
+{
+  "node": "v24.20.0",
+  "platform": "darwin 25.6.0 arm64",
+  "cpu": "Apple M5",
+  "packageRoot": "/Users/elmarti/Projects/dbcurious",
+  "count": 1000000,
+  "shape": "narrow",
+  "cacheMode": "lru",
+  "pageMode": "parallel",
+  "phases": [
+    {
+      "label": "capture",
+      "ms": 29809.264208,
+      "memory": {
+        "rss": 835731456,
+        "heapTotal": 241926144,
+        "heapUsed": 103590784,
+        "external": 36909937,
+        "arrayBuffers": 34622307
+      },
+      "cache": {
+        "mode": "lru",
+        "maxBytes": 8388608,
+        "maxRecords": 1000,
+        "bytes": 0,
+        "records": 0,
+        "hits": 0,
+        "misses": 537600,
+        "evictions": 0,
+        "skipped": 0,
+        "invalidations": 16128
+      }
+    }
+  ],
+  "samples": [
+    {
+      "rows": 25600,
+      "phase": "capture",
+      "rss": 98598912,
+      "heapTotal": 49381376,
+      "heapUsed": 14270136,
+      "external": 6356988,
+      "arrayBuffers": 3998442
+    },
+    {
+      "rows": 51200,
+      "phase": "capture",
+      "rss": 127844352,
+      "heapTotal": 55951360,
+      "heapUsed": 20154944,
+      "external": 5694212,
+      "arrayBuffers": 3401858
+    },
+    {
+      "rows": 76800,
+      "phase": "capture",
+      "rss": 166395904,
+      "heapTotal": 88817664,
+      "heapUsed": 17987024,
+      "external": 7149787,
+      "arrayBuffers": 4857433
+    },
+    {
+      "rows": 102400,
+      "phase": "capture",
+      "rss": 245039104,
+      "heapTotal": 162496512,
+      "heapUsed": 25682384,
+      "external": 17193645,
+      "arrayBuffers": 14773839
+    },
+    {
+      "rows": 128000,
+      "phase": "capture",
+      "rss": 263094272,
+      "heapTotal": 160382976,
+      "heapUsed": 24058880,
+      "external": 10377213,
+      "arrayBuffers": 8089583
+    },
+    {
+      "rows": 153600,
+      "phase": "capture",
+      "rss": 289226752,
+      "heapTotal": 170885120,
+      "heapUsed": 35213664,
+      "external": 21801950,
+      "arrayBuffers": 19315744
+    },
+    {
+      "rows": 179200,
+      "phase": "capture",
+      "rss": 321765376,
+      "heapTotal": 168509440,
+      "heapUsed": 32694880,
+      "external": 24978659,
+      "arrayBuffers": 11367839
+    },
+    {
+      "rows": 204800,
+      "phase": "capture",
+      "rss": 340279296,
+      "heapTotal": 170606592,
+      "heapUsed": 34604944,
+      "external": 15294493,
+      "arrayBuffers": 13006863
+    },
+    {
+      "rows": 230400,
+      "phase": "capture",
+      "rss": 369164288,
+      "heapTotal": 207847424,
+      "heapUsed": 67039376,
+      "external": 31401581,
+      "arrayBuffers": 29113951
+    },
+    {
+      "rows": 256000,
+      "phase": "capture",
+      "rss": 394919936,
+      "heapTotal": 175849472,
+      "heapUsed": 39303096,
+      "external": 34862598,
+      "arrayBuffers": 16310770
+    },
+    {
+      "rows": 281600,
+      "phase": "capture",
+      "rss": 423133184,
+      "heapTotal": 180043776,
+      "heapUsed": 43457096,
+      "external": 38257414,
+      "arrayBuffers": 17975394
+    },
+    {
+      "rows": 307200,
+      "phase": "capture",
+      "rss": 460144640,
+      "heapTotal": 236945408,
+      "heapUsed": 106743728,
+      "external": 41387702,
+      "arrayBuffers": 39100072
+    },
+    {
+      "rows": 332800,
+      "phase": "capture",
+      "rss": 488210432,
+      "heapTotal": 189480960,
+      "heapUsed": 53651616,
+      "external": 44914870,
+      "arrayBuffers": 21304850
+    },
+    {
+      "rows": 358400,
+      "phase": "capture",
+      "rss": 528171008,
+      "heapTotal": 250839040,
+      "heapUsed": 130569192,
+      "external": 48044950,
+      "arrayBuffers": 45757320
+    },
+    {
+      "rows": 384000,
+      "phase": "capture",
+      "rss": 552189952,
+      "heapTotal": 194461696,
+      "heapUsed": 58084856,
+      "external": 27120274,
+      "arrayBuffers": 24633892
+    },
+    {
+      "rows": 409600,
+      "phase": "capture",
+      "rss": 602292224,
+      "heapTotal": 199180288,
+      "heapUsed": 60120496,
+      "external": 54702394,
+      "arrayBuffers": 26298918
+    },
+    {
+      "rows": 435200,
+      "phase": "capture",
+      "rss": 644841472,
+      "heapTotal": 203374592,
+      "heapUsed": 62349984,
+      "external": 30251436,
+      "arrayBuffers": 27963806
+    },
+    {
+      "rows": 460800,
+      "phase": "capture",
+      "rss": 692387840,
+      "heapTotal": 220430336,
+      "heapUsed": 79377024,
+      "external": 61359879,
+      "arrayBuffers": 59072249
+    },
+    {
+      "rows": 486400,
+      "phase": "capture",
+      "rss": 732643328,
+      "heapTotal": 207831040,
+      "heapUsed": 66816072,
+      "external": 64688535,
+      "arrayBuffers": 31293059
+    },
+    {
+      "rows": 512000,
+      "phase": "capture",
+      "rss": 769228800,
+      "heapTotal": 207306752,
+      "heapUsed": 69623960,
+      "external": 69070891,
+      "arrayBuffers": 32957683
+    },
+    {
+      "rows": 537600,
+      "phase": "capture",
+      "rss": 835698688,
+      "heapTotal": 241926144,
+      "heapUsed": 103581144,
+      "external": 36909937,
+      "arrayBuffers": 34622307
+    }
+  ],
+  "peak": {
+    "rss": 889700352,
+    "heapTotal": 296779776,
+    "heapUsed": 217555296,
+    "external": 72518382,
+    "arrayBuffers": 70230752
+  },
+  "status": "768 MiB safety stop",
+  "rowsCommitted": 537600,
+  "storage": {
+    "generation": 5376,
+    "liveBytes": 469698181,
+    "totalBytes": 471074181,
+    "reclaimableBytes": 1376000,
+    "tombstones": 0
+  },
+  "allocations": [
+    {
+      "sampledBytes": 1121273896,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "materializeIndex /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:346"
+      ]
+    },
+    {
+      "sampledBytes": 836479096,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "loadShard /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:318"
+      ]
+    },
+    {
+      "sampledBytes": 611983792,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "append /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:386",
+        "encodeCheckpoint /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:367"
+      ]
+    },
+    {
+      "sampledBytes": 479502440,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "getRecords /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:485"
+      ]
+    },
+    {
+      "sampledBytes": 469462136,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "mutateNow /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:568"
+      ]
+    },
+    {
+      "sampledBytes": 453069840,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "materializeIndex /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:346",
+        "set :0"
+      ]
+    },
+    {
+      "sampledBytes": 430664136,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "append /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:386",
+        "encodeCheckpoint /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:367",
+        "next :0"
+      ]
+    },
+    {
+      "sampledBytes": 402271344,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "loadShard /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:318",
+        "Map :0",
+        "set :0"
+      ]
+    },
+    {
+      "sampledBytes": 318671584,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "loadShard /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:318",
+        "toString node:buffer:918"
+      ]
+    },
+    {
+      "sampledBytes": 218366552,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "(anonymous) file:///Users/elmarti/Projects/BuddyCode/camadb/scripts/checkpoint-2/profile.mjs:1",
+        "from :0",
+        "(anonymous) file:///Users/elmarti/Projects/BuddyCode/camadb/scripts/checkpoint-2/profile.mjs:38"
+      ]
+    },
+    {
+      "sampledBytes": 215700232,
+      "stack": [
+        "write /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/metadata-indexed-persistence.js:199",
+        "(anonymous) /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/metadata-indexed-persistence.js:170",
+        "insert /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/cached-persistence.js:137",
+        "write /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/cached-persistence.js:163",
+        "(anonymous) /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/cached-persistence.js:138",
+        "copyInput /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/cached-persistence.js:223"
+      ]
+    },
+    {
+      "sampledBytes": 156977440,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "append /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:386",
+        "map :0",
+        "(anonymous) /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:391",
+        "encodeFrame /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:132"
+      ]
+    },
+    {
+      "sampledBytes": 122433312,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "append /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:386",
+        "encodeCheckpoint /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:367",
+        "toString :0"
+      ]
+    },
+    {
+      "sampledBytes": 112239888,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "append /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:386"
+      ]
+    },
+    {
+      "sampledBytes": 53772992,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "prepareInsert /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/collection/index.js:221"
+      ]
+    },
+    {
+      "sampledBytes": 52971568,
+      "stack": [
+        "(anonymous) :0",
+        "append /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:386",
+        "map :0",
+        "(anonymous) /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:391",
+        "encodeFrame /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:132",
+        "fromStringFast node:buffer:496"
+      ]
+    },
+    {
+      "sampledBytes": 48834472,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "mutateNow /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:568",
+        "getLocation /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:341"
+      ]
+    },
+    {
+      "sampledBytes": 43030008,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "append /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:386",
+        "next :0"
+      ]
+    },
+    {
+      "sampledBytes": 38969536,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "getRecords /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/cached-persistence.js:75"
+      ]
+    },
+    {
+      "sampledBytes": 27491480,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "prepareInsert /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/collection/index.js:221",
+        "add :0"
+      ]
+    },
+    {
+      "sampledBytes": 26764560,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "getRecords /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/cached-persistence.js:75",
+        "Set :0",
+        "add :0"
+      ]
+    },
+    {
+      "sampledBytes": 25899920,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "append /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:386",
+        "set :0"
+      ]
+    },
+    {
+      "sampledBytes": 24382992,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "materializeIndex /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:346",
+        "next :0"
+      ]
+    },
+    {
+      "sampledBytes": 24068696,
+      "stack": [
+        "(anonymous) /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/metadata-indexed-persistence.js:170",
+        "insert /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/cached-persistence.js:137",
+        "write /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/cached-persistence.js:163",
+        "(anonymous) /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/cached-persistence.js:138",
+        "copyInput /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/cached-persistence.js:223",
+        "structuredClone node:internal/worker/js_transferable:113"
+      ]
+    },
+    {
+      "sampledBytes": 22854888,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "append /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:386",
+        "map :0",
+        "(anonymous) /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:391"
+      ]
+    },
+    {
+      "sampledBytes": 21967960,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "mutateNow /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:568",
+        "next :0"
+      ]
+    },
+    {
+      "sampledBytes": 21541720,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "prepareInsert /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/collection/index.js:221",
+        "next :0"
+      ]
+    },
+    {
+      "sampledBytes": 20951520,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "getRecords /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:485",
+        "next :0"
+      ]
+    },
+    {
+      "sampledBytes": 19675440,
+      "stack": [
+        "(root) :0",
+        "(anonymous) /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/queue/queue.service.js:11",
+        "(anonymous) /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/collection/index.js:38",
+        "prepareInsert /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/collection/index.js:221"
+      ]
+    },
+    {
+      "sampledBytes": 16764008,
+      "stack": [
+        "(root) :0",
+        "(anonymous) :0",
+        "getRecords /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:485",
+        "getLocation /Users/elmarti/Projects/dbcurious/node_modules/@camadb/core/dist/modules/persistence/fs/segment-persistence.js:341"
+      ]
+    }
+  ],
+  "liveCollectionAfterGC": {
+    "rss": 505692160,
+    "heapTotal": 156680192,
+    "heapUsed": 18150680,
+    "external": 2431453,
+    "arrayBuffers": 143823
+  },
+  "maxRssBytes": 890028032
+}

@@ -119,6 +119,73 @@ describe('filesystem record persistence', () => {
     });
   }, DURABLE_COMPACTION_TIMEOUT_MS);
 
+  it('replays wide tail frames across chunk boundaries without changing values or order', async () => {
+    const collection = await createCollection();
+    // Stay below the 512-frame checkpoint threshold, but cross several 1 MiB
+    // read boundaries, including a multibyte UTF-8 payload at the boundary.
+    const rows = Array.from({ length: 100 }, (_, index) => ({
+      _id: String(index), value: `${index}:` + 'café 東京 🌈\u0000\n'.repeat(1400),
+    }));
+    await collection.insertMany(rows);
+    await collection.updateMany({ _id: '50' }, { $set: { value: 'updated' } });
+    await collection.deleteOne({ _id: '20' });
+    const reopened = await createCollection();
+    const expected = rows.filter((row) => row._id !== '20').map((row) =>
+      row._id === '50' ? { ...row, value: 'updated' } : row);
+    await expect(reopened.findMany()).resolves.toMatchObject({ rows: expected, totalCount: 99 });
+  }, DURABLE_COMPACTION_TIMEOUT_MS);
+
+  it('reads a populated checkpoint plus a committed tail and ignores a torn following batch', async () => {
+    const collection = await createCollection();
+    await collection.insertMany(Array.from({ length: 512 }, (_, index) => ({
+      _id: String(index), value: `checkpoint-${index}`,
+    })));
+    await collection.insertMany([{ _id: 'tail', value: 'exact 9007199254740993.00' }]);
+    const segmentPath = path.join(databasePath, 'records', 'records.segment');
+    const committedSize = (await nodeFs.stat(segmentPath)).size;
+    await nodeFs.appendFile(segmentPath, Buffer.from([0, 0, 1, 0, 123]));
+    const reopened = await createCollection();
+    await expect(reopened.findMany({ _id: 'tail' })).resolves.toMatchObject({
+      rows: [{ _id: 'tail', value: 'exact 9007199254740993.00' }],
+    });
+    await expect(reopened.count()).resolves.toBe(513);
+    expect((await nodeFs.stat(segmentPath)).size).toBe(committedSize);
+  });
+
+  it('replays a frame header split across the read buffer boundary', async () => {
+    const collection = await createCollection();
+    const overhead = Buffer.byteLength(JSON.stringify({
+      t: 'p', id: 'first', s: 0, row: { _id: 'first', value: '' },
+    })) + 4;
+    const rows = [
+      { _id: 'first', value: 'x'.repeat(1024 * 1024 - 2 - overhead) },
+      { _id: 'second', value: 'NULL is not an empty string: café 🌈' },
+    ];
+    await collection.insertMany(rows);
+    await expect((await createCollection()).findMany()).resolves.toMatchObject({ rows });
+  });
+
+  it('fills replay buffers when the filesystem returns short reads', async () => {
+    const collection = await createCollection();
+    const row = { _id: 'record', value: 'café 🌈'.repeat(1000) };
+    await collection.insertOne(row);
+    const open = nodeFs.open.bind(nodeFs);
+    jest.spyOn(nodeFs, 'open').mockImplementation(async (...args) => {
+      const handle = await open(...args);
+      const read = handle.read.bind(handle);
+      jest.spyOn(handle, 'read').mockImplementation((async (
+        buffer: Buffer, offset: number, length: number, position: number,
+      ) => read(buffer, offset, buffer.length >= 1024 ? Math.min(length, 113) : length, position)) as typeof handle.read);
+      return handle;
+    });
+    const reopened = await createCollection();
+    // Force recovery while short reads are injected; ordinary point/scan reads
+    // are outside the buffered replay change under test.
+    await expect(reopened.storageStats()).resolves.toMatchObject({ generation: 1 });
+    jest.restoreAllMocks();
+    await expect(reopened.findMany()).resolves.toMatchObject({ rows: [row] });
+  });
+
   it('retains a valid generation when physical compaction cleanup fails', async () => {
     const collection = await createCollection();
     await collection.insertOne({ _id: 'record', value: 'before' });

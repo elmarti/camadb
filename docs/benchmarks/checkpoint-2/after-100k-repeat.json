@@ -1,0 +1,180 @@
+{
+  "node": "v24.20.0",
+  "platform": "darwin 25.6.0 arm64",
+  "cpu": "Apple M5",
+  "packageRoot": "/Users/elmarti/Projects/BuddyCode/camadb",
+  "count": 100000,
+  "shape": "narrow",
+  "cacheMode": "lru",
+  "pageMode": "parallel",
+  "phases": [
+    {
+      "label": "capture",
+      "ms": 4952.086292,
+      "memory": {
+        "rss": 198000640,
+        "heapTotal": 156925952,
+        "heapUsed": 51973224,
+        "external": 7027197,
+        "arrayBuffers": 4739567
+      },
+      "cache": {
+        "mode": "lru",
+        "maxBytes": 8388608,
+        "maxRecords": 1000,
+        "bytes": 0,
+        "records": 0,
+        "hits": 0,
+        "misses": 100000,
+        "evictions": 0,
+        "skipped": 0,
+        "invalidations": 3000
+      }
+    },
+    {
+      "label": "cold-first-page",
+      "ms": 75.55004200000076,
+      "memory": {
+        "rss": 224444416,
+        "heapTotal": 156450816,
+        "heapUsed": 20586552,
+        "external": 4755748,
+        "arrayBuffers": 2437710
+      },
+      "cache": {
+        "mode": "lru",
+        "maxBytes": 8388608,
+        "maxRecords": 1000,
+        "bytes": 11999,
+        "records": 100,
+        "hits": 0,
+        "misses": 100,
+        "evictions": 0,
+        "skipped": 0,
+        "invalidations": 1
+      }
+    },
+    {
+      "label": "cold-index-filter-sort",
+      "ms": 712.6047090000002,
+      "memory": {
+        "rss": 312901632,
+        "heapTotal": 207585280,
+        "heapUsed": 124726624,
+        "external": 6669532,
+        "arrayBuffers": 4351494
+      },
+      "cache": {
+        "mode": "lru",
+        "maxBytes": 8388608,
+        "maxRecords": 1000,
+        "bytes": 136000,
+        "records": 1000,
+        "hits": 10,
+        "misses": 10090,
+        "evictions": 9090,
+        "skipped": 0,
+        "invalidations": 1
+      }
+    },
+    {
+      "label": "unindexed-filter-sort",
+      "ms": 187.4517910000004,
+      "memory": {
+        "rss": 367771648,
+        "heapTotal": 224641024,
+        "heapUsed": 128215520,
+        "external": 16096212,
+        "arrayBuffers": 5387682
+      },
+      "cache": {
+        "mode": "lru",
+        "maxBytes": 8388608,
+        "maxRecords": 1000,
+        "bytes": 136000,
+        "records": 1000,
+        "hits": 10,
+        "misses": 10090,
+        "evictions": 9090,
+        "skipped": 0,
+        "invalidations": 1
+      }
+    }
+  ],
+  "samples": [
+    {
+      "rows": 25600,
+      "phase": "capture",
+      "rss": 98222080,
+      "heapTotal": 49381376,
+      "heapUsed": 13896664,
+      "external": 6357197,
+      "arrayBuffers": 3998443
+    },
+    {
+      "rows": 51200,
+      "phase": "capture",
+      "rss": 127516672,
+      "heapTotal": 55427072,
+      "heapUsed": 19578720,
+      "external": 5694008,
+      "arrayBuffers": 3401654
+    },
+    {
+      "rows": 76800,
+      "phase": "capture",
+      "rss": 164954112,
+      "heapTotal": 91455488,
+      "heapUsed": 34714208,
+      "external": 12851871,
+      "arrayBuffers": 10559517
+    },
+    {
+      "rows": 100000,
+      "phase": "capture",
+      "rss": 197967872,
+      "heapTotal": 156925952,
+      "heapUsed": 51968664,
+      "external": 7027197,
+      "arrayBuffers": 4739567
+    }
+  ],
+  "peak": {
+    "rss": 367771648,
+    "heapTotal": 224641024,
+    "heapUsed": 128215520,
+    "external": 16096212,
+    "arrayBuffers": 10631776
+  },
+  "status": "complete",
+  "rowsCommitted": 100000,
+  "storage": {
+    "generation": 1000,
+    "liveBytes": 26417724,
+    "totalBytes": 26673468,
+    "reclaimableBytes": 255744,
+    "tombstones": 0
+  },
+  "liveCollectionAfterGC": {
+    "rss": 197804032,
+    "heapTotal": 156975104,
+    "heapUsed": 21413904,
+    "external": 7027613,
+    "arrayBuffers": 143823
+  },
+  "afterCaptureGC": {
+    "rss": 196886528,
+    "heapTotal": 151060480,
+    "heapUsed": 7851904,
+    "external": 2431453,
+    "arrayBuffers": 143823
+  },
+  "afterViewsGC": {
+    "rss": 361775104,
+    "heapTotal": 206848000,
+    "heapUsed": 60866536,
+    "external": 7705720,
+    "arrayBuffers": 143615
+  },
+  "maxRssBytes": 367968256
+}
