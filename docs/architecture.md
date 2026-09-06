@@ -20,7 +20,7 @@ Dependencies point from applications and higher-level capabilities toward core. 
 
 The legacy configuration chooses `fs`, `indexeddb`, `localstorage`, or `inmemory`. Those adapters remain inside core for the first workspace release because construction was historically coupled to the collection container. Explicit composition has removed that coupling mechanism and runtime metadata. The compatibility facade preserves every supported root import while later adapter packages can implement the exported `IPersistenceAdapter` contract without importing core internals.
 
-CamaDB 3 adapters expose bounded record operations in addition to compatibility collection operations. See [record-oriented storage](./storage.md) for commit boundaries, page and batch limits, compaction, and migration behavior.
+CamaDB 3 adapters expose bounded record operations in addition to collection operations. See [record-oriented storage](./storage.md) for commit boundaries, page and batch limits, compaction, and explicit legacy-format refusal.
 
 Node filesystem code is selected only for the `fs` adapter. IndexedDB and localStorage implementations remain browser-specific. Memory is runtime-neutral and does not select an embedding SDK.
 

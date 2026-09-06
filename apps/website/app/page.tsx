@@ -251,10 +251,10 @@ export default function Home() {
               </div>
             </div>
             <div className="performance__actions">
-              <a className="cama-button cama-button--primary" href={`${github}/tree/develop/docs/benchmarks`}>
+              <a className="cama-button cama-button--primary" href={`${github}/tree/main/docs/benchmarks`}>
                 Inspect benchmark reports ↗
               </a>
-              <a className="text-link" href={`${github}/tree/develop/docs/benchmarks/speed-lab`}>
+              <a className="text-link" href={`${github}/tree/main/docs/benchmarks/speed-lab`}>
                 See rejected experiments and raw data ↗
               </a>
             </div>
@@ -307,10 +307,11 @@ export default function Home() {
                 Choose SQLite when you need mature SQL planning and relational storage. Choose a client/server database
                 for many independent writers or shared network access.
               </p>
-              <a
-                className="text-link"
-                href={`${github}/blob/develop/docs/benchmarks/wave4-comparison.md#supported-workload-guidance`}
-              >
+              <p>
+                Version 3 uses a new storage format and does not open or convert version 2 stores. Keep using CamaDB 2
+                for existing data, or import application-level exports into a new version 3 location.
+              </p>
+              <a className="text-link" href={`${github}/blob/main/docs/supported-workloads.md`}>
                 Read the full workload guidance ↗
               </a>
             </div>
@@ -344,7 +345,7 @@ export default function Home() {
           <div>
             <a href={github}>GitHub</a>
             <a href={`${github}/issues`}>Issues</a>
-            <a href={`${github}/tree/develop/docs`}>Docs</a>
+            <a href={`${github}/tree/main/docs`}>Docs</a>
           </div>
         </div>
       </footer>

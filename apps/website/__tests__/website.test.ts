@@ -13,10 +13,12 @@ describe('public CamaDB website', () => {
       'Inspect benchmark reports',
       'Open the local knowledge lab',
       'Network by explicit choice',
+      'does not open or convert version 2 stores',
     ]) {
       expect(page).toContain(claim);
     }
     expect(page).toContain('href="/demo/index.html"');
+    expect(page).not.toContain('/develop/');
   });
 
   it('uses a static Next.js export and the shared design system', async () => {

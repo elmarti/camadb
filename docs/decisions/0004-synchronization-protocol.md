@@ -41,7 +41,7 @@ Compaction may compact database storage pages, but must not discard sync tombsto
 
 ## Relationship to 2.x storage
 
-Version 3 does not silently reinterpret version 2 storage. The detection and explicit export/migration rules from decision 0001 remain the boundary. Synchronization begins only after a store has been opened as an explicit version 3 replica; importing legacy data produces normal version 3 mutations if the caller chooses to synchronize it.
+Version 3 does not silently reinterpret version 2 storage. Read-only detection and refusal remain the boundary; any application-level export from v2 must be imported into a new v3 location. Synchronization begins only after a store has been opened as an explicit version 3 replica; imported application data produces normal version 3 mutations if the caller chooses to synchronize it.
 
 ## Consequences
 
