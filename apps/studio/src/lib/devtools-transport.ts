@@ -1,14 +1,9 @@
 import { browser } from 'wxt/browser';
+import { evaluateDevtoolsExpression } from './devtools-evaluation';
+import type { DevtoolsEvaluate } from './devtools-evaluation';
 import { createProbeExpression, createProbePollExpression } from './page-probe';
 import { STUDIO_PROTOCOL_VERSION } from './protocol';
 import type { StudioCommand, StudioCommandResult, StudioProbeResponse } from './protocol';
-
-interface EvaluationException {
-  isError?: boolean;
-  isException?: boolean;
-  value?: string;
-  description?: string;
-}
 
 interface PendingProbe {
   ready: boolean;
@@ -19,12 +14,12 @@ const delay = (milliseconds: number): Promise<void> =>
   new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
 async function evaluate<T>(expression: string): Promise<T> {
-  const evaluation = await browser.devtools.inspectedWindow.eval(expression);
-  const value = evaluation.result as T;
-  const exception = evaluation.exceptionInfo as EvaluationException | undefined;
-  if (exception)
-    throw new Error(exception.description ?? exception.value ?? 'The inspected page rejected the Studio probe');
-  return value;
+  const nativeBrowser = (globalThis as typeof globalThis & { browser?: { runtime?: { id?: string } } }).browser;
+  const style = nativeBrowser?.runtime?.id ? 'promise' : 'callback';
+  const inspectedEval = browser.devtools.inspectedWindow.eval.bind(
+    browser.devtools.inspectedWindow,
+  ) as DevtoolsEvaluate;
+  return evaluateDevtoolsExpression<T>(inspectedEval, expression, style);
 }
 
 export async function sendStudioCommand(command: StudioCommand, timeoutMs = 10000): Promise<StudioCommandResult> {

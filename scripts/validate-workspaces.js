@@ -45,6 +45,10 @@ function visit(name) {
 }
 for (const name of buildSet) visit(name);
 
+for (const name of ordered) {
+  if (byName.get(name).manifest.scripts?.build) run('yarn', ['workspace', name, 'build']);
+}
+
 if (!buildOnly) {
   for (const name of ordered.filter((item) => affected.has(item))) {
     const scripts = byName.get(name).manifest.scripts || {};
@@ -60,14 +64,9 @@ if (!buildOnly) {
   run('yarn', ['jest', '--config', 'jest.config.js', '--runInBand', '--passWithNoTests', ...paths]);
   run('yarn', ['check:boundaries']);
   run('yarn', ['check:packages']);
-}
-
-for (const name of ordered) {
-  if (byName.get(name).manifest.scripts?.build) run('yarn', ['workspace', name, 'build']);
-}
-
-if (!buildOnly && workspaces.some(({ name, manifest }) => affected.has(name) && !manifest.private)) {
-  run('yarn', ['test:integration']);
-  run('yarn', ['test:packages']);
-  run('node', ['scripts/publish-workspaces.js', '--dry-run']);
+  if (workspaces.some(({ name, manifest }) => affected.has(name) && !manifest.private)) {
+    run('yarn', ['test:integration']);
+    run('yarn', ['test:packages']);
+    run('node', ['scripts/publish-workspaces.js', '--dry-run']);
+  }
 }
