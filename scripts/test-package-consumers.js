@@ -35,7 +35,7 @@ try {
   fs.mkdirSync(packageDirectory, { recursive: true });
   fs.mkdirSync(consumerDirectory, { recursive: true });
 
-  const packagePaths = ['core', 'memory', 'camadb'].map((name) => {
+  const packagePaths = ['core', 'memory', 'sync', 'camadb'].map((name) => {
     const output = run('npm', ['pack', '--json', '--pack-destination', packageDirectory], {
       cwd: path.join(root, 'packages', name),
     });
@@ -54,8 +54,10 @@ try {
 const core = require('@camadb/core');
 const compatibility = require('camadb');
 const memory = require('@camadb/memory');
+const sync = require('@camadb/sync');
 assert.strictEqual(typeof core.Cama, 'function');
 assert.strictEqual(compatibility.Cama, core.Cama);
+assert.strictEqual(sync.SYNC_PROTOCOL_VERSION, 1);
 assert.deepStrictEqual(
   memory.prepareEmbeddingQuery(
     { provider: 'local', model: 'small', dimensions: 2, schemaVersion: 'v1' },
@@ -72,6 +74,11 @@ assert.deepStrictEqual(
   const remembered = await memories.remember({ content: 'local package memory', id: 'memory' });
   assert.strictEqual(remembered.id, 'memory');
   assert.strictEqual((await memories.recall('package'))[0].memory.id, 'memory');
+  const source = new sync.LocalSyncReplica('source');
+  const target = new sync.LocalSyncReplica('target');
+  source.put('notes', { _id: 'one', text: 'local sync' });
+  assert.strictEqual((await sync.synchronize(source, target)).applied, 1);
+  assert.strictEqual(target.get('notes', 'one').text, 'local sync');
   const collection = await db.initCollection('cached', { columns: [], indexes: [] });
   await collection.insertOne({ _id: 'a', value: 1 });
   await collection.findMany({ _id: 'a' });
@@ -89,10 +96,15 @@ assert.deepStrictEqual(
 import { Cama as CoreCama, PersistenceAdapterEnum } from '@camadb/core';
 import { Cama as CompatibilityCama } from 'camadb';
 import * as memory from '@camadb/memory';
+import { LocalSyncReplica, synchronize } from '@camadb/sync';
 assert.strictEqual(typeof CoreCama, 'function');
 assert.strictEqual(CompatibilityCama, CoreCama);
 assert.strictEqual(typeof memory.planReembedding, 'function');
 assert.strictEqual(typeof memory.CamaMemory, 'function');
+const syncSource = new LocalSyncReplica('source');
+const syncTarget = new LocalSyncReplica('target');
+syncSource.put('notes', { _id: 'one', text: 'ESM sync' });
+assert.strictEqual((await synchronize(syncSource, syncTarget)).applied, 1);
 const db = new CoreCama({ persistenceAdapter: PersistenceAdapterEnum.InMemory, cache: { mode: 'lazy' } });
 const collection = await db.initCollection('cached', { columns: [], indexes: [] });
 await collection.insertOne({ _id: 'a', value: 1 });
@@ -111,6 +123,7 @@ await collection.destroy();
     `import { Cama, PersistenceAdapterEnum, type ICamaConfig, type CacheConfig, type CacheStats } from '@camadb/core';
 import { Cama as CompatibilityCama } from 'camadb';
 import type { EmbeddingProfile, MemoryRecord, RememberInput } from '@camadb/memory';
+import { LocalSyncReplica, type SyncMutation } from '@camadb/sync';
 const cache: CacheConfig = { mode: 'lru', maxBytes: 1024, maxRecords: 10 };
 const config: ICamaConfig = { persistenceAdapter: PersistenceAdapterEnum.InMemory, cache };
 const embeddingProfile: EmbeddingProfile = {
@@ -134,10 +147,13 @@ const memory: MemoryRecord<{ source: string }> = {
   schemaVersion: 1,
   updatedAt: '2026-09-05T00:00:00.000Z',
 };
+const replica = new LocalSyncReplica<{ _id: string; text: string }>('typed');
+const mutation: SyncMutation<{ _id: string; text: string }> = replica.put('notes', { _id: 'one', text: 'typed' }).mutation;
 void database;
 void memory;
 void input;
 void embeddingProfile;
+void mutation;
 `,
   );
   write(
@@ -152,6 +168,7 @@ void embeddingProfile;
     'browser-entry.js',
     `import { Cama, PersistenceAdapterEnum } from '@camadb/core';
 import { CamaMemory, prepareEmbeddingQuery } from '@camadb/memory';
+import { LocalSyncReplica, synchronize } from '@camadb/sync';
 prepareEmbeddingQuery(
   { provider: 'browser', model: 'small', dimensions: 3, schemaVersion: 'v1' },
   {
@@ -163,6 +180,10 @@ const database = new Cama({ persistenceAdapter: PersistenceAdapterEnum.InMemory 
 const memories = await CamaMemory.create(database, { collectionName: 'browser-memories' });
 await memories.remember({ content: 'local browser memory', id: 'browser-memory' });
 await memories.recall('browser');
+const syncSource = new LocalSyncReplica('browser-source');
+const syncTarget = new LocalSyncReplica('browser-target');
+syncSource.put('notes', { _id: 'one', text: 'browser sync' });
+await synchronize(syncSource, syncTarget);
 const collection = await database.initCollection('searchable', {
   columns: [],
   indexes: [],
