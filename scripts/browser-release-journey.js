@@ -10,6 +10,17 @@ const root = path.resolve(__dirname, '..');
 
 const delay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
+async function stopProcess(child) {
+  if (!child || child.exitCode !== null || child.signalCode !== null) return;
+
+  const exited = new Promise((resolve) => child.once('exit', resolve));
+  child.kill('SIGTERM');
+  if (await Promise.race([exited.then(() => true), delay(5_000).then(() => false)])) return;
+
+  child.kill('SIGKILL');
+  await Promise.race([exited, delay(5_000)]);
+}
+
 async function availablePort() {
   const server = net.createServer();
   await new Promise((resolve, reject) => {
@@ -237,9 +248,8 @@ async function run() {
     throw error;
   } finally {
     client?.close();
-    chrome?.kill('SIGTERM');
-    server.kill('SIGTERM');
-    fs.rmSync(profile, { force: true, recursive: true });
+    await Promise.all([stopProcess(chrome), stopProcess(server)]);
+    fs.rmSync(profile, { force: true, maxRetries: 10, recursive: true, retryDelay: 100 });
   }
 }
 
