@@ -1,0 +1,31 @@
+{
+  "name": "@camadb/sync",
+  "version": "0.1.0",
+  "description": "Versioned synchronization protocol and local reference adapter for CamaDB",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --build --pretty false",
+    "test": "jest --config ../../jest.config.js packages/sync/src --runInBand"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
