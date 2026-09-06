@@ -214,21 +214,39 @@ export default class SegmentPersistence implements IPersistenceAdapter {
     if (end <= start) return;
     const handle = await fs.open(this.filePath, 'r');
     let offset = start;
+    let chunkStart = start;
+    let chunk = Buffer.alloc(0);
+    // Replay committed frame ranges in bounded chunks. Reading each header and
+    // payload separately made cold point reads pay two syscalls per tail row.
+    const bytesAt = async (length: number): Promise<Buffer> => {
+      if (offset < chunkStart || offset + length > chunkStart + chunk.length) {
+        chunkStart = offset;
+        chunk = Buffer.allocUnsafe(Math.min(end - offset, Math.max(SCAN_CHUNK_BYTES, length)));
+        let loaded = 0;
+        while (loaded < chunk.length) {
+          const result = await handle.read(chunk, loaded, chunk.length - loaded, chunkStart + loaded);
+          if (result.bytesRead === 0) break;
+          loaded += result.bytesRead;
+        }
+        chunk = chunk.subarray(0, loaded);
+      }
+      const relative = offset - chunkStart;
+      if (relative + length > chunk.length) throw new Error('Incomplete segment frame');
+      return chunk.subarray(relative, relative + length);
+    };
     try {
       while (offset < end) {
-        const header = Buffer.allocUnsafe(4);
-        const headerRead = await handle.read(header, 0, header.length, offset);
-        if (headerRead.bytesRead !== 4) throw new Error('Invalid segment frame header');
+        if (end - offset < 4) throw new Error('Invalid segment frame header');
+        const header = await bytesAt(4);
         const length = header.readUInt32BE(0);
         if (length > MAX_PAGE_BYTES + 1024 || offset + 4 + length > end) {
           throw new Error('Invalid segment frame length');
         }
-        const data = Buffer.allocUnsafe(length);
-        const frameRead = await handle.read(data, 0, length, offset + 4);
-        if (frameRead.bytesRead !== length) throw new Error('Incomplete segment frame');
+        offset += 4;
+        const data = await bytesAt(length);
         const frame = JSON.parse(data.toString()) as SegmentFrame;
-        this.applyOverlay(frame, { offset: offset + 4, length });
-        offset += 4 + length;
+        this.applyOverlay(frame, { offset, length });
+        offset += length;
       }
     } finally { await handle.close(); }
   }
