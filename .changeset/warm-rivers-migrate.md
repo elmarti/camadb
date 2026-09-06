@@ -3,4 +3,4 @@
 'camadb': minor
 ---
 
-Add a versioned collection-storage envelope, read-only detection of published 2.x storage, and explicit, repeatable migration and rollback-export helpers.
+Add a versioned collection-storage envelope and read-only detection of published 2.x storage. CamaDB 3 refuses legacy stores with an actionable error instead of silently converting or reinterpreting them.

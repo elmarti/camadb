@@ -3,6 +3,7 @@ import { ILogger } from '../../../../interfaces/logger.interface';
 import { PersistenceAdapterEnum } from '../../../../interfaces/perisistence-adapter.enum';
 import { openDB } from 'idb';
 import IndexedDbPersistence from '../indexeddb-persistence';
+import { LEGACY_STORAGE_MESSAGE } from '../../storage-version';
 
 describe('IndexedDbPersistence', () => {
   let databaseNumber = 0;
@@ -19,6 +20,25 @@ describe('IndexedDbPersistence', () => {
 
   it('opens a new database without waiting on itself', async () => {
     await expect(indexedDbPersistence.getData()).resolves.toEqual([]);
+  });
+
+  it('refuses a 2.x collection without modifying its data', async () => {
+    const config = { ...mockConfig, path: `${mockConfig.path}-legacy` };
+    const legacy = [{ _id: 'legacy-1', name: 'Ada' }];
+    const database = await openDB(config.path, 1, {
+      upgrade(db) {
+        db.createObjectStore(mockCollectionName);
+      },
+    });
+    await database.put(mockCollectionName, legacy, 'data');
+    database.close();
+
+    const adapter = new IndexedDbPersistence(config, mockLogger, mockCollectionName);
+    await expect(adapter.getData()).rejects.toThrow(LEGACY_STORAGE_MESSAGE);
+
+    const verification = await openDB(config.path);
+    await expect(verification.get(mockCollectionName, 'data')).resolves.toEqual(legacy);
+    verification.close();
   });
 
   it('opens an existing collection without upgrading', async () => {

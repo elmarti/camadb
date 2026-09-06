@@ -2,7 +2,7 @@ import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 import { IPersistenceAdapter, RecordMutation, StorageStats } from '../../../interfaces/persistence-adapter.interface';
 import { ILogger } from '../../../interfaces/logger.interface';
 import { assertMutationBound, chunkRecords } from '../record-pages';
-import { readStoragePayload } from '../storage-version';
+import { LegacyStorageError, readStoragePayload } from '../storage-version';
 import { serializedBytes, shouldCompact } from '../compaction';
 import { IndexedDbDatabaseCoordinator } from './database-coordinator';
 
@@ -267,7 +267,7 @@ export default class IndexedDbPersistence implements IPersistenceAdapter {
       if (await store.get(METADATA_KEY)) return;
       const existing = readStoragePayload(await store.get('data'));
       if (existing.length > 0) {
-        throw new Error(`Collection "${this.collectionName}" requires explicit migration to record storage`);
+        throw new Error(`Collection "${this.collectionName}" uses an unsupported pre-release storage format`);
       }
       await store.put(emptyMetadata(), METADATA_KEY);
       await tx.done;
@@ -300,6 +300,7 @@ export default class IndexedDbPersistence implements IPersistenceAdapter {
     if (this.destroyed) throw new Error('Collection has been destroyed. Call Cama.initCollection to recreate');
   }
   private contextualError(operation: string, error: unknown): Error {
+    if (error instanceof LegacyStorageError) return error;
     const reason = error instanceof Error && error.name ? error.name : 'IndexedDBError';
     return new Error(
       `IndexedDB ${operation} failed for database "${this.dbName}", collection "${this.collectionName}": ${reason}`,

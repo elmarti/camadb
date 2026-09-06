@@ -52,7 +52,7 @@ IndexedDB work is split into bounded transactions selected by measured record an
 
 ### Versioning and legacy storage
 
-The manifest carries a CamaDB storage-format discriminator and version independent of the npm package version. Record-oriented storage begins at format version 3. Existing 2.x payloads are handled through the detection and explicit export/migration APIs introduced by #75. Opening a legacy payload never silently reinterprets, upgrades, or mutates it. Migration writes a separate version-3 generation, validates it, and only then allows an explicit caller-approved switch; reruns are idempotent and recoverable.
+The manifest carries a CamaDB storage-format discriminator and version independent of the npm package version. Record-oriented storage begins at format version 3. Existing 2.x payloads are detected and refused. Opening a legacy payload never silently reinterprets, upgrades, or mutates it. Users may remain on CamaDB 2 or move documents through an application-level export/import into a separate version-3 store.
 
 ## Consequences
 
@@ -93,5 +93,5 @@ The prototype measured a 10,000-row bulk insert at 30.4 ms, point operations at
 intermediate layouts remain under `docs/benchmarks/speed-lab`.
 
 The segment is format version 3, not a reinterpretation of a 2.x payload.
-Detection remains non-mutating. Any conversion is an explicit migration that
-writes and validates separate version-3 storage before caller-approved use.
+Detection and refusal remain non-mutating; CamaDB does not perform an in-place
+conversion.
