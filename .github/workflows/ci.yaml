@@ -112,19 +112,25 @@ jobs:
         working-directory: candidate
         run: yarn install --frozen-lockfile
 
+      - name: Build baseline benchmarks
+        working-directory: baseline
+        run: yarn workspace @camadb/benchmarks build
+
+      - name: Build candidate benchmarks and comparison tools
+        working-directory: candidate
+        run: yarn workspace @camadb/benchmarks build
+
       - name: Run baseline workloads
         working-directory: baseline
-        run: |
-          yarn workspace @camadb/benchmarks build
-          node ../candidate/packages/benchmarks/dist/ci-run.js --runner-dir packages/benchmarks/dist --output-dir ../benchmark-results/baseline
+        run: node ../candidate/packages/benchmarks/dist/ci-run.js --runner-dir packages/benchmarks/dist --output-dir ../benchmark-results/baseline
 
       - name: Run candidate workloads
         working-directory: candidate
-        run: yarn workspace @camadb/benchmarks benchmark:ci --output-dir ../benchmark-results/candidate
+        run: node packages/benchmarks/dist/ci-run.js --runner-dir packages/benchmarks/dist --output-dir ../benchmark-results/candidate
 
       - name: Compare benchmark distributions
         working-directory: candidate
-        run: yarn workspace @camadb/benchmarks benchmark:compare --baseline ../benchmark-results/baseline --candidate ../benchmark-results/candidate
+        run: node packages/benchmarks/dist/compare.js --baseline ../benchmark-results/baseline --candidate ../benchmark-results/candidate
 
       - name: Upload raw benchmark reports
         if: always()
