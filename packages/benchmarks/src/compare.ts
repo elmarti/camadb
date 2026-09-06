@@ -53,6 +53,11 @@ export interface ReportComparison {
   regressions: ResultComparison[];
 }
 
+interface NamedComparison {
+  name: string;
+  report: ReportComparison;
+}
+
 const timing = (sample: BenchmarkSample): number =>
   sample.perOperationMs ?? sample.perReadMilliseconds ?? sample.milliseconds;
 
@@ -117,7 +122,15 @@ export const compareReports = (
   return { regressions: results.filter(({ regression }) => regression), results };
 };
 
-const parseArguments = (args: string[]): { baseline: string; candidate: string; options: ComparisonOptions } => {
+const parseArguments = (
+  args: string[],
+): {
+  baseline: string;
+  candidate: string;
+  confirmRegressions?: string;
+  options: ComparisonOptions;
+  writeRegressions?: string;
+} => {
   const values = new Map<string, string>();
   for (let index = 0; index < args.length; index += 2) values.set(args[index], args[index + 1]);
   const baseline = values.get('--baseline');
@@ -126,15 +139,34 @@ const parseArguments = (args: string[]): { baseline: string; candidate: string; 
   const relativeTolerance = Number(values.get('--relative-tolerance') ?? '0.25');
   const absoluteToleranceMs = Number(values.get('--absolute-tolerance-ms') ?? '0.25');
   if (!(relativeTolerance >= 0) || !(absoluteToleranceMs >= 0)) throw new Error('Tolerances must be non-negative');
-  return { baseline, candidate, options: { absoluteToleranceMs, relativeTolerance } };
+  return {
+    baseline,
+    candidate,
+    confirmRegressions: values.get('--confirm-regressions'),
+    options: { absoluteToleranceMs, relativeTolerance },
+    writeRegressions: values.get('--write-regressions'),
+  };
 };
 
-const markdown = (comparisons: Array<{ name: string; report: ReportComparison }>): string => {
+const regressionId = (name: string, result: ResultComparison): string => `${name}/${result.key}`;
+
+export const blockingRegressionIds = (
+  comparisons: NamedComparison[],
+  confirmationSet?: ReadonlySet<string>,
+): string[] =>
+  comparisons.flatMap(({ name, report }) =>
+    report.regressions
+      .map((result) => regressionId(name, result))
+      .filter((identity) => confirmationSet === undefined || confirmationSet.has(identity)),
+  );
+
+const markdown = (comparisons: NamedComparison[], confirmationSet?: ReadonlySet<string>): string => {
   const rows = comparisons.flatMap(({ name, report }) =>
-    report.results.map(
-      (result) =>
-        `| ${name} | ${result.key} | ${result.baselineMs.toFixed(3)} | ${result.candidateMs.toFixed(3)} | ${(result.change * 100).toFixed(1)}% | ${result.regression ? 'FAIL' : 'pass'} |`,
-    ),
+    report.results.map((result) => {
+      const confirmed = confirmationSet === undefined || confirmationSet.has(regressionId(name, result));
+      const gate = result.regression ? (confirmed ? 'FAIL' : 'unconfirmed') : 'pass';
+      return `| ${name} | ${result.key} | ${result.baselineMs.toFixed(3)} | ${result.candidateMs.toFixed(3)} | ${(result.change * 100).toFixed(1)}% | ${gate} |`;
+    }),
   );
   return [
     '## Performance regression comparison',
@@ -147,7 +179,7 @@ const markdown = (comparisons: Array<{ name: string; report: ReportComparison }>
 };
 
 const main = async (): Promise<void> => {
-  const { baseline, candidate, options } = parseArguments(process.argv.slice(2));
+  const { baseline, candidate, confirmRegressions, options, writeRegressions } = parseArguments(process.argv.slice(2));
   const files = (await fs.readdir(baseline)).filter((file) => file.endsWith('.json')).sort();
   const candidateFiles = (await fs.readdir(candidate)).filter((file) => file.endsWith('.json')).sort();
   if (JSON.stringify(files) !== JSON.stringify(candidateFiles)) throw new Error('Benchmark report files do not match');
@@ -161,12 +193,27 @@ const main = async (): Promise<void> => {
       ),
     })),
   );
-  const output = markdown(comparisons);
+  const confirmationIds = confirmRegressions
+    ? (JSON.parse(await fs.readFile(confirmRegressions, 'utf8')) as unknown)
+    : undefined;
+  if (
+    confirmationIds !== undefined &&
+    (!Array.isArray(confirmationIds) || confirmationIds.some((identity) => typeof identity !== 'string'))
+  ) {
+    throw new Error('Confirmation regression file must contain an array of result identities');
+  }
+  const confirmationSet = confirmationIds === undefined ? undefined : new Set(confirmationIds);
+  const detectedRegressionIds = blockingRegressionIds(comparisons);
+  if (writeRegressions) await fs.writeFile(writeRegressions, `${JSON.stringify(detectedRegressionIds, null, 2)}\n`);
+
+  const output = markdown(comparisons, confirmationSet);
   process.stdout.write(output);
   if (process.env.GITHUB_STEP_SUMMARY) await fs.appendFile(process.env.GITHUB_STEP_SUMMARY, output);
-  const regressionCount = comparisons.reduce((total, comparison) => total + comparison.report.regressions.length, 0);
+  const regressionCount = blockingRegressionIds(comparisons, confirmationSet).length;
   if (regressionCount > 0)
-    throw new Error(`${regressionCount} statistically separated performance regression(s) detected`);
+    throw new Error(
+      `${regressionCount} ${confirmationSet ? 'confirmed ' : ''}statistically separated performance regression(s) detected`,
+    );
 };
 
 if (require.main === module) {

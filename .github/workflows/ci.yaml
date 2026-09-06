@@ -75,11 +75,11 @@ jobs:
         run: yarn validate:affected
 
   performance:
-    name: Compare performance with PR base
+    name: Compare performance with PR base and reviewed floor
     needs: changes
     if: github.event_name == 'pull_request' && contains(needs.changes.outputs.workspaces, '@camadb/benchmarks')
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     steps:
       - name: Checkout candidate
@@ -93,6 +93,24 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: baseline
+
+      - name: Select the reviewed performance floor
+        id: reviewed-floor
+        working-directory: candidate
+        run: |
+          MANIFEST="../baseline/packages/benchmarks/baselines/node24-linux-x64.manifest.json"
+          if [ ! -f "$MANIFEST" ]; then
+            MANIFEST="packages/benchmarks/baselines/node24-linux-x64.manifest.json"
+          fi
+          COMMIT=$(node -e "process.stdout.write(require('./' + process.argv[1]).sourceCommit)" "$MANIFEST")
+          git merge-base --is-ancestor "$COMMIT" "$GITHUB_SHA"
+          echo "commit=$COMMIT" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout reviewed performance floor
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.reviewed-floor.outputs.commit }}
+          path: reviewed
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
@@ -108,12 +126,20 @@ jobs:
         working-directory: baseline
         run: yarn install --frozen-lockfile
 
+      - name: Install reviewed-floor dependencies
+        working-directory: reviewed
+        run: yarn install --frozen-lockfile
+
       - name: Install candidate dependencies
         working-directory: candidate
         run: yarn install --frozen-lockfile
 
       - name: Build baseline benchmarks
         working-directory: baseline
+        run: yarn workspace @camadb/benchmarks build
+
+      - name: Build reviewed-floor benchmarks
+        working-directory: reviewed
         run: yarn workspace @camadb/benchmarks build
 
       - name: Build candidate benchmarks and comparison tools
@@ -124,13 +150,37 @@ jobs:
         working-directory: baseline
         run: node ../candidate/packages/benchmarks/dist/ci-run.js --runner-dir packages/benchmarks/dist --output-dir ../benchmark-results/baseline
 
+      - name: Run reviewed-floor workloads
+        working-directory: reviewed
+        run: node ../candidate/packages/benchmarks/dist/ci-run.js --runner-dir packages/benchmarks/dist --output-dir ../benchmark-results/reviewed
+
       - name: Run candidate workloads
         working-directory: candidate
         run: node packages/benchmarks/dist/ci-run.js --runner-dir packages/benchmarks/dist --output-dir ../benchmark-results/candidate
 
       - name: Compare benchmark distributions
         working-directory: candidate
-        run: node packages/benchmarks/dist/compare.js --baseline ../benchmark-results/baseline --candidate ../benchmark-results/candidate
+        run: |
+          if node packages/benchmarks/dist/compare.js --baseline ../benchmark-results/baseline --candidate ../benchmark-results/candidate --write-regressions ../benchmark-results/baseline-regressions.json; then
+            exit 0
+          fi
+
+          echo "The initial comparison found a regression. Repeating all workloads to distinguish a code change from hosted-runner noise."
+          node packages/benchmarks/dist/ci-run.js --runner-dir ../baseline/packages/benchmarks/dist --output-dir ../benchmark-results/baseline-confirmation
+          node packages/benchmarks/dist/ci-run.js --runner-dir packages/benchmarks/dist --output-dir ../benchmark-results/candidate-confirmation
+          node packages/benchmarks/dist/compare.js --baseline ../benchmark-results/baseline-confirmation --candidate ../benchmark-results/candidate-confirmation --confirm-regressions ../benchmark-results/baseline-regressions.json
+
+      - name: Enforce the reviewed performance floor
+        working-directory: candidate
+        run: |
+          if node packages/benchmarks/dist/compare.js --baseline ../benchmark-results/reviewed --candidate ../benchmark-results/candidate --write-regressions ../benchmark-results/reviewed-regressions.json; then
+            exit 0
+          fi
+
+          echo "The initial floor comparison found a regression. Repeating all workloads before rejecting the candidate."
+          node packages/benchmarks/dist/ci-run.js --runner-dir ../reviewed/packages/benchmarks/dist --output-dir ../benchmark-results/reviewed-confirmation
+          node packages/benchmarks/dist/ci-run.js --runner-dir packages/benchmarks/dist --output-dir ../benchmark-results/floor-candidate-confirmation
+          node packages/benchmarks/dist/compare.js --baseline ../benchmark-results/reviewed-confirmation --candidate ../benchmark-results/floor-candidate-confirmation --confirm-regressions ../benchmark-results/reviewed-regressions.json
 
       - name: Upload raw benchmark reports
         if: always()
@@ -139,3 +189,74 @@ jobs:
           name: performance-comparison-${{ github.event.pull_request.number }}
           path: benchmark-results
           retention-days: 30
+
+  browser-journey:
+    name: Real Chrome IndexedDB journey
+    needs: changes
+    if: >-
+      contains(needs.changes.outputs.workspaces, '@camadb/core') ||
+      contains(needs.changes.outputs.workspaces, '@camadb/memory') ||
+      contains(needs.changes.outputs.workspaces, '@camadb/knowledge-demo')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Install Yarn Classic
+        run: npm install --global yarn@1.22.22
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build the real browser application
+        run: yarn workspace @camadb/knowledge-demo build
+
+      - name: Exercise IndexedDB in headless Chrome
+        run: yarn test:browser
+
+  release-audit:
+    name: Audit production dependencies and package contents
+    needs: changes
+    if: >-
+      contains(needs.changes.outputs.workspaces, '@camadb/core') ||
+      contains(needs.changes.outputs.workspaces, '@camadb/memory') ||
+      contains(needs.changes.outputs.workspaces, '@camadb/sync') ||
+      contains(needs.changes.outputs.workspaces, '"camadb"')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: yarn
+
+      - name: Install Yarn Classic
+        run: npm install --global yarn@1.22.22
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build publishable packages
+        env:
+          AFFECTED_WORKSPACES: '["@camadb/core","@camadb/memory","@camadb/sync","camadb"]'
+        run: yarn build:affected
+
+      - name: Audit package contents and publishing controls
+        run: yarn check:release
+
+      - name: Audit production dependencies
+        run: yarn audit:dependencies

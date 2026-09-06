@@ -6,4 +6,6 @@ The collection journey runs against in-memory, filesystem, IndexedDB, and localS
 
 Separate journeys cover filesystem-backed `@camadb/memory` reopen/export/forget behavior and optional `@camadb/sync` offline writes plus interrupted, duplicate-safe replay.
 
-The browser adapters run under deterministic API emulation in Jest. This is a release gate for shared behavior, not a substitute for the clean-browser interactive demo or extension smoke tests.
+The shared adapter suite runs browser APIs under deterministic emulation in Jest. CI additionally builds the real knowledge demo and drives it through headless Chrome. That journey imports into native IndexedDB, performs hybrid recall and inspection, reloads the page, verifies persistence, deletes the data, and rejects unexpected external HTTP requests.
+
+The packed-package consumer also runs the filesystem lifecycle expected from an Electron main process. Electron renderers use the separately executed browser bundle and must not import the filesystem adapter.

@@ -34,7 +34,9 @@ function write(relativePath, contents) {
 
 function testSelectedPackages(requestedNames) {
   const workspaces = loadWorkspaces(root);
-  const publicByName = new Map(workspaces.filter(({ manifest }) => !manifest.private).map((workspace) => [workspace.name, workspace]));
+  const publicByName = new Map(
+    workspaces.filter(({ manifest }) => !manifest.private).map((workspace) => [workspace.name, workspace]),
+  );
   const requested = new Set(requestedNames);
   for (const name of requested) {
     if (!publicByName.has(name)) throw new Error(`Unknown public package: ${name}`);
@@ -73,25 +75,52 @@ function testSelectedPackages(requestedNames) {
     if (requested.has('@camadb/core')) {
       commonJs.push("const core = require('@camadb/core');", "assert.strictEqual(typeof core.Cama, 'function');");
       esm.push("const core = await import('@camadb/core');", "assert.strictEqual(typeof core.Cama, 'function');");
-      types.push("import { Cama, PersistenceAdapterEnum } from '@camadb/core';", "void new Cama({ persistenceAdapter: PersistenceAdapterEnum.InMemory });");
-      browser.push("import { Cama, PersistenceAdapterEnum } from '@camadb/core';", "void new Cama({ persistenceAdapter: PersistenceAdapterEnum.InMemory });");
+      types.push(
+        "import { Cama, PersistenceAdapterEnum } from '@camadb/core';",
+        'void new Cama({ persistenceAdapter: PersistenceAdapterEnum.InMemory });',
+      );
+      browser.push(
+        "import { Cama, PersistenceAdapterEnum } from '@camadb/core';",
+        'void new Cama({ persistenceAdapter: PersistenceAdapterEnum.InMemory });',
+      );
     }
     if (requested.has('camadb')) {
-      commonJs.push("const compatibility = require('camadb');", "assert.strictEqual(typeof compatibility.Cama, 'function');");
-      esm.push("const compatibility = await import('camadb');", "assert.strictEqual(typeof compatibility.Cama, 'function');");
+      commonJs.push(
+        "const compatibility = require('camadb');",
+        "assert.strictEqual(typeof compatibility.Cama, 'function');",
+      );
+      esm.push(
+        "const compatibility = await import('camadb');",
+        "assert.strictEqual(typeof compatibility.Cama, 'function');",
+      );
       types.push("import { Cama as CompatibilityCama } from 'camadb';", 'void CompatibilityCama;');
       browser.push("import { Cama as CompatibilityCama } from 'camadb';", 'void CompatibilityCama;');
     }
     if (requested.has('@camadb/memory')) {
-      commonJs.push("const memory = require('@camadb/memory');", "assert.strictEqual(typeof memory.CamaMemory, 'function');");
-      esm.push("const memory = await import('@camadb/memory');", "assert.strictEqual(typeof memory.planReembedding, 'function');");
-      types.push("import type { MemoryRecord } from '@camadb/memory';", 'const memoryRecord: MemoryRecord = {} as MemoryRecord;', 'void memoryRecord;');
+      commonJs.push(
+        "const memory = require('@camadb/memory');",
+        "assert.strictEqual(typeof memory.CamaMemory, 'function');",
+      );
+      esm.push(
+        "const memory = await import('@camadb/memory');",
+        "assert.strictEqual(typeof memory.planReembedding, 'function');",
+      );
+      types.push(
+        "import type { MemoryRecord } from '@camadb/memory';",
+        'const memoryRecord: MemoryRecord = {} as MemoryRecord;',
+        'void memoryRecord;',
+      );
       browser.push("import { prepareEmbeddingQuery } from '@camadb/memory';", 'void prepareEmbeddingQuery;');
     }
     if (requested.has('@camadb/sync')) {
       commonJs.push("const sync = require('@camadb/sync');", 'assert.strictEqual(sync.SYNC_PROTOCOL_VERSION, 1);');
       esm.push("const sync = await import('@camadb/sync');", 'assert.strictEqual(sync.SYNC_PROTOCOL_VERSION, 1);');
-      types.push("import { LocalSyncReplica, type SyncMutation } from '@camadb/sync';", "const replica = new LocalSyncReplica('typed');", 'void ({} as SyncMutation);', 'void replica;');
+      types.push(
+        "import { LocalSyncReplica, type SyncMutation } from '@camadb/sync';",
+        "const replica = new LocalSyncReplica('typed');",
+        'void ({} as SyncMutation);',
+        'void replica;',
+      );
       browser.push("import { LocalSyncReplica } from '@camadb/sync';", "void new LocalSyncReplica('browser');");
     }
 
@@ -100,7 +129,12 @@ function testSelectedPackages(requestedNames) {
     write('import.mjs', `${esm.join('\n')}\n`);
     run(process.execPath, ['import.mjs'], { cwd: consumerDirectory });
     write('types.ts', `${types.join('\n')}\n`);
-    write('tsconfig.json', JSON.stringify({ compilerOptions: { module: 'NodeNext', moduleResolution: 'NodeNext', strict: true, noEmit: true } }));
+    write(
+      'tsconfig.json',
+      JSON.stringify({
+        compilerOptions: { module: 'NodeNext', moduleResolution: 'NodeNext', strict: true, noEmit: true },
+      }),
+    );
     run(process.execPath, [require.resolve('typescript/bin/tsc'), '-p', 'tsconfig.json'], { cwd: consumerDirectory });
     write('browser-entry.js', `${browser.join('\n')}\n`);
     buildSync({
@@ -213,6 +247,34 @@ await collection.destroy();
   run(process.execPath, ['import.mjs'], { cwd: consumerDirectory });
 
   write(
+    'electron-main.cjs',
+    `const assert = require('assert');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { Cama, PersistenceAdapterEnum } = require('camadb');
+const root = fs.mkdtempSync(path.join(os.tmpdir(), 'camadb-electron-main-'));
+(async () => {
+  try {
+    const first = new Cama({ path: root, persistenceAdapter: PersistenceAdapterEnum.FS });
+    const collection = await first.initCollection('documents', { columns: [], indexes: [] });
+    await collection.insertOne({ _id: 'electron', value: 'persisted from the main process' });
+
+    const reopened = await new Cama({ path: root, persistenceAdapter: PersistenceAdapterEnum.FS })
+      .initCollection('documents', { columns: [], indexes: [] });
+    assert.deepStrictEqual((await reopened.findMany({ _id: 'electron' })).rows, [
+      { _id: 'electron', value: 'persisted from the main process' },
+    ]);
+    await reopened.destroy();
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+})().catch((error) => { console.error(error); process.exitCode = 1; });
+`,
+  );
+  run(process.execPath, ['electron-main.cjs'], { cwd: consumerDirectory });
+
+  write(
     'types.ts',
     `import { Cama, PersistenceAdapterEnum, type ICamaConfig, type CacheConfig, type CacheStats } from '@camadb/core';
 import { Cama as CompatibilityCama } from 'camadb';
@@ -305,7 +367,9 @@ await collection.searchHybrid({
   });
   assert.ok(fs.statSync(path.join(consumerDirectory, 'browser-bundle.js')).size > 0);
 
-  console.log('Published packages support CommonJS, ESM imports, TypeScript, and browser bundling.');
+  console.log(
+    'Published packages support CommonJS, ESM imports, TypeScript, browser bundling, and an Electron main-process filesystem journey.',
+  );
 } finally {
   fs.rmSync(temporaryRoot, { recursive: true, force: true });
 }
