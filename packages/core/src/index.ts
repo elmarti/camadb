@@ -70,10 +70,10 @@ export type {
 export {
   CURRENT_STORAGE_VERSION,
   LEGACY_STORAGE_VERSION,
+  LEGACY_STORAGE_MESSAGE,
+  LegacyStorageError,
   createStorageEnvelope,
   detectStorage,
-  exportLegacyStorage,
   isStorageEnvelope,
-  migrateLegacyStorage,
 } from './modules/persistence/storage-version';
 export type { StorageDetection, StorageEnvelope } from './modules/persistence/storage-version';

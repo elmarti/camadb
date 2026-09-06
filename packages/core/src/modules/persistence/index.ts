@@ -18,11 +18,11 @@ export const selectPersistenceAdapterClass = (adapter: PersistenceAdapterEnum) =
 export {
   CURRENT_STORAGE_VERSION,
   LEGACY_STORAGE_VERSION,
+  LEGACY_STORAGE_MESSAGE,
+  LegacyStorageError,
   createStorageEnvelope,
   detectStorage,
-  exportLegacyStorage,
   isStorageEnvelope,
-  migrateLegacyStorage,
   readStoragePayload,
 } from './storage-version';
 export type { StorageDetection, StorageEnvelope } from './storage-version';

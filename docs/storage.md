@@ -28,12 +28,11 @@ Queries that contain only a string `_id` use direct record lookup. Queries over 
 Optional [record caching](./caching.md) provides eager, lazy, and bounded/LRU modes with explicit budgets and invalidation. It is disabled by default and does not bound full-query result or adapter working-set memory.
 
 Record storage uses format version 3. When the filesystem adapter finds a
-non-empty legacy payload or the superseded development page manifest without a
-segment, it reports that explicit migration is required. It never rewrites or
-reinterprets those files while opening them. Use the detection/export facilities
-described in [2.x migration](./migration-2.x.md) before creating the version-3
-record store, and retain the source until the migrated collection has been
-validated.
+legacy payload or the superseded development page manifest without a segment,
+it refuses to open it. It never rewrites or reinterprets those files. Continue
+using CamaDB 2 for that store, or create a new version-3 store and move data
+through application-level export/import. See the [2.x and 3.x compatibility
+policy](./migration-2.x.md).
 
 The detailed format and recovery rationale is recorded in [the storage decision](./decisions/0001-record-oriented-storage.md).
 

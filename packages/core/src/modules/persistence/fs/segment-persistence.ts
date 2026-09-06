@@ -110,13 +110,13 @@ export default class SegmentPersistence implements IPersistenceAdapter {
     if (!segmentExists || (await fs.stat(this.filePath)).size === 0) {
       const pageManifest = path.join(this.collectionPath, 'manifest.json');
       if (await this.legacyFs.exists(pageManifest)) {
-        throw new Error(`Collection "${this.collectionName}" requires explicit migration to segment storage`);
+        throw new Error(`Collection "${this.collectionName}" uses an unsupported pre-release storage format`);
       }
       const legacyPath = path.join(this.collectionPath, 'data');
       if (await this.legacyFs.exists(legacyPath)) {
         const legacy = await this.legacyFs.readData<any[]>(legacyPath);
         if (legacy.length > 0) {
-          throw new Error(`Collection "${this.collectionName}" requires explicit migration to segment storage`);
+          throw new Error(`Collection "${this.collectionName}" uses an unsupported pre-release storage format`);
         }
       }
     }

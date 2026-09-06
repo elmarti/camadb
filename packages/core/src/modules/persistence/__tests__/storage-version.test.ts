@@ -6,10 +6,11 @@ import { ILogger } from '../../../interfaces/logger.interface';
 import { Fs } from '../fs/fs';
 import {
   CURRENT_STORAGE_VERSION,
+  LEGACY_STORAGE_MESSAGE,
+  LegacyStorageError,
   createStorageEnvelope,
   detectStorage,
-  exportLegacyStorage,
-  migrateLegacyStorage,
+  readStoragePayload,
 } from '../storage-version';
 
 const logger: ILogger = {
@@ -20,7 +21,7 @@ const logger: ILogger = {
 
 const fixtureRoot = path.join(__dirname, 'fixtures', '2.0.0');
 
-describe('storage version detection and migration', () => {
+describe('storage version detection', () => {
   it('detects published 2.x adapter values without changing them', async () => {
     const localStorageFixture = await nodeFs.readFile(path.join(fixtureRoot, 'localstorage.json'), 'utf8');
     const indexedDbFixture = await nodeFs.readFile(path.join(fixtureRoot, 'indexeddb.json'), 'utf8');
@@ -33,7 +34,7 @@ describe('storage version detection and migration', () => {
     expect(JSON.stringify(indexedDbValue)).toBe(JSON.stringify(JSON.parse(indexedDbFixture).value));
   });
 
-  it('reads the published filesystem fixture without rewriting it', async () => {
+  it('refuses the published filesystem fixture without rewriting it', async () => {
     const fixturePath = path.join(fixtureRoot, 'fs', 'people', 'data');
     const original = await nodeFs.readFile(fixturePath);
     const directory = await nodeFs.mkdtemp(path.join(tmpdir(), 'camadb-legacy-'));
@@ -42,7 +43,7 @@ describe('storage version detection and migration', () => {
     await nodeFs.writeFile(dataPath, original);
 
     const fs = new Fs(new FlattedSerializer(logger), logger);
-    await expect(fs.readData(dataPath)).resolves.toEqual([{ _id: 'legacy-1', name: 'Ada' }]);
+    await expect(fs.readData(dataPath)).rejects.toThrow(LEGACY_STORAGE_MESSAGE);
     await expect(nodeFs.readFile(dataPath)).resolves.toEqual(original);
 
     await nodeFs.rm(directory, { recursive: true, force: true });
@@ -57,21 +58,34 @@ describe('storage version detection and migration', () => {
     expect(detectStorage(envelope)).toEqual({ kind: 'current', version: CURRENT_STORAGE_VERSION });
   });
 
-  it('migrates explicitly, repeatably, and supports a 2.x rollback export', () => {
+  it('refuses published browser fixtures without changing them', async () => {
+    const localStorageFixture = await nodeFs.readFile(path.join(fixtureRoot, 'localstorage.json'), 'utf8');
+    const indexedDbFixture = await nodeFs.readFile(path.join(fixtureRoot, 'indexeddb.json'), 'utf8');
     const legacy = [{ _id: 'legacy-1', name: 'Ada' }];
     const before = JSON.stringify(legacy);
-    const migrated = migrateLegacyStorage(legacy);
 
+    expect(() => readStoragePayload(legacy)).toThrow(LEGACY_STORAGE_MESSAGE);
+    const error = captureError(() => readStoragePayload(legacy));
+    expect(error).toBeInstanceOf(LegacyStorageError);
+    expect(error).toMatchObject({ code: 'CAMADB_LEGACY_STORAGE' });
     expect(JSON.stringify(legacy)).toBe(before);
-    expect(migrated.camaDB.migratedFrom).toBe(2);
-    expect(migrateLegacyStorage(migrated)).toBe(migrated);
-    expect(exportLegacyStorage(migrated)).toBe(legacy);
+    expect(localStorageFixture).toBe(await nodeFs.readFile(path.join(fixtureRoot, 'localstorage.json'), 'utf8'));
+    expect(indexedDbFixture).toBe(await nodeFs.readFile(path.join(fixtureRoot, 'indexeddb.json'), 'utf8'));
   });
 
   it('rejects unknown envelopes instead of guessing or mutating them', () => {
     const future = { camaDB: { format: 'collection', version: 99 }, data: [] };
     expect(detectStorage(future)).toEqual({ kind: 'unsupported', version: 99 });
-    expect(() => migrateLegacyStorage(future as never)).toThrow('Cannot migrate');
+    expect(() => readStoragePayload(future as never)).toThrow('Unsupported CamaDB storage version 99');
     expect(future.camaDB.version).toBe(99);
   });
 });
+
+const captureError = (operation: () => unknown): unknown => {
+  try {
+    operation();
+  } catch (error) {
+    return error;
+  }
+  return undefined;
+};

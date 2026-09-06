@@ -9,6 +9,7 @@ import { ILogger } from '../../../interfaces/logger.interface';
 import { LogLevel } from '../../../interfaces/logger-level.enum';
 import { ISystem } from '../../../interfaces/system.interface';
 import { IQueueService } from '../../../interfaces/queue-service.interface';
+import { LegacyStorageError } from '../storage-version';
 
 export class CollectionMeta implements ICollectionMeta {
   private meta?: IMetaStructure;
@@ -45,12 +46,24 @@ export class CollectionMeta implements ICollectionMeta {
       this.logger.log(LogLevel.Info, 'Does not exist, creating' + this.fileName);
 
       await this.fs.mkdir(this.dbPath);
+      const existingDataPath = path.join(this.dbPath, 'data');
+      const existingData = await this.fs.exists(existingDataPath);
+      if (existingData) {
+        // Classify an existing collection before creating V3 metadata. In
+        // particular, readData rejects V2 payloads without rewriting them.
+        try {
+          await this.fs.readData(existingDataPath);
+        } catch (error) {
+          if (error instanceof LegacyStorageError) return;
+          throw error;
+        }
+      }
       this.meta = {
         ...collectionConfig,
         collectionName,
       };
       this.logger.log(LogLevel.Info, 'Initialising empty collection');
-      await this.fs.writeData(this.camaPath, this.collectionName, []);
+      if (!existingData) await this.fs.writeData(this.camaPath, this.collectionName, []);
       this.logger.log(LogLevel.Info, 'Writing meta file');
       return await this.fs.writeJSON<IMetaStructure>(this.dbPath, this.fileName, this.meta);
     };

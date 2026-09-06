@@ -5,7 +5,6 @@ export interface StorageEnvelope<T> {
   readonly camaDB: {
     readonly format: 'collection';
     readonly version: typeof CURRENT_STORAGE_VERSION;
-    readonly migratedFrom?: typeof LEGACY_STORAGE_VERSION;
   };
   readonly data: T;
 }
@@ -15,6 +14,18 @@ export type StorageDetection =
   | { readonly kind: 'legacy'; readonly version: typeof LEGACY_STORAGE_VERSION }
   | { readonly kind: 'current'; readonly version: typeof CURRENT_STORAGE_VERSION }
   | { readonly kind: 'unsupported'; readonly version?: number };
+
+export const LEGACY_STORAGE_MESSAGE =
+  'CamaDB 2 storage is not supported by CamaDB 3. Continue using CamaDB 2 or create a new CamaDB 3 store.';
+
+export class LegacyStorageError extends Error {
+  readonly code = 'CAMADB_LEGACY_STORAGE';
+
+  constructor() {
+    super(LEGACY_STORAGE_MESSAGE);
+    this.name = 'LegacyStorageError';
+  }
+}
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -40,38 +51,18 @@ export const detectStorage = (value: unknown): StorageDetection => {
     : { kind: 'unsupported' };
 };
 
-export const createStorageEnvelope = <T>(data: T, migratedFrom?: typeof LEGACY_STORAGE_VERSION): StorageEnvelope<T> => ({
+export const createStorageEnvelope = <T>(data: T): StorageEnvelope<T> => ({
   camaDB: {
     format: 'collection',
     version: CURRENT_STORAGE_VERSION,
-    ...(migratedFrom === undefined ? {} : { migratedFrom }),
   },
   data,
 });
 
-/**
- * Produce migrated content for the caller to persist explicitly.
- * Re-running this function with its result is safe and returns the same envelope.
- */
-export const migrateLegacyStorage = <T>(value: T[] | StorageEnvelope<T[]>): StorageEnvelope<T[]> => {
-  const detection = detectStorage(value);
-  if (detection.kind === 'current') return value as StorageEnvelope<T[]>;
-  if (detection.kind === 'legacy') return createStorageEnvelope(value as T[], LEGACY_STORAGE_VERSION);
-  throw new Error('Cannot migrate empty or unsupported CamaDB storage');
-};
-
-/** Export the 2.x-compatible collection payload without altering the source. */
-export const exportLegacyStorage = <T>(value: T[] | StorageEnvelope<T[]>): T[] => {
-  const detection = detectStorage(value);
-  if (detection.kind === 'legacy') return value as T[];
-  if (detection.kind === 'current') return (value as StorageEnvelope<T[]>).data;
-  throw new Error('Cannot export empty or unsupported CamaDB storage');
-};
-
 export const readStoragePayload = <T>(value: T[] | StorageEnvelope<T[]> | undefined): T[] => {
   if (value === undefined) return [];
   const detection = detectStorage(value);
-  if (detection.kind === 'legacy') return value as T[];
+  if (detection.kind === 'legacy') throw new LegacyStorageError();
   if (detection.kind === 'current') return (value as StorageEnvelope<T[]>).data;
   const version = detection.kind === 'unsupported' ? detection.version : undefined;
   throw new Error(`Unsupported CamaDB storage version${version === undefined ? '' : ` ${version}`}`);

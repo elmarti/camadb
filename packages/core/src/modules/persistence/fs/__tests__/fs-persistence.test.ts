@@ -5,6 +5,7 @@ import { Cama } from '../../../..';
 import { IPersistenceAdapter } from '../../../../interfaces/persistence-adapter.interface';
 import { PersistenceAdapterEnum } from '../../../../interfaces/perisistence-adapter.enum';
 import { TYPES } from '../../../../types';
+import { LEGACY_STORAGE_MESSAGE } from '../../storage-version';
 
 interface TestDocument {
   value: string;
@@ -46,6 +47,20 @@ describe('filesystem record persistence', () => {
       rows: [{ _id: '600', value: 'updated' }],
     });
   }, DURABLE_COMPACTION_TIMEOUT_MS);
+
+  it('refuses a 2.x collection without modifying its data', async () => {
+    const fixturePath = path.join(__dirname, '..', '..', '__tests__', 'fixtures', '2.0.0', 'fs', 'people', 'data');
+    const dataPath = path.join(databasePath, 'people', 'data');
+    const original = await nodeFs.readFile(fixturePath);
+    await nodeFs.mkdir(path.dirname(dataPath), { recursive: true });
+    await nodeFs.writeFile(dataPath, original);
+
+    const database = new Cama({ path: databasePath, persistenceAdapter: PersistenceAdapterEnum.FS });
+    const collection = await database.initCollection<TestDocument>('people', { columns: [], indexes: [] });
+    const adapter = collection.container?.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
+    await expect(adapter?.getData()).rejects.toThrow(LEGACY_STORAGE_MESSAGE);
+    await expect(nodeFs.readFile(dataPath)).resolves.toEqual(original);
+  });
 
   it('keeps the previous generation readable when a segment write is interrupted', async () => {
     const collection = await createCollection();

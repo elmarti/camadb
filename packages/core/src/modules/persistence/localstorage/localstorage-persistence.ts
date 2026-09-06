@@ -185,7 +185,7 @@ export default class LocalstoragePersistence implements IPersistenceAdapter {
     if (window.localStorage.getItem(this.manifestKey())) return;
     const previous = window.localStorage.getItem(`${this.prefix}-data`);
     if (previous && readStoragePayload(JSON.parse(previous)).length > 0) {
-      throw new Error(`Collection "${this.collectionName}" requires explicit migration to record storage`);
+      throw new Error(`Collection "${this.collectionName}" uses an unsupported pre-release storage format`);
     }
     this.writeManifest(emptyManifest());
   }
