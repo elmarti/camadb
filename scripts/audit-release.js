@@ -49,9 +49,39 @@ for (const workspace of publicWorkspaces) {
 }
 
 const releaseWorkflow = fs.readFileSync(path.join(root, '.github/workflows/release.yaml'), 'utf8');
+const releaseCandidateWorkflow = fs.readFileSync(path.join(root, '.github/workflows/release-rc.yaml'), 'utf8');
+const alphaWorkflow = fs.readFileSync(path.join(root, '.github/workflows/release-alpha.yaml'), 'utf8');
 assert.match(releaseWorkflow, /id-token:\s*write/, 'Stable publishing must grant OIDC identity-token permission');
 assert.match(releaseWorkflow, /registry-url:\s*https:\/\/registry\.npmjs\.org/, 'Stable publishing must target npm');
 assert.match(releaseWorkflow, /yarn install --frozen-lockfile/, 'Stable publishing must use the reviewed lockfile');
+assert.match(releaseCandidateWorkflow, /workflow_dispatch:/, 'RC publishing must require a manual dispatch');
+assert.match(releaseCandidateWorkflow, /github\.ref == 'refs\/heads\/develop'/, 'RC publishing must use develop');
+assert.match(releaseCandidateWorkflow, /id-token:\s*write/, 'RC publishing must grant OIDC identity-token permission');
+assert.match(releaseCandidateWorkflow, /yarn release:check/, 'RC publishing must run the complete release gate');
+assert.match(releaseCandidateWorkflow, /yarn release:rc/, 'RC publishing must use the rc npm tag');
+assert.match(
+  releaseCandidateWorkflow,
+  /yarn test:packages:published/,
+  'RC publishing must smoke-test registry packages',
+);
+assert.match(alphaWorkflow, /\[ -f \.changeset\/pre\.json \]/, 'Alpha publishing must detect committed RC mode');
+assert.match(
+  alphaWorkflow,
+  /steps\.release-mode\.outputs\.alpha == 'true'/,
+  'Alpha publishing steps must be disabled during RC mode',
+);
+
+const prereleasePath = path.join(root, '.changeset/pre.json');
+if (fs.existsSync(prereleasePath)) {
+  const prereleaseState = JSON.parse(fs.readFileSync(prereleasePath, 'utf8'));
+  assert.ok(['pre', 'exit'].includes(prereleaseState.mode), 'Changesets prerelease state must be pre or exit');
+  assert.strictEqual(prereleaseState.tag, 'rc', 'The release branch prerelease tag must be rc');
+  if (prereleaseState.mode === 'pre') {
+    for (const { manifest, name } of publicWorkspaces) {
+      assert.match(manifest.version, /-rc\.\d+$/, `${name} must carry a committed rc.N version`);
+    }
+  }
+}
 
 const report = [
   '## Release package audit',

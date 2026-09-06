@@ -32,7 +32,19 @@ function write(relativePath, contents) {
   fs.writeFileSync(destination, contents);
 }
 
-function testSelectedPackages(requestedNames) {
+function installSources(names, publicByName, published) {
+  if (published) return names.map((name) => `${name}@${publicByName.get(name).manifest.version}`);
+  return names.map((name) => {
+    const workspace = publicByName.get(name);
+    const output = run('npm', ['pack', '--json', '--pack-destination', packageDirectory], {
+      cwd: path.join(root, workspace.directory),
+    });
+    const [{ filename }] = JSON.parse(output);
+    return path.join(packageDirectory, filename);
+  });
+}
+
+function testSelectedPackages(requestedNames, published = false) {
   const workspaces = loadWorkspaces(root);
   const publicByName = new Map(
     workspaces.filter(({ manifest }) => !manifest.private).map((workspace) => [workspace.name, workspace]),
@@ -55,14 +67,7 @@ function testSelectedPackages(requestedNames) {
   try {
     fs.mkdirSync(packageDirectory, { recursive: true });
     fs.mkdirSync(consumerDirectory, { recursive: true });
-    const packagePaths = [...included].map((name) => {
-      const workspace = publicByName.get(name);
-      const output = run('npm', ['pack', '--json', '--pack-destination', packageDirectory], {
-        cwd: path.join(root, workspace.directory),
-      });
-      const [{ filename }] = JSON.parse(output);
-      return path.join(packageDirectory, filename);
-    });
+    const packagePaths = installSources([...included], publicByName, published);
     write('package.json', JSON.stringify({ name: 'camadb-package-consumer', private: true, type: 'module' }));
     run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--no-package-lock', ...packagePaths], {
       cwd: consumerDirectory,
@@ -153,9 +158,10 @@ function testSelectedPackages(requestedNames) {
   }
 }
 
-const requestedPackages = process.argv.slice(2);
+const published = process.argv.includes('--published');
+const requestedPackages = process.argv.slice(2).filter((argument) => argument !== '--published');
 if (requestedPackages.length > 0) {
-  testSelectedPackages(requestedPackages);
+  testSelectedPackages(requestedPackages, published);
   process.exit(0);
 }
 
@@ -163,13 +169,16 @@ try {
   fs.mkdirSync(packageDirectory, { recursive: true });
   fs.mkdirSync(consumerDirectory, { recursive: true });
 
-  const packagePaths = ['core', 'memory', 'sync', 'camadb'].map((name) => {
-    const output = run('npm', ['pack', '--json', '--pack-destination', packageDirectory], {
-      cwd: path.join(root, 'packages', name),
-    });
-    const [{ filename }] = JSON.parse(output);
-    return path.join(packageDirectory, filename);
-  });
+  const publicByName = new Map(
+    loadWorkspaces(root)
+      .filter(({ manifest }) => !manifest.private)
+      .map((workspace) => [workspace.name, workspace]),
+  );
+  const packagePaths = installSources(
+    ['@camadb/core', '@camadb/memory', '@camadb/sync', 'camadb'],
+    publicByName,
+    published,
+  );
 
   write('package.json', JSON.stringify({ name: 'camadb-package-consumer', private: true, type: 'module' }));
   run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--no-package-lock', ...packagePaths], {

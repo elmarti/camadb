@@ -1,0 +1,62 @@
+name: Release candidate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: release-rc
+  cancel-in-progress: false
+
+jobs:
+  release-rc:
+    name: Publish and verify committed RC versions
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: yarn
+
+      - name: Install Yarn Classic
+        run: npm install --global yarn@1.22.22
+
+      - name: Install reviewed dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Verify committed RC state
+        run: node scripts/verify-prerelease-state.js
+
+      - name: Run the complete release gate
+        run: yarn release:check
+
+      - name: Publish exact committed versions to the rc tag
+        run: yarn release:rc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Smoke-test the published packages
+        run: |
+          for attempt in 1 2 3 4 5; do
+            if yarn test:packages:published; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 5 ]; then
+              echo "Published packages are not all visible yet; waiting for npm propagation."
+              sleep 15
+            fi
+          done
+          exit 1

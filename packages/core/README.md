@@ -2,11 +2,13 @@
 
 The database, collection/query model, built-in compatibility adapters, and shared public types for CamaDB.
 
-The package currently retains the legacy adapter selector so existing `camadb` configurations remain compatible. New adapters must depend only on this package's public contracts; adapter-specific entry points will be extracted in the next compatibility-safe step.
+The package retains the familiar adapter selector for filesystem, IndexedDB, localStorage and in-memory storage. New adapters must depend only on this package's public contracts. CamaDB 3 does not open or convert persisted CamaDB 2 stores; see the [compatibility policy](../../docs/migration-2.x.md).
 
 ## Runtime and module support
 
 CamaDB supports maintained Node.js releases from Node.js 22 onward. The package publishes CommonJS for compatibility and exposes that entry point explicitly to both `require()` and ESM `import`. Browser bundling is supported for non-filesystem adapters; Electron main processes use the Node.js path and renderer processes use the browser path.
+
+See the [CamaDB 3 API guide](../../docs/api.md) and [supported workload guidance](../../docs/supported-workloads.md).
 
 ## IndexedDB schema changes
 

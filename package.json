@@ -45,7 +45,9 @@
     "version-packages": "changeset version",
     "release": "changeset publish",
     "version:alpha": "changeset version --snapshot alpha",
-    "release:alpha": "changeset publish --tag alpha --no-git-tag"
+    "release:alpha": "changeset publish --tag alpha --no-git-tag",
+    "release:rc": "changeset publish --tag rc --no-git-tag",
+    "test:packages:published": "node scripts/test-package-consumers.js --published"
   },
   "devDependencies": {
     "wabt": "1.0.39",

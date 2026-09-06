@@ -50,6 +50,9 @@ jobs:
       - name: Validate affected workspaces
         run: yarn validate:affected
 
+      - name: Run the complete release gate
+        run: yarn release:check
+
       - name: Create release pull request or publish
         uses: changesets/action@v1
         with:

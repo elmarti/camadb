@@ -2,5 +2,7 @@
   "name": "@camadb/example-basic",
   "version": "0.0.0",
   "private": true,
-  "dependencies": { "camadb": "2.0.1" }
+  "dependencies": {
+    "camadb": "3.0.0-rc.0"
+  }
 }
