@@ -12,10 +12,22 @@ Release safety is enforced in CI for every public-package change.
 
 ## Dependency policy
 
-`yarn audit:production` queries the registry for runtime dependency advisories and
-fails on high or critical findings. Development-tool findings are reviewed
-separately because they do not ship in package archives, but a finding that can
-affect generated output or CI credentials is still a release blocker.
+`yarn audit:dependencies` queries the registry twice. It fails on high or
+critical findings in the published runtime graph. It also reviews the complete
+build/test graph against [`security/tooling-audit-allowlist.json`](../security/tooling-audit-allowlist.json),
+so a new high or critical toolchain advisory fails CI instead of disappearing in
+aggregate counts.
+
+The 6 September 2026 review found no production dependency vulnerabilities. It
+found 20 unique toolchain advisories: 13 high, 6 moderate, 1 low, and no
+critical advisories. The high advisories are transitive through Jest 29 and
+ESLint 8, are absent from published archives, and primarily require an attacker
+to control glob or YAML input passed to the developer tools. Pull-request CI is
+read-only and receives no publishing credential. Replacing the lint/test stack
+during release stabilization carries more regression risk than this isolated
+tooling exposure, so the 13 high findings are explicitly accepted until 1
+December 2026. The machine-readable acceptance expires and must be removed or
+renewed after a fresh review.
 
 Dependency update pull requests created against an obsolete branch are not
 release evidence. Recreate relevant updates against `develop`, validate them

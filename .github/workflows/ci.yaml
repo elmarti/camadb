@@ -243,4 +243,4 @@ jobs:
         run: yarn check:release
 
       - name: Audit production dependencies
-        run: yarn audit:production
+        run: yarn audit:dependencies
