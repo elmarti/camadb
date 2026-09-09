@@ -1,3 +1,5 @@
+import { describeCollection, listCollections } from './modules/persistence/fs/catalogue';
+import { CollectionListOptions } from './interfaces/collection-catalogue.interface';
 import { ICama } from './interfaces/cama.interface';
 import { ICollectionConfig } from './interfaces/collection-config.interface';
 import { ICamaConfig } from './interfaces/cama-config.interface';
@@ -6,14 +8,23 @@ import { Collection } from './modules/collection';
 import { Document } from './interfaces/document-types';
 
 export class Cama implements ICama {
+  /** Read declared metadata without creating or opening a collection. FS only. */
+  describeCollection(name: string) {
+    return describeCollection(this.camaConfig, name);
+  }
+  /** True only for an existing collection with valid declared metadata. */
+  async collectionExists(name: string): Promise<boolean> {
+    return !!(await this.describeCollection(name));
+  }
+  /** Bounded, read-only FS catalogue. Use a closed database for a consistent view. */
+  listCollections(options?: CollectionListOptions) {
+    return listCollections(this.camaConfig, options);
+  }
   private camaConfig: ICamaConfig;
 
   constructor(camaConfig: ICamaConfig) {
     this.camaConfig = camaConfig;
-
   }
-
-
 
   /**
    * Initializes a collection with the appropriate persistence adapter
@@ -25,16 +36,17 @@ export class Cama implements ICama {
    * @param config - The collection configuration
    * @returns an initialised collection
    */
-  async initCollection<TDocument extends object = Document>(collectionName: string, config: ICollectionConfig): Promise<ICollection<TDocument>> {
+  async initCollection<TDocument extends object = Document>(
+    collectionName: string,
+    config: ICollectionConfig,
+  ): Promise<ICollection<TDocument>> {
     const collection = new Collection<TDocument>(collectionName, config, this.camaConfig);
     await collection.initializeCache();
     return collection;
   }
 }
 
-export {
-  Collection
-}
+export { Collection };
 
 export { PersistenceAdapterEnum } from './interfaces/perisistence-adapter.enum';
 export { LogLevel } from './interfaces/logger-level.enum';
@@ -46,8 +58,23 @@ export type { ICollectionConfig } from './interfaces/collection-config.interface
 export type { IColumnConfig } from './interfaces/column-config.interface';
 export type { IFilterResult } from './interfaces/filter-result.interface';
 export type { IQueryOptions } from './interfaces/query-options.interface';
-export type { AggregationPipeline, AggregationStage, Document, DocumentId, FieldFilter, Filter, InsertDocument, StoredDocument, Update } from './interfaces/document-types';
-export type { DeleteResult, InsertManyResult, InsertOneResult, UpdateResult } from './interfaces/mutation-result.interface';
+export type {
+  AggregationPipeline,
+  AggregationStage,
+  Document,
+  DocumentId,
+  FieldFilter,
+  Filter,
+  InsertDocument,
+  StoredDocument,
+  Update,
+} from './interfaces/document-types';
+export type {
+  DeleteResult,
+  InsertManyResult,
+  InsertOneResult,
+  UpdateResult,
+} from './interfaces/mutation-result.interface';
 export type { IPersistenceAdapter } from './interfaces/persistence-adapter.interface';
 export type { StorageStats } from './interfaces/persistence-adapter.interface';
 export type { TextSearchHit, TextSearchMatch, TextSearchOptions } from './interfaces/text-search.interface';
@@ -77,3 +104,9 @@ export {
   isStorageEnvelope,
 } from './modules/persistence/storage-version';
 export type { StorageDetection, StorageEnvelope } from './modules/persistence/storage-version';
+
+export type {
+  CollectionDescriptor,
+  CollectionListOptions,
+  CollectionListPage,
+} from './interfaces/collection-catalogue.interface';

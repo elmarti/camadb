@@ -37,3 +37,9 @@ deterministic BM25-ranked keyword retrieval. Results expose the typed document,
 score, and matched terms; optional metadata filters are applied before scoring
 when an index can resolve them. Derived postings rebuild from committed records.
 See the [full-text guide](../../docs/full-text-search.md).
+
+### Read-only filesystem catalogue
+
+`await db.listCollections({ limit: 100, after })` returns `{ collections, nextCursor? }`, ordered by collection name. Pass the returned cursor as `after` for the next page. `await db.describeCollection(name)` returns `{ name, columns, indexes }` or `undefined`; `await db.collectionExists(name)` returns a boolean. Columns are declared metadata, not inferred document types. Malformed metadata raises an error rather than appearing absent.
+
+These methods require filesystem persistence and never initialize collections, create a missing database, read document payloads or migrate storage. Use a closed database for a consistent view: pages are not a cross-process snapshot. Discovery is bounded to 10,000 directory entries and 100 entries per page; each metadata file is bounded to 256 KiB. Symbolic-link entries and oversized/malformed metadata fail explicitly. This is a read-only inspection API, not a security boundary against another process concurrently replacing files.
