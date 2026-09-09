@@ -3,6 +3,11 @@
   "version": "0.2.0-rc.0",
   "description": "Versioned synchronization protocol and local reference adapter for CamaDB",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elmarti/camadb.git",
+    "directory": "packages/sync"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

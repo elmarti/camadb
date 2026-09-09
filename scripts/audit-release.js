@@ -34,6 +34,15 @@ for (const workspace of publicWorkspaces) {
   assert.strictEqual(manifest.engines?.node, '>=22', `${name} must declare Node.js >=22`);
   assert.strictEqual(manifest.publishConfig?.access, 'public', `${name} must publish publicly`);
   assert.strictEqual(manifest.publishConfig?.provenance, true, `${name} must request npm provenance`);
+  assert.deepStrictEqual(
+    manifest.repository,
+    {
+      type: 'git',
+      url: 'git+https://github.com/elmarti/camadb.git',
+      directory: workspace.directory,
+    },
+    `${name} must declare the canonical repository and workspace directory for npm provenance`,
+  );
   assert.ok(manifest.exports?.['.']?.types, `${name} must export types`);
   assert.ok(manifest.exports?.['.']?.import, `${name} must export ESM imports`);
   assert.ok(manifest.exports?.['.']?.require, `${name} must export CommonJS`);
