@@ -46,7 +46,7 @@
     "release": "changeset publish",
     "version:alpha": "changeset version --snapshot alpha",
     "release:alpha": "changeset publish --tag alpha --no-git-tag",
-    "release:rc": "changeset publish --tag rc --no-git-tag",
+    "release:rc": "node scripts/verify-prerelease-state.js && changeset publish --no-git-tag",
     "test:packages:published": "node scripts/test-package-consumers.js --published"
   },
   "devDependencies": {
