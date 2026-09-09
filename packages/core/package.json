@@ -3,6 +3,11 @@
   "version": "3.0.0-rc.0",
   "description": "CamaDB database, collections, queries, and shared public types",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elmarti/camadb.git",
+    "directory": "packages/core"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
