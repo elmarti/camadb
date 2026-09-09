@@ -13,6 +13,12 @@ candidate is:
 The repository is in Changesets prerelease mode with the `rc` tag. Alpha
 snapshots stop once this mode begins.
 
+`yarn release:rc` verifies that prerelease mode is active with the `rc` tag before
+calling `changeset publish --no-git-tag`. Changesets reads the tag from
+`.changeset/pre.json`; passing an explicit `--tag rc` is invalid in prerelease
+mode. Do not exit prerelease mode to publish an RC. This command does not bump
+package versions.
+
 ## Publish
 
 1. Select `develop` in GitHub Actions.

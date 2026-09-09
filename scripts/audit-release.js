@@ -21,6 +21,13 @@ function packContents(workspace) {
     .sort();
 }
 
+const rootManifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+assert.strictEqual(
+  rootManifest.scripts['release:rc'],
+  'node scripts/verify-prerelease-state.js && changeset publish --no-git-tag',
+  'RC publishing must verify prerelease state and use its tag without a conflicting --tag option',
+);
+
 const rows = [];
 for (const workspace of publicWorkspaces) {
   const { manifest, name } = workspace;
