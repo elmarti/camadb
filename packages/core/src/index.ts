@@ -1,4 +1,4 @@
-import { describeCollection, listCollections } from './modules/persistence/fs/catalogue';
+import { selectCollectionCatalogue } from './modules/persistence/catalogue';
 import { CollectionListOptions } from './interfaces/collection-catalogue.interface';
 import { ICama } from './interfaces/cama.interface';
 import { ICollectionConfig } from './interfaces/collection-config.interface';
@@ -8,17 +8,17 @@ import { Collection } from './modules/collection';
 import { Document } from './interfaces/document-types';
 
 export class Cama implements ICama {
-  /** Read declared metadata without creating or opening a collection. FS only. */
-  describeCollection(name: string) {
-    return describeCollection(this.camaConfig, name);
+  /** Read declared metadata without creating or opening a collection. Supported adapters only. */
+  async describeCollection(name: string) {
+    return selectCollectionCatalogue(this.camaConfig).describeCollection(name);
   }
   /** True only for an existing collection with valid declared metadata. */
   async collectionExists(name: string): Promise<boolean> {
     return !!(await this.describeCollection(name));
   }
-  /** Bounded, read-only FS catalogue. Use a closed database for a consistent view. */
-  listCollections(options?: CollectionListOptions) {
-    return listCollections(this.camaConfig, options);
+  /** Bounded, read-only adapter catalogue. Use a closed database for a consistent view. */
+  async listCollections(options?: CollectionListOptions) {
+    return selectCollectionCatalogue(this.camaConfig).listCollections(options);
   }
   private camaConfig: ICamaConfig;
 
@@ -106,6 +106,7 @@ export {
 export type { StorageDetection, StorageEnvelope } from './modules/persistence/storage-version';
 
 export type {
+  ICollectionCatalogue,
   CollectionDescriptor,
   CollectionListOptions,
   CollectionListPage,

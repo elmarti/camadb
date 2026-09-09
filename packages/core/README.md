@@ -38,8 +38,18 @@ score, and matched terms; optional metadata filters are applied before scoring
 when an index can resolve them. Derived postings rebuild from committed records.
 See the [full-text guide](../../docs/full-text-search.md).
 
-### Read-only filesystem catalogue
+### Read-only collection catalogue
 
 `await db.listCollections({ limit: 100, after })` returns `{ collections, nextCursor? }`, ordered by collection name. Pass the returned cursor as `after` for the next page. `await db.describeCollection(name)` returns `{ name, columns, indexes }` or `undefined`; `await db.collectionExists(name)` returns a boolean. Columns are declared metadata, not inferred document types. Malformed metadata raises an error rather than appearing absent.
 
-These methods require filesystem persistence and never initialize collections, create a missing database, read document payloads or migrate storage. Use a closed database for a consistent view: pages are not a cross-process snapshot. Discovery is bounded to 10,000 directory entries and 100 entries per page; each metadata file is bounded to 256 KiB. Symbolic-link entries and oversized/malformed metadata fail explicitly. This is a read-only inspection API, not a security boundary against another process concurrently replacing files.
+The public methods select an adapter-level `ICollectionCatalogue` capability without constructing a collection persistence adapter. FS and IndexedDB currently implement this capability. LocalStorage and InMemory reject with an explicit unsupported-adapter error; they do not return a misleading empty catalogue. InMemory currently has collection-instance storage rather than a shared database registry.
+
+Catalogue reads never initialize a collection, read document payloads or migrate storage. Collection names and metadata shapes are validated consistently across supported adapters. Pages contain at most 100 descriptors and discovery inspects at most 10,000 directory entries or object stores. Metadata is limited to 256 KiB. Missing metadata denotes an absent collection; unrelated IndexedDB stores without CamaDB collection metadata are skipped. Only declared columns and ordinary index names are returned, not search/vector index definitions.
+
+FS inspection leaves a missing database directory absent, rejects symbolic-link entries and bounds reads before parsing. Inspect a closed database for a consistent view; these checks are not a security boundary against a process concurrently replacing files.
+
+IndexedDB inspection opens the current database version without requesting an upgrade. If opening would create a missing database, it aborts the initial upgrade transaction and returns absence without persisting a database or version change. This avoids relying on `indexedDB.databases()` enumeration and its deletion races. It reads only the `collection-metadata` key in readonly transactions, closes its connections and yields on version changes. The 256 KiB limit is checked after IndexedDB structured-clones the metadata; it is not a bound on the browser's initial read allocation. Transaction/open failures remain errors, not absence. See the [IndexedDB upgrade and abort semantics](https://www.w3.org/TR/IndexedDB/).
+
+Catalogue pages are not a snapshot across concurrent writers or multiple calls. Await pending collection operations before inspecting; existing `initCollection` cache initialization alone does not guarantee all lazy metadata writes have settled.
+
+Validation includes shared FS/IndexedDB conformance tests for missing storage, pagination, metadata, reopen, malformed input and limits. IndexedDB-specific tests cover unchanged versions/object stores/payloads and releasing connections before later schema upgrades. Real-browser checks also verify missing-database non-persistence and metadata-only catalogue operations.

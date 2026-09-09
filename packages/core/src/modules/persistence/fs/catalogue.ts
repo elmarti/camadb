@@ -1,3 +1,4 @@
+import { catalogueName as nameCheck, catalogueLimit, collectionDescriptor } from '../catalogue-validation';
 import { promises as fs, constants } from 'fs';
 import * as path from 'path';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
@@ -7,10 +8,6 @@ import {
   CollectionListOptions,
   CollectionListPage,
 } from '../../../interfaces/collection-catalogue.interface';
-function nameCheck(name: string): void {
-  if (!name || name.length > 255 || /[\0/\\]/.test(name) || name === '.' || name === '..')
-    throw new Error('Invalid collection name.');
-}
 function root(config: ICamaConfig): string {
   if (config.persistenceAdapter !== PersistenceAdapterEnum.FS)
     throw new Error('Collection catalogue currently requires filesystem persistence.');
@@ -53,30 +50,7 @@ export async function describeCollection(config: ICamaConfig, name: string): Pro
     )
       throw new Error('Collection metadata changed while reading; retry with a closed database.');
     const value: unknown = JSON.parse(buffer.subarray(0, bytesRead).toString('utf8'));
-    if (!value || typeof value !== 'object') throw new Error('Invalid collection metadata.');
-    const meta = value as Record<string, unknown>;
-    if (
-      meta.collectionName !== name ||
-      !Array.isArray(meta.columns) ||
-      meta.columns.length > 1000 ||
-      meta.columns.some(
-        (c) =>
-          !c ||
-          typeof c.title !== 'string' ||
-          typeof c.type !== 'string' ||
-          c.title.length > 255 ||
-          c.type.length > 100,
-      ) ||
-      !Array.isArray(meta.indexes) ||
-      meta.indexes.length > 1000 ||
-      meta.indexes.some((i) => typeof i !== 'string' || i.length > 255)
-    )
-      throw new Error('Invalid collection metadata.');
-    return {
-      name,
-      columns: meta.columns.map((c) => ({ title: c.title, type: c.type })),
-      indexes: [...meta.indexes] as string[],
-    };
+    return collectionDescriptor(name, value);
   } finally {
     await handle.close();
   }
@@ -86,10 +60,7 @@ export async function listCollections(
   options: CollectionListOptions = {},
 ): Promise<CollectionListPage> {
   const base = root(config),
-    limit = options.limit ?? 100;
-  if (!Number.isInteger(limit) || limit < 1 || limit > 100)
-    throw new Error('Catalogue page size must be between 1 and 100.');
-  if (options.after !== undefined) nameCheck(options.after);
+    limit = catalogueLimit(options);
   if (!(await directory(base))) return { collections: [] };
   const names: string[] = [];
   const handle = await fs.opendir(base);

@@ -15,3 +15,9 @@ export interface CollectionListPage {
   collections: CollectionDescriptor[];
   nextCursor?: string;
 }
+
+/** Optional database-level capability, independent of collection initialization. */
+export interface ICollectionCatalogue {
+  describeCollection(name: string): Promise<CollectionDescriptor | undefined>;
+  listCollections(options?: CollectionListOptions): Promise<CollectionListPage>;
+}
