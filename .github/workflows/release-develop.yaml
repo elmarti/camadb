@@ -4,6 +4,8 @@ on:
     branches:
       - develop
       - main
+    paths-ignore:
+      - '.github/workflows/**'
 jobs:
   release:
     name: Release
