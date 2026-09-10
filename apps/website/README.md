@@ -13,3 +13,9 @@ yarn workspace @camadb/website dev
 Use `CAMADB_BASE_PATH=/camadb yarn build` to reproduce the GitHub Pages build.
 The public site intentionally covers the database project only. Paid services
 and their account or network features belong to a separate product and site.
+
+## Documentation
+
+The website build generates `/docs/index.html` from public core/memory/sync JSDoc and repository Markdown using TypeDoc. The generated API and guides are included in the same Pages artifact as the landing page and demo.
+
+`yarn docs:check` validates all exposed callable comments and Markdown links. `yarn docs:build` regenerates the standalone documentation. The development command also copies docs into `public/docs`; restart after editing documentation. See [authoring guidance](../../docs/documentation.md).

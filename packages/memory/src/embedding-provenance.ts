@@ -37,6 +37,9 @@ export interface EmbeddingCompatibility {
 export class EmbeddingCompatibilityError extends Error {
   readonly code = 'EMBEDDING_PROVENANCE_MISMATCH';
 
+  /**
+   * Create a compatibility error retaining structured differences between expected and received embedding profiles.
+   */
   constructor(readonly mismatches: readonly EmbeddingCompatibilityMismatch[]) {
     super(`Embedding provenance is incompatible: ${mismatches.map(({ expected, field, received }) =>
       `${field} expected ${JSON.stringify(expected)}, received ${JSON.stringify(received)}`,
@@ -86,6 +89,9 @@ const PROFILE_FIELDS: readonly EmbeddingCompatibilityField[] = [
   'revision',
 ];
 
+/**
+ * Validate non-empty provider/model/schema fields, positive dimensions and an optional non-empty revision. Throws for invalid profiles without modifying them.
+ */
 export const validateEmbeddingProfile = (profile: EmbeddingProfile, label = 'Embedding profile'): void => {
   if (!profile || typeof profile !== 'object') throw new Error(`${label} must be an object`);
   for (const field of ['provider', 'model', 'schemaVersion'] as const) {
@@ -102,6 +108,9 @@ export const validateEmbeddingProfile = (profile: EmbeddingProfile, label = 'Emb
   }
 };
 
+/**
+ * Require a finite numeric array with exactly the expected dimensions. Throws before an incompatible vector can be stored or queried.
+ */
 export const validateEmbeddingVector = (
   embedding: readonly number[],
   dimensions: number,
@@ -116,6 +125,9 @@ export const validateEmbeddingVector = (
   }
 };
 
+/**
+ * Compare validated provider, model, dimensions, schema version and revision; return structured mismatches. Creation timestamps do not affect compatibility.
+ */
 export const compareEmbeddingProvenance = (
   expected: EmbeddingProfile,
   received: EmbeddingProfile,
@@ -128,6 +140,9 @@ export const compareEmbeddingProvenance = (
   return { compatible: mismatches.length === 0, mismatches };
 };
 
+/**
+ * Throw EmbeddingCompatibilityError when validated embedding profiles differ; otherwise return without changing either profile.
+ */
 export const assertEmbeddingCompatibility = (
   expected: EmbeddingProfile,
   received: EmbeddingProfile,
@@ -146,6 +161,9 @@ export const prepareEmbeddingQuery = (
   return query.embedding;
 };
 
+/**
+ * Validate a profile and creation timestamp, then return provenance suitable for storing with a vector.
+ */
 export const createEmbeddingProvenance = (
   profile: EmbeddingProfile,
   createdAt: string,

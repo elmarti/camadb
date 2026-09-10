@@ -51,6 +51,13 @@ export class Collection<TDocument extends object = Document> implements ICollect
   private readonly testMode: boolean;
   private aggregator: IAggregator<StoredDocument<TDocument>>;
 
+  /**
+   * Construct a collection handle and select its adapters.
+   * Prefer `Cama.initCollection()` so readiness is awaited before use.
+   * @param collectionName - Valid single-component collection name.
+   * @param collectionConfig - Declared columns and index configuration.
+   * @param camaConfig - Database adapter, location and operational settings.
+   */
   constructor(collectionName: string, collectionConfig: ICollectionConfig, camaConfig: ICamaConfig) {
     this.testMode = !!camaConfig.test;
     this.container = containerFactory(collectionName, camaConfig, collectionConfig);
@@ -66,23 +73,35 @@ export class Collection<TDocument extends object = Document> implements ICollect
     this.logger.log(LogLevel.Debug, 'Initializing persistence adapter');
   }
 
-  /** Called by Cama.initCollection to warm an eager cache before returning. */
+  /**
+   * Await collection metadata and configured cache initialization.
+   * Called by `Cama.initCollection()` before returning a usable handle.
+   */
   async initializeCache(): Promise<void> {
     if (!this.testMode) await this.container.get<ICollectionMeta>(TYPES.CollectionMeta).get();
     await this.persistenceAdapter.initializeCache?.();
   }
 
+  /**
+   * {@inheritDoc ICollection.cacheStats}
+   */
   cacheStats(): CacheStats {
     this.checkDestroyed();
     if (!this.persistenceAdapter.cacheStats) throw new Error('Cache statistics are unavailable');
     return this.persistenceAdapter.cacheStats();
   }
 
+  /**
+   * {@inheritDoc ICollection.clearCache}
+   */
   clearCache(): void {
     this.checkDestroyed();
     this.persistenceAdapter.clearCache?.();
   }
 
+  /**
+   * {@inheritDoc ICollection.insertMany}
+   */
   async insertMany(rows: InsertDocument<TDocument>[]): Promise<InsertManyResult<DocumentId>> {
     this.checkDestroyed();
     return this.queue.add(async () => {
@@ -101,11 +120,7 @@ export class Collection<TDocument extends object = Document> implements ICollect
   }
 
   /**
-   * Inserts 1 value into collection
-   *
-   * @remarks
-   * Essentially syntactic sugar - internally calls the same function as `insertMany`
-   * @param row
+   * {@inheritDoc ICollection.insertOne}
    */
   async insertOne(row: InsertDocument<TDocument>): Promise<InsertOneResult<DocumentId>> {
     this.checkDestroyed();
@@ -121,13 +136,7 @@ export class Collection<TDocument extends object = Document> implements ICollect
   }
 
   /**
-   * Find many rows from the collection
-   *
-   * @remarks
-   * Identity-only queries can use the configured record cache; other queries scan storage.
-   *
-   * @param query - Query Object
-   * @param options - Query options
+   * {@inheritDoc ICollection.findMany}
    */
   async findMany(
     query: Filter<StoredDocument<TDocument>> = {},
@@ -141,6 +150,9 @@ export class Collection<TDocument extends object = Document> implements ICollect
     return result;
   }
 
+  /**
+   * {@inheritDoc ICollection.searchText}
+   */
   async searchText(
     query: string,
     options?: TextSearchOptions<StoredDocument<TDocument>>,
@@ -150,6 +162,9 @@ export class Collection<TDocument extends object = Document> implements ICollect
     return this.persistenceAdapter.searchText(query, options);
   }
 
+  /**
+   * {@inheritDoc ICollection.searchVector}
+   */
   async searchVector(
     field: VectorField<StoredDocument<TDocument>>,
     vector: readonly number[],
@@ -160,6 +175,9 @@ export class Collection<TDocument extends object = Document> implements ICollect
     return this.persistenceAdapter.searchVector(field, vector, options);
   }
 
+  /**
+   * {@inheritDoc ICollection.searchHybrid}
+   */
   async searchHybrid(
     options: HybridSearchOptions<StoredDocument<TDocument>>,
   ): Promise<HybridSearchHit<StoredDocument<TDocument>>[]> {
@@ -197,9 +215,7 @@ export class Collection<TDocument extends object = Document> implements ICollect
   }
 
   /**
-   * Update all matched rows
-   * @param query
-   * @param delta
+   * {@inheritDoc ICollection.updateMany}
    */
   async updateMany(
     query: Filter<StoredDocument<TDocument>>,
@@ -217,6 +233,9 @@ export class Collection<TDocument extends object = Document> implements ICollect
     });
   }
 
+  /**
+   * {@inheritDoc ICollection.deleteOne}
+   */
   async deleteOne(query: Filter<StoredDocument<TDocument>>): Promise<DeleteResult> {
     this.checkDestroyed();
     return this.queue.add(async () => {
@@ -225,6 +244,9 @@ export class Collection<TDocument extends object = Document> implements ICollect
     });
   }
 
+  /**
+   * {@inheritDoc ICollection.deleteMany}
+   */
   async deleteMany(query: Filter<StoredDocument<TDocument>>): Promise<DeleteResult> {
     this.checkDestroyed();
     return this.queue.add(async () => {
@@ -233,11 +255,17 @@ export class Collection<TDocument extends object = Document> implements ICollect
     });
   }
 
+  /**
+   * {@inheritDoc ICollection.count}
+   */
   async count(query: Filter<StoredDocument<TDocument>> = {}): Promise<number> {
     this.checkDestroyed();
     return this.queryService.count(query);
   }
 
+  /**
+   * {@inheritDoc ICollection.upsert}
+   */
   async upsert(
     query: Filter<StoredDocument<TDocument>>,
     document: InsertDocument<TDocument>,
@@ -265,19 +293,24 @@ export class Collection<TDocument extends object = Document> implements ICollect
   }
 
   /**
-   * Destroy the collection
-   * @remarks After calling this, the collection instance becomes unusable
+   * {@inheritDoc ICollection.destroy}
    */
   async destroy(): Promise<void> {
     await this.persistenceAdapter.destroy();
     this.destroyed = true;
   }
 
+  /**
+   * {@inheritDoc ICollection.compact}
+   */
   async compact(): Promise<void> {
     this.checkDestroyed();
     await this.persistenceAdapter.compact?.();
   }
 
+  /**
+   * {@inheritDoc ICollection.storageStats}
+   */
   async storageStats(): Promise<StorageStats> {
     this.checkDestroyed();
     if (!this.persistenceAdapter.storageStats) {
@@ -293,8 +326,7 @@ export class Collection<TDocument extends object = Document> implements ICollect
   }
 
   /**
-   * Perform MongoDB style aggregations
-   * @param pipeline
+   * {@inheritDoc ICollection.aggregate}
    */
   async aggregate<TResult extends object = StoredDocument<TDocument>>(
     pipeline: AggregationPipeline<StoredDocument<TDocument>>,

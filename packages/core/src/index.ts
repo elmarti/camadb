@@ -1,3 +1,4 @@
+/** @module core */
 import { selectCollectionCatalogue } from './modules/persistence/catalogue';
 import { CollectionListOptions } from './interfaces/collection-catalogue.interface';
 import { ICama } from './interfaces/cama.interface';
@@ -8,33 +9,36 @@ import { Collection } from './modules/collection';
 import { Document } from './interfaces/document-types';
 
 export class Cama implements ICama {
-  /** Read declared metadata without creating or opening a collection. Supported adapters only. */
+  /**
+   * {@inheritDoc ICama.describeCollection}
+   */
   async describeCollection(name: string) {
     return selectCollectionCatalogue(this.camaConfig).describeCollection(name);
   }
-  /** True only for an existing collection with valid declared metadata. */
+  /**
+   * {@inheritDoc ICama.collectionExists}
+   */
   async collectionExists(name: string): Promise<boolean> {
     return !!(await this.describeCollection(name));
   }
-  /** Bounded, read-only adapter catalogue. Use a closed database for a consistent view. */
+  /**
+   * {@inheritDoc ICama.listCollections}
+   */
   async listCollections(options?: CollectionListOptions) {
     return selectCollectionCatalogue(this.camaConfig).listCollections(options);
   }
   private camaConfig: ICamaConfig;
 
+  /**
+   * Configure a local database; no collection is created until initialization.
+   * @param camaConfig - Runtime-compatible persistence adapter, path and optional cache/compaction settings.
+   */
   constructor(camaConfig: ICamaConfig) {
     this.camaConfig = camaConfig;
   }
 
   /**
-   * Initializes a collection with the appropriate persistence adapter
-   *
-   * @remarks
-   * Initialises collection metadata if non-existent, else loads it
-   *
-   * @param collectionName - the collection name
-   * @param config - The collection configuration
-   * @returns an initialised collection
+   * {@inheritDoc ICama.initCollection}
    */
   async initCollection<TDocument extends object = Document>(
     collectionName: string,

@@ -1,3 +1,4 @@
+/** @module sync */
 export { LocalSyncReplica } from './local-replica';
 export type { MutationBatch } from './local-replica';
 export { SYNC_PROTOCOL_VERSION, SyncProtocolError, assertMutation, mutationIdFor } from './protocol';

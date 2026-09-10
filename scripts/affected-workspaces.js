@@ -53,9 +53,11 @@ function resolveAffectedWorkspaces(changedFiles, workspaces = loadWorkspaces(), 
       for (const name of changesetPackages(normalized, workspaceRoot)) if (byName.has(name)) direct.add(name);
       continue;
     }
+    if (normalized.startsWith('docs/') || normalized === 'README.md' || normalized === 'CONTRIBUTING.md') {
+      direct.add('@camadb/website');
+      continue;
+    }
     if (
-      normalized.startsWith('docs/') ||
-      normalized === 'README.md' ||
       normalized === 'LICENSE' ||
       normalized.startsWith('.github/ISSUE_TEMPLATE/')
     ) {
@@ -94,7 +96,7 @@ function resolveAffectedWorkspaces(changedFiles, workspaces = loadWorkspaces(), 
 function changedFiles(base, head) {
   if (!base || !head) throw new Error('Usage: affected-workspaces.js <base> <head>');
   const validBase = /^0+$/.test(base) ? `${head}^` : base;
-  return execFileSync('git', ['diff', '--name-only', '--diff-filter=ACMR', `${validBase}...${head}`], {
+  return execFileSync('git', ['diff', '--name-only', '--diff-filter=ACMRD', `${validBase}...${head}`], {
     cwd: root,
     encoding: 'utf8',
   })

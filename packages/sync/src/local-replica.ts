@@ -27,10 +27,16 @@ export class LocalSyncReplica<TDocument extends object = Record<string, unknown>
   private readonly records = new Map<string, VersionedRecord<TDocument>>();
   private sequence = 0;
 
+  /**
+   * Create an empty in-memory reference replica with a non-empty stable identity. Records and mutation history are not durable across process restarts.
+   */
   constructor(readonly replicaId: string) {
     if (!replicaId) throw new SyncProtocolError('Replica identity must be non-empty');
   }
 
+  /**
+   * Create and apply a local put mutation against the current parent revision. The document must carry a string _id and be JSON-serializable.
+   */
   put(collection: string, document: TDocument & { _id: string }): ApplyMutationResult<TDocument> {
     const mutation = this.createMutation(collection, document._id, {
       document: clone(document),
@@ -39,10 +45,16 @@ export class LocalSyncReplica<TDocument extends object = Record<string, unknown>
     return this.apply(mutation);
   }
 
+  /**
+   * Create a delete tombstone for a record against its current parent revision; retains revision evidence for replay.
+   */
   delete(collection: string, recordId: string): ApplyMutationResult<TDocument> {
     return this.apply(this.createMutation(collection, recordId, { operation: 'delete' }));
   }
 
+  /**
+   * Validate and replay a mutation idempotently. Returns applied, duplicate or conflict; rejects mutation-ID reuse with a different payload.
+   */
   apply(mutation: SyncMutation<TDocument>): ApplyMutationResult<TDocument> {
     assertMutation(mutation);
     const safeMutation = clone(mutation);
@@ -78,20 +90,32 @@ export class LocalSyncReplica<TDocument extends object = Record<string, unknown>
     return clone(result);
   }
 
+  /**
+   * Return a cloned live document or undefined when absent/deleted. Does not expose internal replica state.
+   */
   get(collection: string, recordId: string): (TDocument & { _id: string }) | undefined {
     const record = this.records.get(recordKey(collection, recordId));
     return record?.document ? clone(record.document) : undefined;
   }
 
+  /**
+   * Return cloned versioned state, including tombstones, or undefined when the record is unknown.
+   */
   inspect(collection: string, recordId: string): VersionedRecord<TDocument> | undefined {
     const record = this.records.get(recordKey(collection, recordId));
     return record ? clone(record) : undefined;
   }
 
+  /**
+   * Return cloned unresolved conflict evidence accumulated by this reference replica.
+   */
   conflicts(): SyncConflict<TDocument>[] {
     return [...this.conflictsById.values()].map(clone);
   }
 
+  /**
+   * Read a bounded slice of the applied-mutation log. Cursor is a non-negative offset and limit a positive integer; the next cursor advances by returned entries.
+   */
   mutations(cursor = 0, limit = 100): MutationBatch<TDocument> {
     if (!Number.isSafeInteger(cursor) || cursor < 0)
       throw new SyncProtocolError('Cursor must be a non-negative integer');
@@ -101,6 +125,9 @@ export class LocalSyncReplica<TDocument extends object = Record<string, unknown>
     return { cursor, mutations, nextCursor: cursor + mutations.length };
   }
 
+  /**
+   * Number of applied mutations currently retained in this in-memory log.
+   */
   get mutationCount(): number {
     return this.log.length;
   }

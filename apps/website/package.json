@@ -4,9 +4,9 @@
   "private": true,
   "description": "Public website for the open-source CamaDB database",
   "scripts": {
-    "build": "next build && node scripts/copy-demo.js",
-    "dev": "node scripts/copy-demo.js --public && next dev",
-    "start": "node scripts/copy-demo.js --public && next dev",
+    "build": "next build && node scripts/copy-demo.js && yarn --cwd ../.. docs:build",
+    "dev": "yarn --cwd ../.. docs:build --out apps/website/public/docs && node scripts/copy-demo.js --public && next dev",
+    "start": "yarn dev",
     "typecheck": "tsc --noEmit --pretty false"
   },
   "dependencies": {
@@ -17,6 +17,10 @@
   },
   "devDependencies": {
     "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0"
+    "@types/react-dom": "^19.2.0",
+    "@camadb/core": "3.0.0-rc.0",
+    "@camadb/memory": "0.2.0-rc.0",
+    "@camadb/sync": "0.2.0-rc.0",
+    "@camadb/knowledge-demo": "0.0.0"
   }
 }

@@ -79,6 +79,12 @@ implements MemoryStore<Metadata> {
     private readonly profile: EmbeddingProfile | undefined,
   ) {}
 
+  /**
+   * Initialize a memory collection with text retrieval and optional provenance-aware embeddings.
+   * @param database - Configured Cama instance on the chosen local adapter.
+   * @param options - Collection name, provider/profile and optional lifecycle clock.
+   * @returns A ready memory store; no provider or network transport is chosen implicitly.
+   */
   static async create<Metadata extends Record<string, unknown> = Record<string, unknown>>(
     database: ICama,
     options: MemoryStoreOptions = {},
@@ -100,11 +106,17 @@ implements MemoryStore<Metadata> {
     return new CamaMemory(collection, { ...options }, profile ? { ...profile } : undefined);
   }
 
+  /**
+   * {@inheritDoc MemoryStore.remember}
+   */
   async remember(input: RememberInput<Metadata>): Promise<MemoryRecord<Metadata>> {
     const [remembered] = await this.rememberMany([input]);
     return remembered;
   }
 
+  /**
+   * {@inheritDoc MemoryStore.rememberMany}
+   */
   async rememberMany(inputs: readonly RememberInput<Metadata>[]): Promise<readonly MemoryRecord<Metadata>[]> {
     if (inputs.length === 0) return [];
     const documents: Array<StoredMemoryDocument<Metadata> & { _id?: string }> = [];
@@ -134,6 +146,9 @@ implements MemoryStore<Metadata> {
     return documents.map((document, index) => this.toRecord({ ...document, _id: insertedIds[index] }));
   }
 
+  /**
+   * {@inheritDoc MemoryStore.recall}
+   */
   async recall(query: string, options: RecallOptions = {}): Promise<readonly RecallResult<Metadata>[]> {
     assertLimit(options.limit, 'Recall limit');
     assertLimit(options.candidateLimit, 'Recall candidateLimit', 1);
@@ -170,16 +185,25 @@ implements MemoryStore<Metadata> {
     return hits.map((hit) => this.fromHybridHit(hit, options.metric ?? 'cosine'));
   }
 
+  /**
+   * {@inheritDoc MemoryStore.explain}
+   */
   explain(result: RecallResult<Metadata>): RecallExplanation {
     return clone(result.explanation);
   }
 
+  /**
+   * {@inheritDoc MemoryStore.inspect}
+   */
   async inspect(id: string): Promise<MemoryRecord<Metadata> | undefined> {
     assertNonEmpty(id, 'Memory id');
     const { rows } = await this.collection.findMany({ _id: id }, { limit: 1 });
     return rows[0] ? this.toRecord(rows[0]) : undefined;
   }
 
+  /**
+   * {@inheritDoc MemoryStore.list}
+   */
   async list(options: ListMemoriesOptions = {}): Promise<readonly MemoryRecord<Metadata>[]> {
     assertLimit(options.limit, 'List limit');
     assertLimit(options.offset, 'List offset');
@@ -190,6 +214,9 @@ implements MemoryStore<Metadata> {
     return result.rows.map((document) => this.toRecord(document));
   }
 
+  /**
+   * {@inheritDoc MemoryStore.edit}
+   */
   async edit(id: string, changes: EditMemoryInput<Metadata>): Promise<MemoryRecord<Metadata>> {
     const current = await this.inspect(id);
     if (!current) throw new Error(`Memory "${id}" does not exist`);
@@ -235,12 +262,16 @@ implements MemoryStore<Metadata> {
     return this.toRecord({ ...set, _id: id });
   }
 
+  /**
+   * {@inheritDoc MemoryStore.forget}
+   */
   async forget(id: string): Promise<ForgetResult> {
     assertNonEmpty(id, 'Memory id');
     const result = await this.collection.deleteOne({ _id: id });
     return { forgotten: result.deletedCount === 1, id };
   }
 
+  /** {@inheritDoc MemoryStore.export} */
   async export(): Promise<MemoryExport<Metadata>> {
     return {
       exportedAt: this.now(),
@@ -404,4 +435,7 @@ implements MemoryStore<Metadata> {
   }
 }
 
+/**
+ * Convenience alias for `CamaMemory.create`; initializes the same typed memory store.
+ */
 export const createMemoryStore = CamaMemory.create;

@@ -42,15 +42,24 @@ export type ApplyMutationResult<TDocument extends object> =
   | { conflict: SyncConflict<TDocument>; mutation: SyncMutation<TDocument>; status: 'conflict' };
 
 export class SyncProtocolError extends Error {
+  /**
+   * Create an error describing an invalid mutation or replica protocol operation.
+   */
   constructor(message: string) {
     super(message);
     this.name = 'SyncProtocolError';
   }
 }
 
+/**
+ * Derive a deterministic identity from a replica ID and sequence. Use a positive safe-integer sequence and validate externally supplied mutations with assertMutation.
+ */
 export const mutationIdFor = (replicaId: string, sequence: number): string =>
   `${encodeURIComponent(replicaId)}:${sequence}`;
 
+/**
+ * Validate protocol version, identities, sequence, mutation ID and put-document identity. Throws SyncProtocolError on inconsistency without applying the mutation.
+ */
 export const assertMutation = <TDocument extends object>(mutation: SyncMutation<TDocument>): void => {
   if (mutation.protocolVersion !== SYNC_PROTOCOL_VERSION) {
     throw new SyncProtocolError(`Unsupported synchronization protocol version: ${String(mutation.protocolVersion)}`);

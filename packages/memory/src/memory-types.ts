@@ -57,6 +57,9 @@ export interface EditMemoryInput<Metadata extends Record<string, unknown> = Reco
 }
 
 export interface EmbeddingProvider {
+  /**
+   * Generate a finite numeric vector in the declared provider profile. Network calls occur only if this application-supplied implementation makes them.
+   */
   embed(content: string): Promise<readonly number[]>;
   profile: EmbeddingProfile;
 }
@@ -67,6 +70,9 @@ export interface MemoryStoreOptions {
   embeddingProfile?: EmbeddingProfile;
   /** Optional local or cloud implementation supplied entirely by the application. */
   embeddingProvider?: EmbeddingProvider;
+  /**
+   * Supply a valid clock value for memory lifecycle timestamps; defaults to the current Date.
+   */
   now?: () => Date;
 }
 
@@ -125,14 +131,64 @@ export interface ForgetResult {
 }
 
 export interface MemoryStore<Metadata extends Record<string, unknown> = Record<string, unknown>> {
+  /**
+   * Edit an existing memory and update its timestamp.
+   * Changing content refreshes or validates embedding data; invalid changes reject.
+   * @param id - Stable memory identity.
+   * @param changes - Content, category, metadata, expiry or embedding changes.
+   * @returns The updated memory; throws when the ID does not exist.
+   */
   edit(id: string, changes: EditMemoryInput<Metadata>): Promise<MemoryRecord<Metadata>>;
+  /**
+   * Read the ranking evidence already attached to a recall result without another query.
+   * @param result - A previously returned recall result.
+   * @returns Component scores, ranks and provenance used for that result.
+   */
   explain(result: RecallResult<Metadata>): RecallExplanation;
+  /**
+   * Export all stored memories, including expired records, in the versioned logical export format.
+   * The result is materialized in memory; storing the backup is the caller's responsibility.
+   */
   export(): Promise<MemoryExport<Metadata>>;
+  /**
+   * Delete a memory by ID and report whether a record was removed.
+   * @param id - Memory to remove.
+   * @returns The identity and deletion outcome; this is not guaranteed physical secure erasure.
+   */
   forget(id: string): Promise<ForgetResult>;
+  /**
+   * Read a memory by identity, including expired memories.
+   * @param id - Memory identity.
+   * @returns The stored memory, or undefined when absent.
+   */
   inspect(id: string): Promise<MemoryRecord<Metadata> | undefined>;
+  /**
+   * List stored memories with optional category, expiry and pagination controls.
+   * Expired memories are excluded unless explicitly included.
+   * @param options - Filters and paging settings.
+   * @returns Matching memories.
+   */
   list(options?: ListMemoriesOptions): Promise<readonly MemoryRecord<Metadata>[]>;
+  /**
+   * Retrieve memories using text, vector or hybrid ranking without modifying records.
+   * Auto mode uses hybrid when embeddings are available and text otherwise. Expired memories are excluded by default.
+   * @param query - Query text.
+   * @param options - Strategy, filters, limits and optional compatible query embedding.
+   * @returns Ranked memories with inspectable retrieval evidence.
+   */
   recall(query: string, options?: RecallOptions): Promise<readonly RecallResult<Metadata>[]>;
+  /**
+   * Validate and store one memory, generating embeddings only through an explicit provider.
+   * @param memory - Content, category, metadata and optional expiry/embedding.
+   * @returns The stored memory with stable ID and timestamps.
+   */
   remember(memory: RememberInput<Metadata>): Promise<MemoryRecord<Metadata>>;
+  /**
+   * Validate memories and resolve embeddings before one atomic collection insert.
+   * A provider failure cannot partially insert the batch. The 10,000-record mutation ceiling applies.
+   * @param memories - Memories to insert together.
+   * @returns Stored memories in input order.
+   */
   rememberMany(memories: readonly RememberInput<Metadata>[]): Promise<readonly MemoryRecord<Metadata>[]>;
 }
 

@@ -1,212 +1,105 @@
 # CamaDB
 
-CamaDB is a NoSQL embedded database written in pure TypeScript for Node, Electron and browser-based environments.
+**An embedded TypeScript database for local application data and AI memory.**
+Store typed documents, query offline, and combine metadata filters, full-text search and vector similarity without running a database server.
 
-Node.js integrations require Node.js 22 or newer. Packages support CommonJS `require()`, ESM `import`, and TypeScript declarations; browser and Electron renderer applications use the browser-compatible adapters.
+[Documentation](https://elmarti.github.io/camadb/docs/index.html) · [Website](https://elmarti.github.io/camadb/) · [Try the local demo](https://elmarti.github.io/camadb/demo/index.html) · [API reference](https://elmarti.github.io/camadb/docs/modules.html)
 
-This repository is a workspace. The existing `camadb` import is preserved by a compatibility package; new development may use `@camadb/core`. AI memory and embedding provenance contracts live in `@camadb/memory`, while Studio and examples are private workspace applications.
+## Is it a fit?
 
-The open-source project also includes a [Next.js public website](apps/website/README.md) and [fully local browser knowledge demo](apps/knowledge-demo/README.md). The demo imports, chunks, embeds, stores, searches, explains, exports, and deletes knowledge on-device, with outbound application connections blocked by policy. Both use the framework-independent [CamaDB design system](docs/design-system.md). The public website and demo cover the database project only; any paid service is treated as a separate product.
+Use CamaDB for offline application state, locally captured query results, searchable knowledge collections, and inspectable AI memory in **Node.js 22+, Electron, or browsers**. It is MIT licensed; no account or hosted service is required.
 
-See the [CamaDB 3 API guide](docs/api.md), [supported runtimes and workloads](docs/supported-workloads.md), [release-readiness record](docs/release-readiness.md), [workspace architecture](docs/architecture.md), [metadata indexes](docs/indexes.md), [full-text search](docs/full-text-search.md), [local development](docs/development.md), [versioning and publishing](docs/versioning-and-publishing.md), and the [2.x compatibility policy](docs/migration-2.x.md).
+- **Typed documents:** define a collection's type once; insert, filter, update and retrieve with that contract.
+- **Local persistence:** filesystem, IndexedDB, localStorage and in-memory adapters.
+- **Retrieval:** scalar indexes, deterministic BM25 text search, exact vector search and explainable hybrid ranking.
+- **Operational controls:** bounded mutation batches, recovery, compaction and optional record caching.
+- **Optional packages:** embedding provenance and memory workflows; transport-independent synchronization contracts.
 
-Stable releases are automated through a Changesets release pull request on `main`. Develop pushes publish unique `alpha` snapshots until committed RC mode begins; exact release candidates use the manual `rc` workflow.
+CamaDB is not a SQL engine or a multi-writer database server. Exact vector search is not an ANN index. Result arrays and indexes still consume memory: selected 100k-record benchmarks are measurements, not a universal capacity guarantee. Read the [workload guidance](https://elmarti.github.io/camadb/docs/documents/docs_supported-workloads.html) before choosing it for a large dataset.
 
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+## Install the v3 release candidate
 
-## Why?
-
-I was struggling to find a solution for Electron-based projects that deal with larger datasets in the main thread.
-
-- I had issues getting SQLite to work with webpack due to its native build
-- SQLite doesn't (by default) return native JS data types (Dates in particular)
-- Other NoSQL embedded databases seem to be largely abandoned
-- Most other NoSQL embedded databases seem to be limited by V8's hard string length limits
-
-## Goals
-
-- Measured querying, insertion, and manipulation with explicit workload limits rather than a blanket row-count claim
-- Frictionless integration with supported Node.js, Electron and browser runtimes
-- Rich API
-- Full TypeScript support
-- Simplicity and versatility - This is built for storing data in dynamic structures
-
-## Current state
-
-The 3.0 release-candidate line is under validation. Metadata equality/range indexes,
-deterministic full-text search, exact vector similarity, inspectable hybrid
-retrieval, and the local-first memory API are available on the 3.0 development
-line.
-
-## Getting started
-
-[Project website](https://elmarti.github.io/camadb/) · [API guide](docs/api.md)
-
-### Installing
-
-```
-yarn add camadb
+```sh
+npm install @camadb/core@rc
 ```
 
-OR
+**These docs describe v3.** The unqualified `camadb` package can resolve to v2; use the explicit release channel and commit your lockfile. Release candidates are for evaluation before stable rollout. Version 3 does **not** open or automatically migrate version 2 stores. Export using your compatible v2 application, then import into a new v3 location. See [migration](https://elmarti.github.io/camadb/docs/documents/docs_migration-2.x.html) and [release status](https://elmarti.github.io/camadb/docs/documents/docs_release-readiness.html).
 
-```
-npm install camadb --save
-```
+## Your first collection
 
-### Initializing the database
-
-All of these config options are optional:
-
-- `path` - Where you want the data to be stored - default is `./.cama` or `cama` for indexeddb and localstorage
-- `persistenceAdapter` - How you want to persist your data - `fs`, `indexeddb`, `localstorage` or `inmemory`
-- `logLevel` - info or debug
-
-```
-  import { Cama } from 'camadb'
-  const database = new Cama({
-    path: './.cama',
-    persistenceAdapter: 'fs',
-    logLevel: 'debug'
-  });
-```
-
-### Initializing a collection
-
-- Use the columns field to add specific data types for rows. This does _need_ to be done for each column, but is essential for date objects
-- Use `indexes` for frequently queried top-level scalar fields. See the [index guide](docs/indexes.md) for supported predicates and tradeoffs.
-
-```
- interface Message {
-   _id: string;
-   name: string;
-   description: string;
-   createdAt: Date;
- }
-
- const collection = await database.initCollection<Message>('test', {
-    columns: [{
-      type:'date',
-      title:'createdAt'
-    }],
-    indexes: ['name'],
-    searchIndexes: ['name', 'description'],
-  });
-```
-
-### Full-text search
+This TypeScript example runs inside an async function on Node.js or in an Electron main process:
 
 ```ts
-const hits = await collection.searchText('dummy data', {
-  match: 'all',
-  limit: 10,
-});
-```
+import { Cama, PersistenceAdapterEnum } from '@camadb/core';
 
-Hits contain the typed document, its deterministic BM25 score, and the matched
-normalized terms. See the [full-text search guide](docs/full-text-search.md) for
-tokenization, filtering, recovery, and performance details.
+interface Note {
+  _id: string;
+  title: string;
+  body: string;
+  topic: string;
+}
 
-In 2.x, the type parameter could be supplied independently to methods such as
-`findMany<T>()`. In 3.x, move it to `initCollection<T>()` once so inserts,
-filters, updates, aggregations, and returned rows all share the same document
-contract:
-
-```ts
-// 2.x
-const messages = await database.initCollection('messages', config);
-await messages.insertOne<Message>(message);
-const result = await messages.findMany<Message>({ _id: message._id });
-
-// 3.x
-const messages = await database.initCollection<Message>('messages', config);
-await messages.insertOne(message);
-const result = await messages.findMany({ _id: message._id });
-```
-
-### Insert one
-
-```
- await collection.insertOne({
-    _id: 'test',
-    name: 'Dummy field',
-    description: `Data`,
+async function main() {
+  const db = new Cama({
+    path: './notes-v3',
+    persistenceAdapter: PersistenceAdapterEnum.FS,
   });
-```
-
-### Insert many
-
-```
-  await collection.insertMany([{
-       _id: 'test',
-       name: 'Dummy field',
-       description: `Data`,
-  }]);
-
-```
-
-Every newly inserted document has an immutable string `_id`. Supply one when
-importing an existing identity, or omit it and use the `insertedId` /
-`insertedIds` returned by the mutation. Duplicate IDs reject without partially
-writing an insert batch.
-
-### CRUD results and upsert
-
-```ts
-const count = await collection.count({ name: 'Dummy field' });
-const updated = await collection.updateMany({ name: 'Dummy field' }, { $set: { description: 'Updated' } });
-const removed = await collection.deleteOne({ _id: 'test' });
-const upserted = await collection.upsert(
-  { name: 'New message' },
-  { name: 'New message', description: 'Created when absent', createdAt: new Date() },
-);
-```
-
-Mutation results report inserted IDs and matched, modified, upserted, or
-deleted counts. `deleteMany` removes every match; `deleteOne` removes only the
-first match in collection order.
-
-### Find many
-
-CamaDB uses a MongoDB style query language, powered by [SiftJS](https://github.com/crcn/sift.js/). Have a look at that project to see the full capabilities of that library.
-
-```
- const findResult = await collection.findMany({
-    _id: {
-      $gte: 50000,
-    },
-  },
-    {
-      sort:{
-        desc: x => x._id
-      },
-      offset: 100,
-      limit: 100
-    });
-```
-
-### Updating
-
-Again we use a MongoDB style language for data updates, for this we use [obop](https://github.com/kawanet/obop)
-
-```
-  await collection.updateMany({
-    _id:3
-  }, {
-    $set: {
-      steve:"steve"
-    }
+  const notes = await db.initCollection<Note>('notes', {
+    columns: [],
+    indexes: ['topic'],
+    searchIndexes: ['title', 'body'],
   });
+
+  const { insertedId } = await notes.insertOne({
+    title: 'Local first',
+    body: 'Keep useful knowledge on this device.',
+    topic: 'architecture',
+  });
+  const page = await notes.findMany({ topic: 'architecture' }, { limit: 20 });
+  const hits = await notes.searchText('knowledge', { limit: 5 });
+  await notes.updateMany({ _id: insertedId }, { $set: { title: 'Offline knowledge' } });
+  console.log(page.rows, hits);
+}
+
+main().catch(console.error);
 ```
 
-### Aggregation
+For a browser, select `PersistenceAdapterEnum.IndexedDb` and use a database name for `path`. Run initialization on the client, not during server rendering. In Electron, keep filesystem access in the main process and expose a narrow IPC API. Never use `destroy()` as a close operation: it deletes the collection.
 
-We use [Mingo](https://github.com/kofrasa/mingo) for aggregation - currently lookup commands aren't supported.
+## Learn by task
 
+| I want to…                                       | Start here                                                                                             |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| Choose an adapter and run a complete example     | [Getting started](https://elmarti.github.io/camadb/docs/documents/docs_getting-started.html)           |
+| Filter, paginate, update and import records      | [Query recipes](https://elmarti.github.io/camadb/docs/documents/docs_query-recipes.html)               |
+| Tune metadata, text, vector and hybrid retrieval | [Retrieval guide](https://elmarti.github.io/camadb/docs/documents/docs_retrieval.html)                 |
+| Build local AI memory with provenance            | [Memory examples](https://elmarti.github.io/camadb/docs/documents/packages_memory_README.html)         |
+| Understand synchronization and conflicts         | [Sync examples](https://elmarti.github.io/camadb/docs/documents/docs_synchronization.html)             |
+| Diagnose storage, cache or quota problems        | [Operations and troubleshooting](https://elmarti.github.io/camadb/docs/documents/docs_operations.html) |
+| Look up a signature or return type               | [Generated API reference](https://elmarti.github.io/camadb/docs/modules.html)                          |
+
+The [source guides](docs/start.md) are also readable directly in this repository.
+
+## Packages and applications
+
+| Workspace             | Purpose                                                                                  |
+| --------------------- | ---------------------------------------------------------------------------------------- |
+| `@camadb/core`        | Database, collection and retrieval API                                                   |
+| `camadb`              | Historical package name; re-exports core, without v2 storage compatibility               |
+| `@camadb/memory`      | Local memory lifecycle and embedding provenance                                          |
+| `@camadb/sync`        | Sync protocol and in-memory reference replica; supply your own persistence and transport |
+| `apps/knowledge-demo` | Offline browser knowledge lab                                                            |
+| `apps/studio`         | Browser extension for inspecting supported local stores                                  |
+| `apps/website`        | Public website, guides and generated API docs                                            |
+
+## Contribute
+
+```sh
+yarn install --frozen-lockfile
+yarn validate
+yarn docs:check
 ```
- const aggregationResult = await collection.aggregate([{
-    $match:{
-      _id:3
-    }
-  }]);
-```
+
+Use Node.js 22+ and Yarn Classic 1.22.22. See [development](docs/development.md), [contributing](CONTRIBUTING.md), and [documentation authoring](docs/documentation.md). `yarn build` includes the static website, guides and API reference. Releases use Changesets; see [publishing](docs/versioning-and-publishing.md).
+
+Report reproducible problems in [GitHub issues](https://github.com/elmarti/camadb/issues). Include the package version, adapter, runtime and a minimal example without private data.
