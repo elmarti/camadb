@@ -1,3 +1,4 @@
+import { ICollectionMeta } from '../../interfaces/collection-meta.interface';
 import { ICollection } from '../../interfaces/collection.interface';
 import { ICollectionConfig } from '../../interfaces/collection-config.interface';
 import { TYPES } from '../../types';
@@ -47,9 +48,11 @@ export class Collection<TDocument extends object = Document> implements ICollect
   private queryService: IQueryService<StoredDocument<TDocument>>;
   public queue: IQueueService;
   private destroyed = false;
+  private readonly testMode: boolean;
   private aggregator: IAggregator<StoredDocument<TDocument>>;
 
   constructor(collectionName: string, collectionConfig: ICollectionConfig, camaConfig: ICamaConfig) {
+    this.testMode = !!camaConfig.test;
     this.container = containerFactory(collectionName, camaConfig, collectionConfig);
     this.logger = this.container.get<ILogger>(TYPES.Logger);
     this.persistenceAdapter = this.container.get<IPersistenceAdapter>(TYPES.PersistenceAdapter);
@@ -65,6 +68,7 @@ export class Collection<TDocument extends object = Document> implements ICollect
 
   /** Called by Cama.initCollection to warm an eager cache before returning. */
   async initializeCache(): Promise<void> {
+    if (!this.testMode) await this.container.get<ICollectionMeta>(TYPES.CollectionMeta).get();
     await this.persistenceAdapter.initializeCache?.();
   }
 

@@ -1,3 +1,4 @@
+import { validateCollectionMetadata } from '../catalogue-validation';
 import * as path from 'path';
 import { TYPES } from '../../../types';
 import { IFS } from '../../../interfaces/fs.interface';
@@ -13,6 +14,7 @@ import { LegacyStorageError } from '../storage-version';
 
 export class CollectionMeta implements ICollectionMeta {
   private meta?: IMetaStructure;
+  private readonly initialized: Promise<void>;
   private dbPath?: string;
   private fileName?: string;
   private camaPath?: string;
@@ -25,6 +27,7 @@ export class CollectionMeta implements ICollectionMeta {
     private system: ISystem,
     private queue: IQueueService,
   ) {
+    validateCollectionMetadata(collectionName, { ...collectionConfig, collectionName });
     const initializeCollectionMetaTask = async () => {
       this.camaPath = this.system.getOutputPath();
       this.dbPath = path.join(this.system.getOutputPath(), collectionName);
@@ -41,6 +44,7 @@ export class CollectionMeta implements ICollectionMeta {
       if (await this.fs.exists(path.join(this.dbPath, this.fileName))) {
         this.logger.log(LogLevel.Info, 'Already exists');
         this.meta = await this.fs.loadJSON<IMetaStructure>(path.join(this.dbPath, this.fileName));
+        validateCollectionMetadata(collectionName, this.meta);
         return;
       }
       this.logger.log(LogLevel.Info, 'Does not exist, creating' + this.fileName);
@@ -67,7 +71,8 @@ export class CollectionMeta implements ICollectionMeta {
       this.logger.log(LogLevel.Info, 'Writing meta file');
       return await this.fs.writeJSON<IMetaStructure>(this.dbPath, this.fileName, this.meta);
     };
-    this.queue.add(initializeCollectionMetaTask);
+    this.initialized = this.queue.add(initializeCollectionMetaTask);
+    void this.initialized.catch(() => undefined);
   }
 
   /**
@@ -76,6 +81,10 @@ export class CollectionMeta implements ICollectionMeta {
    * @param metaStructure - the value to be to be applied to the meta
    */
   async update(collectionName: string, metaStructure: IMetaStructure): Promise<void> {
+    if (this.collectionName && this.collectionName !== collectionName)
+      throw new Error('Collection metadata cannot rename its collection.');
+    validateCollectionMetadata(collectionName, metaStructure);
+    await this.initialized;
     const updateCollectionMetaTask = () => {
       this.logger.log(LogLevel.Info, 'Updating meta file');
 
@@ -92,6 +101,7 @@ export class CollectionMeta implements ICollectionMeta {
    * Gets the in-memory meta value
    */
   async get(): Promise<IMetaStructure | undefined> {
+    await this.initialized;
     const getCollectionMetaTask = () => {
       this.logger.log(LogLevel.Info, 'Getting data from cache');
       return this.meta;

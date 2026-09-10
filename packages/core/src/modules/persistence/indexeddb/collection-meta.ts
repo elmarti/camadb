@@ -1,3 +1,4 @@
+import { validateCollectionMetadata } from '../catalogue-validation';
 import { ICollectionMeta } from '../../../interfaces/collection-meta.interface';
 import { ICamaConfig } from '../../../interfaces/cama-config.interface';
 import { ICollectionConfig } from '../../../interfaces/collection-config.interface';
@@ -10,22 +11,32 @@ export class CollectionMeta implements ICollectionMeta {
   private readonly initialized: Promise<void>;
   private meta?: IMetaStructure;
 
-  constructor(config?: ICamaConfig, collectionConfig?: ICollectionConfig, private collectionName?: string) {
+  constructor(
+    config?: ICamaConfig,
+    collectionConfig?: ICollectionConfig,
+    private collectionName?: string,
+  ) {
     if (!collectionName || !collectionConfig) {
       this.initialized = Promise.resolve();
       return;
     }
+    validateCollectionMetadata(collectionName, { ...collectionConfig, collectionName });
     this.databaseName = config?.path || 'cama';
     this.initialized = IndexedDbDatabaseCoordinator.ensureStore(this.databaseName, collectionName).then(async () => {
       await IndexedDbDatabaseCoordinator.run(this.databaseName!, async (db) => {
-        const store = db.transaction(collectionName, 'readwrite').objectStore(collectionName);
-        this.meta = await store.get(CollectionMeta.key) as IMetaStructure | undefined;
+        const transaction = db.transaction(collectionName, 'readwrite');
+        void transaction.done.catch(() => undefined);
+        const store = transaction.objectStore(collectionName);
+        this.meta = (await store.get(CollectionMeta.key)) as IMetaStructure | undefined;
+        if (this.meta) validateCollectionMetadata(collectionName, this.meta);
         if (!this.meta) {
           this.meta = { ...collectionConfig, collectionName };
           await store.put(this.meta, CollectionMeta.key);
         }
+        await transaction.done;
       });
     });
+    void this.initialized.catch(() => undefined);
   }
 
   /**
@@ -34,11 +45,15 @@ export class CollectionMeta implements ICollectionMeta {
    * @param metaStructure - the value to be to be applied to the meta
    */
   async update(collectionName: string, metaStructure: IMetaStructure): Promise<void> {
+    if (this.collectionName && this.collectionName !== collectionName)
+      throw new Error('Collection metadata cannot rename its collection.');
+    validateCollectionMetadata(collectionName, { ...metaStructure, collectionName });
     await this.initialized;
     this.meta = { ...metaStructure, collectionName };
     if (!this.collectionName || !this.databaseName) return;
     await IndexedDbDatabaseCoordinator.run(this.databaseName, async (db) => {
       const transaction = db.transaction(this.collectionName!, 'readwrite');
+      void transaction.done.catch(() => undefined);
       await transaction.objectStore(this.collectionName!).put(this.meta, CollectionMeta.key);
       await transaction.done;
     });
@@ -47,7 +62,7 @@ export class CollectionMeta implements ICollectionMeta {
   /**
    * Gets the in-memory meta value
    */
-  async get(): Promise<IMetaStructure|undefined> {
+  async get(): Promise<IMetaStructure | undefined> {
     await this.initialized;
     return this.meta;
   }
