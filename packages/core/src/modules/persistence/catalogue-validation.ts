@@ -10,6 +10,13 @@ export function catalogueLimit(options: CollectionListOptions): number {
   if (options.after !== undefined) catalogueName(options.after);
   return limit;
 }
+/** The same bounds apply before writes and when inspecting existing metadata. */
+export function validateCollectionMetadata(name: string, value: unknown): void {
+  catalogueName(name);
+  collectionDescriptor(name, value);
+  const encoded = JSON.stringify(value, null, 2);
+  if (new TextEncoder().encode(encoded).byteLength > 262144) throw new Error('Collection metadata exceeds 256 KiB.');
+}
 export function collectionDescriptor(name: string, value: unknown): CollectionDescriptor {
   if (!value || typeof value !== 'object') throw new Error('Invalid collection metadata.');
   const meta = value as Record<string, unknown>;

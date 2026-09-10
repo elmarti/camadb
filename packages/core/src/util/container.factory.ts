@@ -1,3 +1,4 @@
+import { validateCollectionMetadata } from '../modules/persistence/catalogue-validation';
 import { ICamaConfig } from '../interfaces/cama-config.interface';
 import { ICollectionConfig } from '../interfaces/collection-config.interface';
 import { ICollectionMeta } from '../interfaces/collection-meta.interface';
@@ -35,6 +36,7 @@ export const containerFactory = (
   camaConfig: ICamaConfig,
   collectionConfig: ICollectionConfig,
 ): ServiceRegistry => {
+  validateCollectionMetadata(collectionName, { ...collectionConfig, collectionName });
   const registry = new ServiceRegistry();
   const queue = new QueueService();
   const metadataQueue = new QueueService();

@@ -31,6 +31,8 @@ const notes = await database.initCollection<Note>('notes', {
 });
 ```
 
+`initCollection` waits for metadata readiness before resolving, including with lazy or disabled record caching. Collection names and metadata are validated before adapter creation; see the [catalogue contract and limits](../packages/core/README.md#read-only-collection-catalogue).
+
 `Collection<T>` carries the document type through its complete public surface:
 
 | Area      | Operations                                                                   |

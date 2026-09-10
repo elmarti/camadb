@@ -97,6 +97,7 @@ export class VectorSearchPersistence implements IPersistenceAdapter {
         await collectionMeta.update(metadata.collectionName, { ...metadata, vectorIndexes: configuredIndexes });
       }
     });
+    void this.initialized.catch(() => undefined);
   }
 
   get recordsResident(): boolean { return this.adapter.recordsResident === true; }
@@ -188,7 +189,11 @@ export class VectorSearchPersistence implements IPersistenceAdapter {
   getRecords(ids: string[]): Promise<Map<string, any>> { this.checkDestroyed(); return this.adapter.getRecords!(ids); }
   iterateRecords(): AsyncIterable<any> { this.checkDestroyed(); return this.adapter.iterateRecords!(); }
   cacheRevision(): Promise<string> { this.checkDestroyed(); return this.adapter.cacheRevision!(); }
-  initializeCache(): Promise<void> { this.checkDestroyed(); return this.adapter.initializeCache?.() ?? Promise.resolve(); }
+  async initializeCache(): Promise<void> {
+    this.checkDestroyed();
+    await this.initialized;
+    await this.adapter.initializeCache?.();
+  }
   cacheStats(): CacheStats { this.checkDestroyed(); return this.adapter.cacheStats!(); }
   clearCache(): void { this.checkDestroyed(); this.adapter.clearCache?.(); }
   compact(): Promise<void> { this.checkDestroyed(); return this.adapter.compact?.() ?? Promise.resolve(); }

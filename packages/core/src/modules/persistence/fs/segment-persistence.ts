@@ -91,6 +91,7 @@ export default class SegmentPersistence implements IPersistenceAdapter {
     this.tailCommits = 0;
     this.destroyed = false;
     this.initialized = this.queue.add(() => this.initialize());
+    void this.initialized.catch(() => undefined);
   }
   checkDestroyed() {
     if (this.destroyed) throw new Error('Collection has been destroyed. Call Cama.initCollection to recreate');
