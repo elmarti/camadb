@@ -33,7 +33,14 @@ it('includes every downstream workspace when a shared package changes', () => {
   );
 });
 
-it('skips documentation and treats shared CI configuration conservatively', () => {
-  expect(resolveAffectedWorkspaces(['docs/decisions/example.md'], workspaces, root)).toEqual([]);
+it('validates published documentation and treats shared CI configuration conservatively', () => {
+  expect(resolveAffectedWorkspaces(['docs/decisions/example.md'], workspaces, root)).toEqual(['@camadb/website']);
   expect(resolveAffectedWorkspaces(['.github/workflows/ci.yaml'], workspaces, root)).toHaveLength(workspaces.length);
+});
+
+
+it('rebuilds published API docs when sync source changes', () => {
+  expect(resolveAffectedWorkspaces(['packages/sync/src/protocol.ts'], workspaces, root)).toEqual(
+    expect.arrayContaining(['@camadb/sync', '@camadb/website']),
+  );
 });

@@ -47,7 +47,10 @@
     "version:alpha": "changeset version --snapshot alpha",
     "release:alpha": "changeset publish --tag alpha --no-git-tag",
     "release:rc": "node scripts/verify-prerelease-state.js && changeset publish --no-git-tag",
-    "test:packages:published": "node scripts/test-package-consumers.js --published"
+    "test:packages:published": "node scripts/test-package-consumers.js --published",
+    "docs:build": "yarn docs:examples && node scripts/build-docs.js",
+    "docs:check": "yarn docs:examples && typedoc --options typedoc.json --emit none",
+    "docs:examples": "tsc --build packages/core packages/memory packages/sync && node scripts/check-doc-examples.js"
   },
   "devDependencies": {
     "wabt": "1.0.39",

@@ -28,6 +28,7 @@ const db = new Cama({
 });
 
 const notes = await db.initCollection<Note>('notes', {
+  columns: [],
   indexes: ['title'],
   searchIndexes: ['title', 'body'],
 });
@@ -68,6 +69,7 @@ export default function Home() {
             <a href="#science">How it works</a>
             <a href="#performance">Performance</a>
             <a href="#quickstart">Quick start</a>
+            <Link href="/docs/index.html">Documentation</Link>
             <Link href="/demo/index.html">Demo</Link>
           </nav>
           <a className="cama-button cama-button--quiet header-github" href={github}>
@@ -183,7 +185,7 @@ export default function Home() {
                   <span>1</span>
                   <div>
                     <strong>Install</strong>
-                    <code>yarn add @camadb/core</code>
+                    <code>npm install @camadb/core@rc</code>
                   </div>
                 </li>
                 <li>
@@ -201,9 +203,9 @@ export default function Home() {
                   </div>
                 </li>
               </ol>
-              <a className="cama-button cama-button--accent" href={`${github}#getting-started`}>
-                Read the full guide ↗
-              </a>
+              <Link className="cama-button cama-button--accent" href="/docs/index.html">
+                Read the full guide →
+              </Link>
             </div>
             <pre className="cama-code">
               <code>{code}</code>
@@ -345,7 +347,7 @@ export default function Home() {
           <div>
             <a href={github}>GitHub</a>
             <a href={`${github}/issues`}>Issues</a>
-            <a href={`${github}/tree/main/docs`}>Docs</a>
+            <Link href="/docs/index.html">Docs & API</Link>
           </div>
         </div>
       </footer>

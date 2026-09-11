@@ -1,3 +1,4 @@
+/** @module memory */
 export {
   EmbeddingCompatibilityError,
   assertEmbeddingCompatibility,

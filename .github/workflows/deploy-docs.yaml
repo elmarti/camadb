@@ -10,6 +10,17 @@ on:
       - packages/core/**
       - packages/design/**
       - packages/memory/**
+      - packages/sync/**
+      - docs/**
+      - README.md
+      - scripts/build-docs.js
+      - scripts/check-doc-links.js
+      - scripts/check-doc-examples.js
+      - CONTRIBUTING.md
+      - typedoc.json
+      - tsconfig.docs.json
+      - tsconfig.base.json
+      - yarn.lock
       - package.json
       - .github/workflows/deploy-docs.yaml
 

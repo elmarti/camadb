@@ -12,3 +12,5 @@ coverage
 out
 apps/website/public/demo
 *.tsbuildinfo
+
+apps/website/public/docs

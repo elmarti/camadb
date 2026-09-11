@@ -140,7 +140,7 @@ order, trailing-data truncation, mutation publication and fsync are unchanged.
 | Wide LRU parallel          |               497.0 |    103.9 |              5.60 / 5.72 |                    248.6 / 237.3 |
 
 Every ordinary page contains 100 rows and bypasses previews. Paired raw files
-are in [checkpoint-2](checkpoint-2/). Capture is unchanged code and varies
+are in [checkpoint-2](https://github.com/elmarti/camadb/tree/main/docs/benchmarks/checkpoint-2). Capture is unchanged code and varies
 between runs; this patch makes no ingestion or RSS improvement claim.
 The isolated cold indexed view takes 693–713 ms after the fix with LRU; the
 following unindexed view takes 168–188 ms. All narrow 100k measurements remain

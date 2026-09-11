@@ -21,6 +21,9 @@ export const LEGACY_STORAGE_MESSAGE =
 export class LegacyStorageError extends Error {
   readonly code = 'CAMADB_LEGACY_STORAGE';
 
+  /**
+   * Create the error used when v3 refuses incompatible v2 storage without rewriting it.
+   */
   constructor() {
     super(LEGACY_STORAGE_MESSAGE);
     this.name = 'LegacyStorageError';
@@ -30,6 +33,9 @@ export class LegacyStorageError extends Error {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
+/**
+ * Test whether a value has the current collection envelope marker. This checks the envelope, not the shape of its generic payload.
+ */
 export const isStorageEnvelope = <T>(value: unknown): value is StorageEnvelope<T> => {
   if (!isRecord(value) || !isRecord(value.camaDB)) return false;
   return value.camaDB.format === 'collection' && value.camaDB.version === CURRENT_STORAGE_VERSION && 'data' in value;
@@ -51,6 +57,9 @@ export const detectStorage = (value: unknown): StorageDetection => {
     : { kind: 'unsupported' };
 };
 
+/**
+ * Wrap a payload with the current collection format marker without persisting or cloning it.
+ */
 export const createStorageEnvelope = <T>(data: T): StorageEnvelope<T> => ({
   camaDB: {
     format: 'collection',

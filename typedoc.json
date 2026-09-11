@@ -1,0 +1,37 @@
+{
+  "entryPoints": ["packages/core/src/index.ts", "packages/memory/src/index.ts", "packages/sync/src/index.ts"],
+  "tsconfig": "tsconfig.docs.json",
+  "name": "CamaDB 3 documentation",
+  "readme": "docs/start.md",
+  "projectDocuments": [
+    "docs/**/*.md",
+    "packages/core/README.md",
+    "packages/memory/README.md",
+    "packages/sync/README.md",
+    "apps/studio/README.md",
+    "CONTRIBUTING.md"
+  ],
+  "exclude": ["**/__tests__/**", "**/*.test.ts"],
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true,
+  "out": "apps/website/out/docs",
+  "navigationLinks": {
+    "Website": "https://elmarti.github.io/camadb/",
+    "Demo": "https://elmarti.github.io/camadb/demo/index.html",
+    "GitHub": "https://github.com/elmarti/camadb"
+  },
+  "validation": {
+    "notDocumented": true,
+    "invalidLink": true,
+    "notExported": false
+  },
+  "requiredToBeDocumented": ["Function", "Method", "Constructor", "Accessor"],
+  "treatValidationWarningsAsErrors": true,
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true,
+    "includeFolders": true
+  },
+  "packagesRequiringDocumentation": ["@camadb/core", "@camadb/memory", "@camadb/sync"]
+}
